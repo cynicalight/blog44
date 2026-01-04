@@ -56,3 +56,11 @@ export const GALLERY_MDX_COMPONENTS = {
   },
   // 移除wrapper，让每个图片单独渲染
 }
+
+// 隐藏 MDX 正文中的图片 (用于 Parallax 布局)
+export const HIDDEN_GALLERY_MDX_COMPONENTS = {
+  ...MDX_COMPONENTS,
+  // 将图片渲染为空，但保留组件定义以防止 MDX 错误
+  img: (props: any) => null,
+  Image: (props: any) => null,
+}

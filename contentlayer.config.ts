@@ -5,6 +5,7 @@ import { slug } from 'github-slugger'
 import { fromHtmlIsomorphic } from 'hast-util-from-html-isomorphic'
 import path from 'path'
 import readingTime from 'reading-time'
+import sizeOf from 'image-size'
 // Remark packages
 import {
   remarkCodeTitles,
@@ -101,6 +102,29 @@ export const Blog = defineDocumentType(() => ({
   },
   computedFields: {
     ...computedFields,
+    imagesList: {
+      type: 'list',
+      of: { type: 'string' },
+      resolve: (doc) => {
+        // 使用正则提取所有图片链接
+        // 匹配 ![](/path/to/image) 或 <img src="/path/to/image" />
+        const markdownImageRegex = /!\[.*?\]\((.*?)\)/g
+        const htmlImageRegex = /<img.*?src=["'](.*?)["']/g
+
+        const images: string[] = []
+        let match
+
+        while ((match = markdownImageRegex.exec(doc.body.raw)) !== null) {
+          images.push(match[1])
+        }
+
+        while ((match = htmlImageRegex.exec(doc.body.raw)) !== null) {
+          images.push(match[1])
+        }
+
+        return images
+      },
+    },
     structuredData: {
       type: 'json',
       resolve: (doc) => ({
@@ -138,6 +162,29 @@ export const Snippet = defineDocumentType(() => ({
   },
   computedFields: {
     ...computedFields,
+    imagesList: {
+      type: 'list',
+      of: { type: 'string' },
+      resolve: (doc) => {
+        // 使用正则提取所有图片链接
+        // 匹配 ![](/path/to/image) 或 <img src="/path/to/image" />
+        const markdownImageRegex = /!\[.*?\]\((.*?)\)/g
+        const htmlImageRegex = /<img.*?src=["'](.*?)["']/g
+
+        const images: string[] = []
+        let match
+
+        while ((match = markdownImageRegex.exec(doc.body.raw)) !== null) {
+          images.push(match[1])
+        }
+
+        while ((match = htmlImageRegex.exec(doc.body.raw)) !== null) {
+          images.push(match[1])
+        }
+
+        return images
+      },
+    },
     structuredData: {
       type: 'json',
       resolve: (doc) => ({
@@ -174,6 +221,41 @@ export const Gallery = defineDocumentType(() => ({
   },
   computedFields: {
     ...computedFields,
+    imagesList: {
+      type: 'json',
+      resolve: (doc) => {
+        const markdownImageRegex = /!\[.*?\]\((.*?)\)/g
+        const htmlImageRegex = /<img.*?src=["'](.*?)["']/g
+
+        const images: string[] = []
+        let match
+
+        while ((match = markdownImageRegex.exec(doc.body.raw)) !== null) {
+          images.push(match[1])
+        }
+
+        while ((match = htmlImageRegex.exec(doc.body.raw)) !== null) {
+          images.push(match[1])
+        }
+
+        return images.map((src) => {
+          let aspectRatio = 1.5 // 默认比例
+          try {
+            // 只处理本地图片
+            if (src.startsWith('/') && !src.startsWith('http')) {
+              const imagePath = path.join(process.cwd(), 'public', src)
+              const dimensions = sizeOf(imagePath)
+              if (dimensions.width && dimensions.height) {
+                aspectRatio = dimensions.width / dimensions.height
+              }
+            }
+          } catch (e) {
+            console.warn(`Failed to calculate aspect ratio for image: ${src}`, e)
+          }
+          return { src, aspectRatio }
+        })
+      },
+    },
     structuredData: {
       type: 'json',
       resolve: (doc) => ({

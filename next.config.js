@@ -117,6 +117,7 @@ module.exports = () => {
           hostname: '**', // 允许所有 HTTPS 图片
         },
       ],
+      qualities: [75, 100],
       unoptimized,
     },
     async headers() {

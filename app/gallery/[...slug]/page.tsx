@@ -3,24 +3,10 @@ import { allAuthors, allGalleries } from 'contentlayer/generated'
 import 'css/prism.css'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { MDXLayoutRenderer } from 'pliny/mdx-components'
 import { allCoreContent, coreContent, sortPosts } from 'pliny/utils/contentlayer'
 import { SITE_METADATA } from '~/data/site-metadata'
-import { PostBanner } from '~/layouts/post-banner'
-import { PostLayout } from '~/layouts/post-layout'
-import { PostSimple } from '~/layouts/post-simple'
 import { GalleryLayout } from '~/layouts/gallery-layout'
-// 导入 Gallery 专用的 MDX 组件
-import { GALLERY_MDX_COMPONENTS } from '~/components/gallery/gallery-mdx'
 import { GalleryContentRenderer } from '~/components/gallery/client-wrapper'
-
-const DEFAULT_LAYOUT = 'GalleryLayout'
-const LAYOUTS = {
-  PostSimple,
-  PostLayout,
-  PostBanner,
-  GalleryLayout,
-}
 
 export async function generateMetadata(props: {
   params: Promise<{ slug: string[] }>
@@ -105,17 +91,15 @@ export default async function Page(props: { params: Promise<{ slug: string[] }> 
     }
   })
 
-  const Layout = LAYOUTS[gallery.layout || DEFAULT_LAYOUT]
-
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Layout content={mainContent} authorDetails={authorDetails} next={next} prev={prev}>
+      <GalleryLayout content={mainContent} next={next} prev={prev}>
         <GalleryContentRenderer code={gallery.body.code} toc={gallery.toc} />
-      </Layout>
+      </GalleryLayout>
     </>
   )
 }
