@@ -94,6 +94,20 @@ module.exports = {
         x: '#0f1419',
         linkedin: '#0077B5',
         weibo: '#CD3734',
+        // 管理后台专用颜色
+        admin: {
+          bg: '#fafbfc',
+          'bg-dark': '#0d1117',
+          sidebar: '#f6f8fa',
+          'sidebar-dark': '#161b22',
+          border: '#e5e7eb',
+          'border-dark': '#30363d',
+          accent: '#6366f1',
+          success: '#10b981',
+          warning: '#f59e0b',
+          danger: '#ef4444',
+          info: '#3b82f6',
+        },
       },
       width: {
         4.5: '1.125rem',

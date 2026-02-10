@@ -98,7 +98,7 @@ export default async function Page(props: { params: Promise<{ slug: string[] }> 
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <GalleryLayout content={mainContent} next={next} prev={prev}>
-        <GalleryContentRenderer code={gallery.body.code} toc={gallery.toc} />
+        <GalleryContentRenderer code={gallery.body.code} toc={gallery.toc} raw={gallery.body.raw} />
       </GalleryLayout>
     </>
   )

@@ -6,6 +6,8 @@
       "@/data/*": ["data/*"],
       "@/layouts/*": ["layouts/*"],
       "@/css/*": ["css/*"],
+      "@/lib/*": ["lib/*"],
+      "@/hooks/*": ["hooks/*"],
       "contentlayer/generated": ["./.contentlayer/generated"]
     }
   }

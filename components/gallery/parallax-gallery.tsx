@@ -17,15 +17,15 @@ export function ParallaxGallery({ images }: { images: { src: string; aspectRatio
   }, [])
   const { scrollYProgress } = useScroll({
     target: container,
-    offset: ['start end', 'end start'],
+    offset: ['start start', 'end start'],
   })
 
   // 视差参数 - 调整这些值来改变滚动速度
   // 中间列速度稍慢，两侧列速度稍快，制造错落感
   // 这里的 Y 值表示向下位移的距离，正值越大，视觉上滚动越慢（因为它抵消了页面的向上滚动）
-  const y = useTransform(scrollYProgress, [0, 1], [0, safeHeight * 0.3])
-  const y2 = useTransform(scrollYProgress, [0, 1], [0, safeHeight * 0.8])
-  const y3 = useTransform(scrollYProgress, [0, 1], [0, safeHeight * 0.1])
+  const y = useTransform(scrollYProgress, [0, 1], [0, safeHeight * 0.2])
+  const y2 = useTransform(scrollYProgress, [0, 1], [0, safeHeight * 0.35])
+  const y3 = useTransform(scrollYProgress, [0, 1], [0, safeHeight * 0.12])
 
   const isMobile = width !== 0 && width < 768
   const columns = useMemo(() => {
@@ -99,7 +99,7 @@ export function ParallaxGallery({ images }: { images: { src: string; aspectRatio
   }
 
   // 计算最大偏移量，用于补偿底部被遮挡的空间
-  const maxOffset = safeHeight * 0.8
+  const maxOffset = safeHeight * 0.35
 
   return (
     <div
