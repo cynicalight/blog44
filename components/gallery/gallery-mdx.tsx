@@ -63,4 +63,33 @@ export const HIDDEN_GALLERY_MDX_COMPONENTS = {
   // 将图片渲染为空，但保留组件定义以防止 MDX 错误
   img: (props: any) => null,
   Image: (props: any) => null,
+  // 仅在段落有真实可见内容时渲染，避免图片被隐藏后留下空白段落
+  p: (props: React.HTMLAttributes<HTMLParagraphElement>) => {
+    const hasVisibleContent = (node: React.ReactNode): boolean => {
+      return React.Children.toArray(node).some((child) => {
+        if (typeof child === 'string') return child.trim().length > 0
+        if (typeof child === 'number') return true
+        if (!React.isValidElement(child)) return false
+
+        const childType = child.type
+        if (childType === 'img') return false
+
+        const typeName =
+          typeof childType === 'function'
+            ? ((childType as React.ComponentType & { displayName?: string }).displayName ??
+              childType.name ??
+              '')
+            : ''
+        if (typeName === 'Image') return false
+
+        const childProps = child.props as Record<string, unknown> | undefined
+        if (typeof childProps?.src === 'string' && !childProps.children) return false
+
+        return hasVisibleContent(childProps?.children as React.ReactNode) || !childProps?.children
+      })
+    }
+
+    if (!hasVisibleContent(props.children)) return null
+    return <p {...props} />
+  },
 }
