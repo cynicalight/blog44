@@ -1,29 +1,35 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useAuth } from '../../../lib/auth-context'
+import { useAuth } from '~/lib/auth-context'
 
 export default function LoginPage() {
   const router = useRouter()
-  const { login } = useAuth()
+  const { login, user, isLoading: isSessionLoading } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  useEffect(() => {
+    if (!isSessionLoading && user) {
+      router.replace('/admin/posts')
+    }
+  }, [isSessionLoading, router, user])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
-    setIsLoading(true)
+    setIsSubmitting(true)
 
     try {
       await login(email, password)
-      router.push('/admin')
+      router.push('/admin/posts')
     } catch (err) {
-      setError('登录失败，请检查邮箱和密码')
+      setError(err instanceof Error ? err.message : '登录失败，请检查邮箱和密码')
     } finally {
-      setIsLoading(false)
+      setIsSubmitting(false)
     }
   }
 
@@ -34,9 +40,9 @@ export default function LoginPage() {
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-gray-100">
             登录管理后台
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
-            bu44er.ink 博客管理系统
-          </p>
+          {/* <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400"> */}
+          {/*   单管理员登录，保存文章会直接提交到 GitHub `main` */}
+          {/* </p> */}
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -123,7 +129,7 @@ export default function LoginPage() {
           <div>
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={isSubmitting}
               className="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <span className="absolute inset-y-0 left-0 flex items-center pl-3">
@@ -139,22 +145,10 @@ export default function LoginPage() {
                   />
                 </svg>
               </span>
-              {isLoading ? '登录中...' : '登录'}
+              {isSubmitting ? '登录中...' : '登录'}
             </button>
           </div>
         </form>
-
-        <div className="text-center">
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            还没有账号?{' '}
-            <a
-              href="/admin/register"
-              className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
-            >
-              注册
-            </a>
-          </p>
-        </div>
       </div>
     </div>
   )

@@ -7,6 +7,7 @@
     "dev": "PORT=3434 cross-env INIT_CWD=$PWD next dev --webpack",
     "build": "cross-env INIT_CWD=$PWD prisma generate && next build --webpack && pnpm run postbuild",
     "postbuild": "cross-env NODE_OPTIONS='--experimental-json-modules' tsx ./scripts/post-build.ts",
+    "admin:hash-password": "tsx ./scripts/hash-admin-password.ts",
     "serve": "next start",
     "analyze": "cross-env ANALYZE=true next build",
     "lint": "tsc -p tsconfig.json --noEmit",

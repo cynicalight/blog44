@@ -20,3 +20,12 @@
   background-color: rgb(var(--admin-sidebar));
   border-color: rgb(var(--admin-border));
 }
+
+body.admin-route .site-header,
+body.admin-route .site-footer {
+  display: none;
+}
+
+body.admin-route .site-main {
+  margin-bottom: 0;
+}

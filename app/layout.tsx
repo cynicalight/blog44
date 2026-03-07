@@ -15,7 +15,6 @@ import { Header } from '~/components/header'
 import { TiltedGridBackground } from '~/components/ui/tilted-grid-background'
 import { SITE_METADATA } from '~/data/site-metadata'
 import { ThemeProviders } from './theme-providers'
-import { AuthProvider } from './auth-provider'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import {
   FONT_JETBRAINS_MONO,
@@ -121,12 +120,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProviders>
           <UmamiAnalytics websiteId={SITE_METADATA.analytics.umamiAnalytics.websiteId} />
           <SearchProvider searchConfig={SITE_METADATA.search as SearchConfig}>
-            <AuthProvider>
+            <div className="site-header">
               <Header />
-              <main className="mb-auto grow">{children}</main>
-            </AuthProvider>
+            </div>
+            <main className="site-main mb-auto grow">{children}</main>
           </SearchProvider>
-          <Footer />
+          <div className="site-footer">
+            <Footer />
+          </div>
           <SpeedInsights />
         </ThemeProviders>
       </body>

@@ -1,25 +1,33 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { ADMIN_SESSION_COOKIE } from '~/lib/admin-auth-constants'
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // 只对 /admin 路径进行保护（排除 /admin/login 和 /admin/register）
+  // 只对 /admin 路径进行保护（排除 /admin/login）
   if (pathname.startsWith('/admin')) {
-    // 允许访问登录和注册页面
-    if (pathname === '/admin/login' || pathname === '/admin/register') {
+    if (pathname === '/admin/login') {
       return NextResponse.next()
     }
 
-    // 检查是否有token（简单验证）
-    // 注意：这里只是基础保护，真正的验证应该在服务器端API中进行
-    const token = request.cookies.get('admin_token')?.value
+    const token = request.cookies.get(ADMIN_SESSION_COOKIE)?.value
 
     if (!token) {
-      // 没有token，重定向到登录页
       const loginUrl = new URL('/admin/login', request.url)
       loginUrl.searchParams.set('from', pathname)
       return NextResponse.redirect(loginUrl)
+    }
+  }
+
+  if (pathname.startsWith('/api/admin')) {
+    if (pathname === '/api/admin/auth/login') {
+      return NextResponse.next()
+    }
+
+    const token = request.cookies.get(ADMIN_SESSION_COOKIE)?.value
+    if (!token) {
+      return NextResponse.json({ message: '未登录' }, { status: 401 })
     }
   }
 
@@ -27,5 +35,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*'],
+  matcher: ['/admin/:path*', '/api/admin/:path*'],
 }

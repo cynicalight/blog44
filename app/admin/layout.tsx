@@ -1,14 +1,22 @@
 'use client'
 
+import { useEffect } from 'react'
 import { usePathname } from 'next/navigation'
-import { AuthProvider } from '../../lib/auth-context'
-import AdminSidebar from '../../components/admin/AdminSidebar'
-import AdminHeader from '../../components/admin/AdminHeader'
+import { AuthProvider } from '~/lib/auth-context'
+import AdminSidebar from '~/components/admin/AdminSidebar'
+import AdminHeader from '~/components/admin/AdminHeader'
 import './admin-styles.css'
 
 function AdminLayoutContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
-  const isLoginPage = pathname === '/admin/login' || pathname === '/admin/register'
+  const isLoginPage = pathname === '/admin/login'
+
+  useEffect(() => {
+    document.body.classList.add('admin-route')
+    return () => {
+      document.body.classList.remove('admin-route')
+    }
+  }, [])
 
   if (isLoginPage) {
     return children

@@ -1,76 +1,69 @@
 'use client'
 
 import React, { createContext, useContext, useState, useEffect } from 'react'
-
-interface User {
-  id: string
-  email: string
-  name: string
-  role: 'admin' | 'editor' | 'user'
-}
+import type { AdminSessionUser } from '~/types/admin'
 
 interface AuthContextType {
-  user: User | null
-  token: string | null
+  user: AdminSessionUser | null
   login: (email: string, password: string) => Promise<void>
-  logout: () => void
+  logout: () => Promise<void>
+  refreshSession: () => Promise<void>
   isLoading: boolean
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
-  const [token, setToken] = useState<string | null>(null)
+  const [user, setUser] = useState<AdminSessionUser | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {
-    // 从localStorage加载token和用户信息
-    const storedToken = localStorage.getItem('admin_token')
-    const storedUser = localStorage.getItem('admin_user')
-
-    if (storedToken && storedUser) {
-      setToken(storedToken)
-      setUser(JSON.parse(storedUser))
-    }
-    setIsLoading(false)
-  }, [])
-
-  const login = async (email: string, password: string) => {
+  const refreshSession = async () => {
     try {
-      // TODO: 替换为实际的API端点
-      const response = await fetch('http://localhost:8080/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+      const response = await fetch('/api/admin/auth/session', {
+        cache: 'no-store',
       })
 
       if (!response.ok) {
-        throw new Error('登录失败')
+        setUser(null)
+        return
       }
 
       const data = await response.json()
-
-      setToken(data.token)
       setUser(data.user)
-
-      localStorage.setItem('admin_token', data.token)
-      localStorage.setItem('admin_user', JSON.stringify(data.user))
     } catch (error) {
-      console.error('Login error:', error)
-      throw error
+      console.error('Failed to refresh admin session:', error)
+      setUser(null)
     }
   }
 
-  const logout = () => {
-    setToken(null)
+  useEffect(() => {
+    refreshSession().finally(() => setIsLoading(false))
+  }, [])
+
+  const login = async (email: string, password: string) => {
+    const response = await fetch('/api/admin/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    })
+
+    const data = await response.json()
+    if (!response.ok) {
+      throw new Error(data.message || '登录失败')
+    }
+
+    setUser(data.user)
+  }
+
+  const logout = async () => {
+    await fetch('/api/admin/auth/logout', {
+      method: 'POST',
+    })
     setUser(null)
-    localStorage.removeItem('admin_token')
-    localStorage.removeItem('admin_user')
   }
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, login, logout, refreshSession, isLoading }}>
       {children}
     </AuthContext.Provider>
   )
