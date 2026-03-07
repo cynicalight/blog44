@@ -34,7 +34,7 @@ function logASCIItext() {
   logged = true
 }
 
-export function Header() {
+export function Header({ className }: { className?: string }) {
   const pathname = usePathname()
   useEffect(logASCIItext, [])
 
@@ -42,6 +42,7 @@ export function Header() {
     <Container
       as="header"
       className={clsx(
+        className,
         // 现代化背景和毛玻璃效果
         'border border-gray-200/50 bg-white/80 backdrop-blur-md',
         'dark:border-gray-800/50 dark:bg-zinc-900',

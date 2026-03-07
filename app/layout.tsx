@@ -120,9 +120,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProviders>
           <UmamiAnalytics websiteId={SITE_METADATA.analytics.umamiAnalytics.websiteId} />
           <SearchProvider searchConfig={SITE_METADATA.search as SearchConfig}>
-            <div className="site-header">
-              <Header />
-            </div>
+            <Header className="site-header" />
             <main className="site-main mb-auto grow">{children}</main>
           </SearchProvider>
           <div className="site-footer">

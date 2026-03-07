@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  font-size: 14px;
+}
+
 /* 自定义 h1 标题间距 */
 .prose h1 {
   margin-top: 1em !important;
