@@ -3,7 +3,9 @@ import { NextResponse } from 'next/server'
 import { verifyAdminSessionToken } from '~/lib/admin-auth'
 import { ADMIN_SESSION_COOKIE } from '~/lib/admin-auth-constants'
 import {
+  deleteAdminPost,
   getAdminPost,
+  isAdminContentPath,
   isGitHubContentError,
   parseAdminPostInput,
   updateAdminPost,
@@ -26,7 +28,7 @@ function assertAdmin(request: NextRequest) {
 
 function getSourcePath(params: Params) {
   const path = params.path.join('/')
-  if (!path.startsWith('data/blog/') || !path.endsWith('.mdx')) {
+  if (!isAdminContentPath(path)) {
     throw new Error('无效的文章路径')
   }
   return path
@@ -65,6 +67,24 @@ export async function PUT(request: NextRequest, props: { params: Promise<Params>
       return NextResponse.json({ message: error.message }, { status: error.status })
     }
     const message = error instanceof Error ? error.message : '更新文章失败'
+    return NextResponse.json({ message }, { status: 400 })
+  }
+}
+
+export async function DELETE(request: NextRequest, props: { params: Promise<Params> }) {
+  if (!assertAdmin(request)) {
+    return unauthorizedResponse()
+  }
+
+  try {
+    const params = await props.params
+    await deleteAdminPost(getSourcePath(params))
+    return NextResponse.json({ ok: true })
+  } catch (error) {
+    if (isGitHubContentError(error)) {
+      return NextResponse.json({ message: error.message }, { status: error.status })
+    }
+    const message = error instanceof Error ? error.message : '删除文章失败'
     return NextResponse.json({ message }, { status: 400 })
   }
 }

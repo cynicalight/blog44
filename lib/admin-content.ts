@@ -1,11 +1,19 @@
 import matter from 'gray-matter'
 import { z } from 'zod'
-import { buildBlogSourcePath, getSlugFromSourcePath, normalizeTags } from '~/lib/admin-post-utils'
+import {
+  buildSourcePath,
+  getContentTypeFromSourcePath,
+  getSlugFromSourcePath,
+  isManagedContentPath,
+  normalizeTags,
+} from '~/lib/admin-post-utils'
 import type { AdminPostDetail, AdminPostInput, AdminPostSummary } from '~/types/admin'
 
 const BLOG_ROOT = 'data/blog'
+const GALLERY_ROOT = 'data/gallery'
 
 const postInputSchema = z.object({
+  contentType: z.enum(['blog', 'gallery']),
   slug: z.string().min(1),
   title: z.string().min(1),
   date: z.string().min(10),
@@ -229,10 +237,12 @@ function parsePost(path: string, source: string): ParsedPost {
   const coverImage = Array.isArray(data.images)
     ? data.images.find((value) => typeof value === 'string') || ''
     : ''
+  const contentType = getContentTypeFromSourcePath(path)
 
   return {
     detail: {
       path,
+      contentType,
       slug: getSlugFromSourcePath(path),
       title: typeof data.title === 'string' ? data.title : '',
       date: normalizeDate(data.date),
@@ -289,7 +299,11 @@ export function parseAdminPostInput(input: unknown) {
 }
 
 export async function listAdminPosts(): Promise<AdminPostSummary[]> {
-  const paths = await walkDirectory(BLOG_ROOT)
+  const [blogPaths, galleryPaths] = await Promise.all([
+    walkDirectory(BLOG_ROOT),
+    walkDirectory(GALLERY_ROOT),
+  ])
+  const paths = [...blogPaths, ...galleryPaths]
   const posts = await Promise.all(
     paths.map(async (path) => {
       const file = await getFile(path)
@@ -317,7 +331,7 @@ export async function getAdminPost(path: string): Promise<AdminPostDetail> {
 
 export async function createAdminPost(input: AdminPostInput): Promise<AdminPostDetail> {
   const normalized = parseAdminPostInput(input)
-  const nextPath = buildBlogSourcePath(normalized.date, normalized.slug)
+  const nextPath = buildSourcePath(normalized.contentType, normalized.date, normalized.slug)
   const existing = await getFile(nextPath)
   if (existing) {
     throw new GitHubContentError(`Post already exists at ${nextPath}`, 409)
@@ -356,7 +370,7 @@ export async function updateAdminPost(
   }
 
   const currentParsed = parsePost(currentPath, currentFile.content)
-  const nextPath = buildBlogSourcePath(normalized.date, normalized.slug)
+  const nextPath = buildSourcePath(normalized.contentType, normalized.date, normalized.slug)
   if (nextPath !== currentPath) {
     const conflicting = await getFile(nextPath)
     if (conflicting) {
@@ -397,6 +411,34 @@ export async function updateAdminPost(
   return parsePost(nextPath, source).detail
 }
 
+export async function deleteAdminPost(currentPath: string) {
+  const currentFile = await getFile(currentPath)
+  if (!currentFile) {
+    throw new GitHubContentError(`Post not found: ${currentPath}`, 404)
+  }
+
+  const parentCommitSha = await getBranchHead()
+  const commit = await getCommit(parentCommitSha)
+  const treeSha = await createTree(commit.tree.sha, [
+    {
+      path: currentPath,
+      mode: '100644',
+      type: 'blob',
+      sha: null,
+    },
+  ])
+  const commitSha = await createCommit(
+    `content: delete post ${getSlugFromSourcePath(currentPath)}`,
+    treeSha,
+    parentCommitSha
+  )
+  await updateBranch(commitSha)
+}
+
 export function isGitHubContentError(error: unknown): error is GitHubContentError {
   return error instanceof GitHubContentError
+}
+
+export function isAdminContentPath(path: string) {
+  return isManagedContentPath(path)
 }

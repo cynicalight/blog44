@@ -1,9 +1,12 @@
+export type AdminContentType = 'blog' | 'gallery'
+
 export type AdminSessionUser = {
   email: string
 }
 
 export type AdminPostSummary = {
   path: string
+  contentType: AdminContentType
   slug: string
   title: string
   date: string
@@ -19,6 +22,7 @@ export type AdminPostDetail = AdminPostSummary & {
 }
 
 export type AdminPostInput = {
+  contentType: AdminContentType
   slug: string
   title: string
   date: string

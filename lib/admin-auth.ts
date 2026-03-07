@@ -37,7 +37,13 @@ function signPayload(encodedPayload: string) {
 }
 
 function parsePasswordHash(value: string) {
-  const [algorithm, iterations, salt, hash] = value.split('$')
+  const normalized = value
+    .trim()
+    .replace(/^"(.+)"$/, '$1')
+    .replace(/^'(.+)'$/, '$1')
+    .replace(/\\\$/g, '$')
+
+  const [algorithm, iterations, salt, hash] = normalized.split('$')
   if (algorithm !== PBKDF2_PREFIX || !iterations || !salt || !hash) {
     throw new Error('ADMIN_PASSWORD_HASH must use pbkdf2_sha256$iterations$salt$hash format')
   }

@@ -3,11 +3,11 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {
-  buildBlogSourcePath,
+  buildSourcePath,
   encodeAdminApiPath,
-  getPublicBlogPathFromSourcePath,
+  getPublicPathFromSourcePath,
 } from '~/lib/admin-post-utils'
-import type { AdminPostDetail, AdminPostInput } from '~/types/admin'
+import type { AdminContentType, AdminPostDetail, AdminPostInput } from '~/types/admin'
 
 type PostEditorProps = {
   mode: 'create' | 'edit'
@@ -15,6 +15,7 @@ type PostEditorProps = {
 }
 
 const EMPTY_FORM: AdminPostInput = {
+  contentType: 'blog',
   slug: '',
   title: '',
   date: new Date().toISOString().slice(0, 10),
@@ -26,12 +27,40 @@ const EMPTY_FORM: AdminPostInput = {
   body: '',
 }
 
+const TOGGLE_BASE =
+  'inline-flex items-center justify-center rounded-full border px-4 py-2 text-sm font-medium transition-all duration-200 ease-out active:scale-[0.98]'
+
+function ToggleButton({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean
+  onClick: () => void
+  children: React.ReactNode
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={
+        active
+          ? `${TOGGLE_BASE} border-indigo-300 bg-indigo-600 text-white shadow-[0_10px_30px_rgba(79,70,229,0.24)] hover:bg-indigo-500`
+          : `${TOGGLE_BASE} border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:hover:border-gray-600 dark:hover:bg-gray-800`
+      }
+    >
+      {children}
+    </button>
+  )
+}
+
 export function PostEditor({ mode, sourcePath }: PostEditorProps) {
   const router = useRouter()
   const [form, setForm] = useState<AdminPostInput>(EMPTY_FORM)
   const [tagInput, setTagInput] = useState('')
   const [isLoading, setIsLoading] = useState(mode === 'edit')
   const [isSaving, setIsSaving] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
 
@@ -65,6 +94,7 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
           return
         }
         setForm({
+          contentType: post.contentType,
           slug: post.slug,
           title: post.title,
           date: post.date,
@@ -95,17 +125,17 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
 
   const previewPath = useMemo(() => {
     try {
-      return buildBlogSourcePath(form.date, form.slug)
+      return buildSourcePath(form.contentType, form.date, form.slug)
     } catch {
       return ''
     }
-  }, [form.date, form.slug])
+  }, [form.contentType, form.date, form.slug])
 
   const previewPublicPath = useMemo(() => {
     if (!previewPath) {
       return ''
     }
-    return getPublicBlogPathFromSourcePath(previewPath)
+    return getPublicPathFromSourcePath(previewPath)
   }, [previewPath])
 
   function updateField<K extends keyof AdminPostInput>(key: K, value: AdminPostInput[K]) {
@@ -156,6 +186,37 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
       setError(err instanceof Error ? err.message : '保存文章失败')
     } finally {
       setIsSaving(false)
+    }
+  }
+
+  async function handleDelete() {
+    if (!sourcePath) {
+      return
+    }
+
+    const confirmed = window.confirm('确定要删除这篇内容吗？')
+    if (!confirmed) {
+      return
+    }
+
+    setError('')
+    setSuccess('')
+    setIsDeleting(true)
+
+    try {
+      const response = await fetch(`/api/admin/posts/${encodeAdminApiPath(sourcePath)}`, {
+        method: 'DELETE',
+      })
+      const data = await response.json()
+      if (!response.ok) {
+        throw new Error(data.message || '删除文章失败')
+      }
+      router.push('/admin/posts')
+      router.refresh()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '删除文章失败')
+    } finally {
+      setIsDeleting(false)
     }
   }
 
@@ -218,15 +279,35 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
             />
           </label>
 
-          <label className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm dark:border-gray-700 dark:bg-gray-900">
-            <input
-              type="checkbox"
-              checked={form.draft}
-              onChange={(event) => updateField('draft', event.target.checked)}
-              className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-            />
-            <span className="font-medium text-gray-700 dark:text-gray-200">保存为草稿</span>
-          </label>
+          <div className="space-y-2">
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-200">状态</span>
+            <div className="flex flex-wrap gap-2">
+              <ToggleButton active={!form.draft} onClick={() => updateField('draft', false)}>
+                已发布
+              </ToggleButton>
+              <ToggleButton active={form.draft} onClick={() => updateField('draft', true)}>
+                草稿
+              </ToggleButton>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-200">类型</span>
+            <div className="flex flex-wrap gap-2">
+              <ToggleButton
+                active={form.contentType === 'blog'}
+                onClick={() => updateField('contentType', 'blog' as AdminContentType)}
+              >
+                Blog
+              </ToggleButton>
+              <ToggleButton
+                active={form.contentType === 'gallery'}
+                onClick={() => updateField('contentType', 'gallery' as AdminContentType)}
+              >
+                Gallery
+              </ToggleButton>
+            </div>
+          </div>
 
           <label className="space-y-2 lg:col-span-2">
             <span className="text-sm font-medium text-gray-700 dark:text-gray-200">摘要</span>
@@ -276,6 +357,7 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
         <div className="rounded-lg border border-gray-200 bg-white p-4 text-sm dark:border-gray-700 dark:bg-gray-900">
           <div className="font-medium text-gray-700 dark:text-gray-200">发布预览</div>
           <div className="mt-2 space-y-1 text-gray-600 dark:text-gray-300">
+            <div>内容类型：{form.contentType === 'gallery' ? 'Gallery' : 'Blog'}</div>
             <div>仓库路径：{previewPath || '请先填写合法日期和 slug'}</div>
             <div>公开链接：{previewPublicPath || '请先填写合法日期和 slug'}</div>
           </div>
@@ -306,6 +388,16 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
           >
             返回文章列表
           </button>
+          {mode === 'edit' && sourcePath ? (
+            <button
+              type="button"
+              onClick={handleDelete}
+              disabled={isDeleting}
+              className="rounded-lg border border-red-300 px-4 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-red-900/60 dark:text-red-300 dark:hover:bg-red-950/40"
+            >
+              {isDeleting ? '删除中...' : '删除文章'}
+            </button>
+          ) : null}
         </div>
       </form>
     </div>
