@@ -1,0 +1,179 @@
+---
+title: Swift Concurrency
+date: '2026-03-08'
+tags:
+  - swfit
+draft: false
+summary: Swiftful Thinking 的 swfit 并发课程笔记
+images:
+  - >-
+    https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260216180334390.png?imageMogr2/quality/80&imageSlim
+authors:
+  - default
+---
+
+
+- from Swiftful Thinking
+
+## do catch try throws
+
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260211180258257.png?imageMogr2/quality/80&imageSlim)
+
+Once you fail one of these `try` statements, you immediately go into the `catch` block.
+
+If you don't really care about the error, it's unnecessary to use a long `do catch` block. Instead, you can just make `try` a Optional:
+```swift
+let newTitle = try? manager.getTitle3()
+if let newTitle = newTitle {
+	self.text = newTitle
+}
+```
+
+
+And there are two ways to handle a throwing call:
+1. `do-catch`: Handle the error right here, locally
+2. `try` inside a `throws` function: Let the error "bubble up" to whoever called this function
+
+## Callback closure
+
+A callback closure is **a closure you pass into a function** so the function can call the closure later.
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260212143313852.png?imageMogr2/quality/80&imageSlim)
+
+Callback closure are common for **asynchronous** code, where the result isn't available immediately.
+
+### escaping
+
+Now we are clear about the concept of callback closure. In the real async code, there is one more thing --- `escaping`.
+
+As shown below, we pass the callback closure `completionHandler` to a function `downloadData3`. And the function decides to execute the closure by `asyncAfter`, which means the closure will be executed 2s later.
+- by the way, we usually refer the callback closure as handler
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260212152906687.png?imageMogr2/quality/80&imageSlim)
+
+The function will return immediately, but the closure would be executed **after** the function finished.
+
+In this case, `escaping` is required, indicating that the closure 'escapes' the life cycle of the function.
+
+For the asynchronous code, to prevent the memory leakage, we usually use `weak self`.
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260212152533541.png?imageMogr2/quality/80&imageSlim)
+
+Here is an example of `escaping` and `async` about the same asynchronous function:
+- `escaping` with callback closure is complex 🤮
+- **without the complex callback things**, the `async` code appears more **sequential** and easier to understand
+	- especially, we are clear about what to await
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260213015735272.png?imageMogr2/quality/80&imageSlim)
+
+## async await
+
+- `async` is responsible for **marking**
+	- e.g. mark a function as asynchronous
+	- Also, you can mark a variable as asynchronous, which we will introduce later.
+- `await` is responsible for **executing**
+	- e.g. add `await` before calling an asynchronous function
+
+```swift
+// 1. mark
+func fetchUsername() async -> String {
+    // simulate waiting
+    return "xxx"
+}
+
+// 2. execute
+Task {
+    let name = await fetchUsername() 
+    print(name)
+}
+```
+
+### sequential
+
+`await` refers to a asynchrony **at thread level**, while the current `await` code is '**paused**', which means a kind of **local synchrony**.
+
+As shown below, the code in task will be executed **sequentially**. The next `await` will wait for the previous `await`.
+- we will introduce how to implement parallelism rather than sequentail execution later
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260214153634972.png?imageMogr2/quality/80&imageSlim)
+
+#### Parallelism
+
+In Swift's concurrency model, this pattern is often referred to as "Fork-Join": `async let` is responsible for distributing tasks for **parallel execution** (forking), while the final `await` is responsible for gathering all the results back (joining).
+
+```swift
+func loadDataParallel() async throws {
+    // async let don't wait for result, unlike await
+    async let userTask = fetchUser()
+    async let settingsTask = fetchSettings()
+    
+    // now, two requests(function) is running in parallel
+    
+    // total duration is the longest duration
+    let (user, settings) = try await (userTask, settingsTask)
+    
+    print("Done in parallel: \(user.name), \(settings.theme)")
+}
+```
+
+`async let` is the parallel version of `try await`.
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260217155954591.png?imageMogr2/quality/80&imageSlim)
+
+
+## Task
+
+The basic usage of `Task` is **cooperative concurrency** 协作式并发.
+
+Cooperative concurrency is a concurrency model where tasks shared the same context (often a single thread).
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260215233419701.png?imageMogr2/quality/80&imageSlim)
+- note that two tasks can be in the same thread !
+
+### Sleep Yield
+
+Task can sleep or yield in order to change their original priority.
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260216020648500.png?imageMogr2/quality/80&imageSlim)
+
+### child task
+
+Child tasks will inherit basicly all the metadata from the parent tasks, including **priority**.
+- there is a method called `detached` to detach the child from the parent, however apple doesn't recommand to use it
+
+### task modifier
+
+`.task` is the task modifier, a new way to run a task when the view appears.
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260216180334390.png?imageMogr2/quality/80&imageSlim)
+Note that, `.task` will also **automatically cancel** the task if the view disappears!
+
+Fundamentally, `.task` subsumes 包含 the lifecycle responsibilities traditionally handled by `onAppear` and `onDisappear`. That's awesome!
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260216180647970.png?imageMogr2/quality/80&imageSlim)
+
+#### extra check
+
+In some cases, if you have a really **long** work in a task, the automatically cancellation will not be executed immediately to wait for the 'long long work'.
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260217022320682.png?imageMogr2/quality/80&imageSlim)
+
+So, if you are in such situations, you should add a `checkCancellation()` in your 'long long work'.
+
+
+## Sendable
+
+Computed property is essentially a **function**, so when you add `Sendable` to a struct, the computed property in the struct is still **not able to be access in another actor**. 
+
+Sendable just means can be sent, not ensure the code can be **run** (or the function can be called).
+
+In this case, we can add `nonisolated` to the computed property.
+```swift
+nonisolated var xxx: Xxx {}
+```
+
+You can see the setting about Default Actor Isolation:
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260205193230462.png?imageMogr2/quality/80&imageSlim)
+
+
+
+## Actor
+
+Actor is essentially a modern evolution of the Monitor 管程. The core concept is Mutual Exclusion 互斥 for access (both for reads and writes).
+
+在 swift6 之后，没有显式声明 actor 的代码默认跑在 mainactor 上，显式声明 actor 的代码跑在自己的线程上。
+
+### log: the isolation conflict
+
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260205005251314.png?imageMogr2/quality/80&imageSlim)
+
+The client in a Actor want to execute the code in MainActor, which caused a isolation conflict.
