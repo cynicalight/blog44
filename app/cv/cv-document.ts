@@ -519,6 +519,13 @@ export const CV_HTML = String.raw`<!doctype html>
                   ，体现出从理论学习到研究实践的主动性与执行力。
                 </p>
               </article>
+              <article class="entry">
+                <div class="entry-head">
+                  <h3>渗透测试 agent 项目</h3>
+                  <div class="period">清华大学网络科学与网络空间研究院</div>
+                </div>
+                <p>网研院实习期间参与了某安全公司横向（渗透测试 agent 开发），主要负责了 browser mcp 的调研与开发</p>
+              </article>
             </div>
           </section>
         </div>
