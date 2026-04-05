@@ -5,14 +5,14 @@ export const AUTHOR_INFO = {
   email: '391900788dOtqqDotcom',
   identity: 'Learner | Builder',
   address: {
-    city: 'Wuhan, China',
+    city: 'Shanghai, China',
     flag: 'flag-china',
     timeZone: 8,
   },
   work: {
     company: 'Wuhan University',
     occupation: 'student',
-    location: 'Wuhan, China',
+    location: 'Shanghai, China',
     website: '/',
   },
   social: {
