@@ -1,0 +1,45 @@
+---
+title: VSCode 調試 Java 項目
+date: 2025-01-23T00:00:00.000Z
+tags:
+  - java
+draft: false
+images:
+  - /static/images/blog/2025/c6a019/Pasted%20image%2020250123165824.png
+authors:
+  - default
+---
+
+### 安裝插件
+
+VSCode 搜 Java，直接無腦把第一頁的 Java 插件全裝上，省事。
+
+![](/static/images/blog/2025/c6a019/Pasted%20image%2020250123164530.png)
+
+### 配置 launch.json
+
+來到運行和調試界面：
+
+![](/static/images/blog/2025/c6a019/Pasted%20image%2020250123164756.png)
+
+建議創建 `launch.json` 文件，並配置。
+
+默認配置如下：
+
+![](/static/images/blog/2025/c6a019/Pasted%20image%2020250123165119.png)
+
+其中 config 中每個對象分別對應左側`运行和调试`欄頂部的一個選項：
+
+![](/static/images/blog/2025/c6a019/Pasted%20image%2020250123165244.png)
+
+接下來我們添加一個config項 `Launch with Arguments Prompt`：
+
+- 這個選項可以在調試的時候輸入參數，非常必要
+
+![](/static/images/blog/2025/c6a019/Pasted%20image%2020250123165350.png)
+
+直接在空白處輸入 java 就會彈出選項，VSCode 會自動補全你想要的配置：
+
+![](/static/images/blog/2025/c6a019/Pasted%20image%2020250123165824.png)
+
+之後就可以正常下斷點，愉快的開始調試了。

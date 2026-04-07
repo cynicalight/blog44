@@ -86,6 +86,9 @@ importers:
       next-themes:
         specifier: ^0.3.0
         version: 0.3.0(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+      opencc-js:
+        specifier: ^1.0.5
+        version: 1.0.5
       pliny:
         specifier: 0.4.1
         version: 0.4.1(@algolia/client-search@5.46.0)(@types/react@19.2.7)(esbuild@0.23.1)(next@16.0.7(@babel/core@7.28.4(supports-color@10.2.2))(@opentelemetry/api@1.9.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(search-insights@2.17.3)(supports-color@10.2.2)
@@ -3930,6 +3933,9 @@ packages:
   oo-ascii-tree@1.120.0:
     resolution: {integrity: sha512-8aZZbPwoizq9fGRcn7MkCmYdZ2G4RSA/k2s8OlF4ijbbGFzxhG2jt4xVw4uRPpt9aLOgU051h/t0LePFBVppsQ==}
     engines: {node: '>= 14.17.0'}
+
+  opencc-js@1.0.5:
+    resolution: {integrity: sha512-LD+1SoNnZdlRwtYTjnQdFrSVCAaYpuDqL5CkmOaHOkKoKh7mFxUicLTRVNLU5C+Jmi1vXQ3QL4jWdgSaa4sKjg==}
 
   opener@1.5.2:
     resolution: {integrity: sha512-ur5UIdyw5Y7yEj9wLzhqXiy6GZ3Mwx0yGI+5sMn2r0N0v3cKJvUmFH5yPP+WXh9e0xfyzyJX95D8l088DNFj7A==}
@@ -9384,6 +9390,8 @@ snapshots:
   oo-ascii-tree@1.114.1: {}
 
   oo-ascii-tree@1.120.0: {}
+
+  opencc-js@1.0.5: {}
 
   opener@1.5.2: {}
 

@@ -1,0 +1,114 @@
+---
+title: CSRF 跨站請求偽造漏洞
+date: 2024-08-04T00:00:00.000Z
+tags:
+  - sec
+draft: false
+images:
+  - /static/images/blog/2024/e4b0b8/Pasted%20image%2020240824215518.png
+authors:
+  - default
+---
+
+> 用別人的瀏覽器冒充別人的身份
+
+# 漏洞原理
+
+- CSRF (Cross-Site Request Forgery) 跨站請求偽造漏洞
+
+網站存在缺陷，可以允許攻擊者構造惡意請求，並且誘導正常用戶提交該請求以產生危害。
+
+- 例如：惡意網站構造一個惡意鏈接（網頁），鏈接的效果是（**使用用戶的瀏覽器**）訪問攻擊者的網站（通過 hidden 的 input元素 提交惡意請求）。
+- 關鍵在於該惡意請求來自用戶的瀏覽器，比如http請求頭會帶有用戶的cookie，導致攻擊者可以冒充了正常用戶的身份。
+
+---
+
+## 漏洞防護
+
+### 添加隨機Token
+
+在請求的表單中引入一個隨機字符串，和用戶的session綁定，並且在提交表單時需要附上這個獨特的token進行驗證。
+由於攻擊者無法獲取事先獲取這個token值，故無法發送正確的惡意請求。
+
+- token需要用戶瀏覽器訪問這個頁面才能獲得
+
+```html
+<form action="/update-sex" method="POST">
+  <input type="text" name="newsex" placeholder="输入新性别" />
+  <input type="hidden" name="csrf-token" value="oaifajsdfjasdlkfjs" 1 />
+  <button type="submit">提交</button>
+</form>
+```
+
+- 一般csrf poc中都會用到 input元素的type屬性的 **hidden類型**，使 input 這個控件不可見
+- csrf的本質是構造惡意**請求**，所以可以引入機制讓攻擊者無法**預先**構造出請求，無法“一次性”提交請求。
+
+---
+
+## JSONHijacking 漏洞
+
+- 一類特殊的CSRF漏洞
+- 正常功能在不安全的場景下調用，也是漏洞。
+
+JSONP接口洩露的信息，可被攻擊者在可控網站通過構造AJAX請求的方式，操縱用戶瀏覽器跨域讀取並接受。
+
+### 同源策略
+
+目前所有瀏覽器都實行這個策略，它規定了從一個源加載的資源如何與另一個源進行交互。
+
+> 同源的定義
+>
+> 如果A頁面和B頁面有相同協議、相同域名、相同端口，則認為兩個頁面同源。
+
+- **協議相同**的情況下，兩個同域名的頁面都沒有指出特定端口，則可以認為它們使用的是相同的**默認端口**（HTTP為80，HTTPS為443）。
+
+```c
+www.mysite.com
+mysite.com
+# 顶级域名相同，子域名不相同，不同源
+```
+
+基於同源策略的限制，A網站可以向B網站發送數據但是一般不能返回數據；然而，跨域加載圖片/js形式數據時，是可以跨域讀取的。
+
+- **凡是有 `src` 屬性的標籤都可以不受同源策略限制！**
+
+而JSONP接口正是設計成JSON格式來加載js腳本的，_JSON是js默認支持的格式_，攻擊者可以通過JSONP接口跨域加載自己惡意的js腳本。
+
+於是，攻擊者可以在自己的網站上部署惡意js腳本，用CSRF的原理，用被害者的瀏覽器冒充身份訪問JSONP接口，獲取信息。
+
+- 在我看來，JSONHijacking是通過同源策略，實現了跨站兩次的CSRF攻擊
+
+### JSONHijacking檢測
+
+觀察 Referer 是否了合理校驗，是否有額外的 HTTP請求頭字段。
+
+---
+
+## CORS 漏洞
+
+- CORS (Cross-Origin Resource Sharing) 跨域資源共享
+- 和JSONHijacking類似，區別是JSONP是瀏覽器默認支持的跨域方式，CORS是W3C提供的一個跨域標準
+
+CORS是一種允許跨域訪問資源的機制，需要瀏覽器和服務器同時開啟。
+
+- 主流瀏覽器都支持CORS機制
+
+對於簡單請求，瀏覽器可以直接發送CORS跨域請求，需要在header中增加一個origin字段，表明這是一個跨域請求。
+
+若同源，則瀏覽器可以直接讀取信息；若不同源，則需要服務器端配置 `Access-Control-Allow-Origin` **HTTP響應頭**。
+
+- 配置為 `*` 表示接受任何域名的請求
+
+---
+
+# 實戰
+
+## burp -- CSRF PoC
+
+Engagement tools - generate CSRF PoC
+![](/static/images/blog/2024/e4b0b8/Pasted%20image%2020240824215319.png)
+
+會生成如下的釣魚網站的html：
+![](/static/images/blog/2024/e4b0b8/Pasted%20image%2020240824215518.png)
+
+- 用受害者的瀏覽器打開就可以冒充受害者的身份造成危害

@@ -9,9 +9,7 @@ const isProduction = process.env.NODE_ENV === 'production'
 export async function GET(req: Request, props: { params: Promise<Params> }) {
   try {
     const params = await props.params
-    const slug = (
-      typeof params.slug === 'string' ? params.slug.toString() : params.slug?.pop()?.toString()
-    ) as string
+    const slug = Array.isArray(params.slug) ? params.slug.join('/') : params.slug.toString()
 
     const views = await __db.views.findUnique({ where: { slug } })
 
@@ -27,9 +25,7 @@ export async function GET(req: Request, props: { params: Promise<Params> }) {
 export async function POST(req: Request, props: { params: Promise<Params> }) {
   try {
     const params = await props.params
-    const slug = (
-      typeof params.slug === 'string' ? params.slug.toString() : params.slug?.pop()?.toString()
-    ) as string
+    const slug = Array.isArray(params.slug) ? params.slug.join('/') : params.slug.toString()
 
     // Avoid dirty data in the development environment
     if (!isProduction) {

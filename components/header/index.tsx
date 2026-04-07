@@ -12,6 +12,7 @@ import { SITE_METADATA } from '~/data/site-metadata'
 import { MobileNav } from './mobile-nav'
 import { MoreLinks } from './more-links'
 import { SearchButton } from './search'
+import { ScriptSwitcher } from './script-switcher'
 import { ThemeSwitcher } from './theme-switcher'
 import { AUTHOR_INFO } from '~/data/author-info'
 
@@ -101,6 +102,7 @@ export function Header({ className }: { className?: string }) {
             className="hidden h-5 w-px shrink-0 bg-gray-300/60 dark:bg-gray-600/60 md:block"
           />
           <div className="flex items-center gap-1">
+            <ScriptSwitcher />
             <ThemeSwitcher />
             <SearchButton />
             <MobileNav />

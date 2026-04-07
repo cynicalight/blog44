@@ -21,8 +21,8 @@ interface LayoutProps {
 }
 
 export function PostBanner({ content, children }: LayoutProps) {
-  const { slug, type, title, images, date, lastmod, readingTime, tags, filePath, toc } = content
-  const postUrl = `${SITE_METADATA.siteUrl}/${type.toLowerCase()}/${slug}`
+  const { slug, path, title, images, date, lastmod, readingTime, tags, filePath, toc } = content
+  const postUrl = `${SITE_METADATA.siteUrl}/${path}`
 
   return (
     <Container className="pt-4 lg:pt-12">

@@ -1,0 +1,103 @@
+---
+title: PPO 近端策略優化算法
+summary: PPO論文筆記
+date: '2025-04-13'
+tags:
+  - llm
+  - rl
+  - paper
+  - ml
+draft: false
+images:
+  - /static/images/blog/2025/ppo/Pasted%20image%2020250413154243.png
+authors:
+  - default
+---
+
+- paper: [1707.06347](https://arxiv.org/pdf/1707.06347)
+- Proximal Policy Optimization Algorithms 近端策略優化算法
+
+“近端 proximal” 主要體現在對策略更新幅度的限制，保證新策略和舊策略之間較為 “接近”，這是算法的核心特性。
+
+## 簡介
+
+近端策略優化（PPO）算法旨在結合信任區域策略優化（TRPO）的數據效率和可靠性能，同時使用更簡單的一階優化方法。
+
+其核心在於提出了一個帶有裁剪概率比（clipped probability ratios）的目標函數，以此對策略性能進行悲觀估計（pessimistic estimate i.e. lower bound）。
+
+## 傳統策略優化
+
+論文中提到了以下兩種傳統策略優化作為 background：
+
+1. 在標準策略梯度方法中，目標是最大化策略梯度估計器對應的目標函數
+   $$
+   L^{PG}(\theta)=\hat{\mathbb{E}}_{t}\left[\log \pi_{\theta}\left(a_{t} | s_{t}\right) \hat{A}_{t}\right]
+   $$
+
+- $\pi_{\theta}$是隨機策略，$\hat{A}_{t}$是優勢函數在時刻$t$的估計值。
+
+2. 在信任區域策略優化（TRPO）中，TRPO 會最大化一個替代目標函數$L^{CPI}(\theta)$ ，
+   $$
+   L^{CPI}(\theta)=\hat{\mathbb{E}}_{t}[r_t(\theta)\hat{A}_t]
+   $$
+
+- $r_t(\theta)=\frac{\pi_{\theta}(a_t | s_t)}{\pi_{\theta_{old}}(a_t | s_t)}$表示概率比率
+- $\hat{A}_t$是優勢函數估計值
+
+然而，如果沒有約束條件，對$L^{CPI}$進行最大化會導致策略**更新幅度過大**，影響學習的穩定性。
+
+## 原理
+
+### Clipped Surrogate Objective
+
+Clipped Surrogate Objective（裁剪替代目標函數）是 PPO 算法中的關鍵概念，旨在改進傳統策略優化中可能出現的**策略更新幅度過大的問題**，使策略學習更加穩定和有效。
+
+PPO提出的裁剪替代目標函數為
+
+$$
+L^{CLIP}(\theta)=\hat{\mathbb{E}}_{t}[\min(r_t(\theta)\hat{A}_t,\text{clip}(r_t(\theta),1 - \epsilon,1 + \epsilon)\hat{A}_t)]
+$$
+
+- $\epsilon$是超參數，常取$0.2$
+
+重點在於裁剪函數 $\text{clip}(r_t(\theta),1 - \epsilon,1 + \epsilon)$，它將概率比率 $r_t(\theta)$ 限制在 $[1 - \epsilon,1 + \epsilon]$ 區間內 - 如果 $r_t(\theta)$ 超出區間端點，則裁剪為duan端點；**在區間內則保持不變**
+
+$L^{CLIP}(\theta)$ 的 min 函數中：
+
+- 參數一是 **TRPO** 中的目標函數 $L^{CPI}$
+- 參數二是代入裁剪過的概率比率的目標函數
+
+取兩者最小值，使得 $L^{CLIP}(\theta)$ 成為未裁剪目標函數 $L^{CPI}$ 的下限，即文中提到的 pessimistic 的界限。
+
+![](/static/images/blog/2025/ppo/Pasted%20image%2020250413152733.png)
+
+### Adaptive KL Penalty Coefficient
+
+除了裁剪概率比率，PPO 還提出了另一種方法，自適應 KL 散度懲罰係數，其目標函數為：
+
+$$L^{PENALTY}(\theta)=\hat{\mathbb{E}}_{t}\left[r_{t}(\theta) \hat{A}_{t}-\beta KL\left[\pi_{\theta_{old}}\left(\cdot | s_{t}\right), \pi_{\theta}\left(\cdot | s_{t}\right)\right]\right]$$
+
+- $\beta$ 是一個係數，需要動態調整
+- $KL\left[\pi_{\theta_{old}}\left(\cdot | s_{t}\right), \pi_{\theta}\left(\cdot | s_{t}\right)\right]$ 是新舊策略在狀態$s_t$下的KL散度
+
+通過在目標函數中加入KL散度懲罰項，限制策略更新的幅度。
+
+## 實現
+
+PPO算法的具體實現步驟如下：
+
+1. **數據採樣**：使用當前策略$\pi_{\theta}$與環境進行交互，收集一批軌跡數據$\{(s_t, a_t, r_t)\}$，其中$s_t$是狀態，$a_t$是動作，$r_t$是獎勵。
+2. **優勢估計**：計算每個時間步的優勢函數估計值$\hat{A}_{t}$。常見的方法有廣義優勢估計（Generalized Advantage Estimation，GAE）等。
+3. **目標函數優化**：根據選定的目標函數（如$L^{CLIP}$或$L^{PENALTY}$），使用隨機梯度上升算法對策略參數$\theta$進行多輪次（多個epoch）的小batch更新。例如，對於PPO中的CLIP方法，通過最大化$L^{CLIP}(\theta)$來更新$\theta$。
+4. **參數更新**：在完成對採樣數據的多輪優化後，更新策略參數$\theta$，並重覆上述步驟進行下一輪的採樣和優化。
+
+## 優勢
+
+PPO算法具有以下顯著優勢：
+
+1. **實現簡單**：相較於TRPO，PPO無需複雜的二階優化方法（如共軛梯度算法），僅使用一階優化（如隨機梯度上升），降低了實現難度和計算複雜度。
+2. **數據效率高**：通過 clipped 或 KL散度懲罰項 的方法，PPO能夠在有限的樣本數據上進行有效的策略更新，避免了策略更新幅度過大導致的性能波動，提高了數據的利用效率。
+3. **通用性強**：PPO適用於各種不同的強化學習任務，包括連續控制任務和離散動作空間任務（如Atari遊戲）。在實驗中，它在多個基準任務上表現出色，能夠在不同的環境中取得較好的性能。
+4. **樣本複雜度低**：與其他在線策略梯度方法相比，PPO在較少的樣本數量下就能達到較好的性能，減少了與環境交互的次數，從而節省了訓練時間和資源。
+
+![](/static/images/blog/2025/ppo/Pasted%20image%2020250413154243.png)

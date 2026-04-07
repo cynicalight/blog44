@@ -106,7 +106,8 @@ export default function AdminPostsPage() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">文章管理</h1>
           <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            当前内容源包含 `data/blog/**/*.mdx` 和 `data/gallery/**/*.mdx`。
+            Blog 支持简体主文件加繁體配对文件，当前内容源包含 `data/blog/**/*.mdx` 和
+            `data/gallery/**/*.mdx`。
           </p>
         </div>
         <Link
@@ -175,6 +176,11 @@ export default function AdminPostsPage() {
                     <span className="inline-flex rounded-full bg-sky-100 px-2.5 py-1 text-xs font-medium text-sky-800 dark:bg-sky-900/30 dark:text-sky-200">
                       {post.contentType === 'gallery' ? 'Gallery' : 'Blog'}
                     </span>
+                    {post.contentType === 'blog' ? (
+                      <span className="inline-flex rounded-full bg-violet-100 px-2.5 py-1 text-xs font-medium text-violet-800 dark:bg-violet-900/30 dark:text-violet-200">
+                        {post.scriptVariant === 'zh-Hant' ? '繁體' : '简体'}
+                      </span>
+                    ) : null}
                   </div>
                 </td>
                 <td className="px-4 py-4 align-top text-gray-700 dark:text-gray-300">

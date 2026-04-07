@@ -1,15 +1,24 @@
-import { genPageMetadata } from 'app/seo'
 import { allBlogs } from 'contentlayer/generated'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 import { filterBlogsByScriptVariant } from '~/lib/blog-script'
 import { ListLayout } from '~/layouts/list-layout'
 import { POSTS_PER_PAGE } from '~/utils/const'
 
-export const metadata = genPageMetadata({ title: 'Blog' })
+export const generateStaticParams = async () => {
+  const totalPages = Math.ceil(
+    filterBlogsByScriptVariant(allBlogs, 'zh-Hant').length / POSTS_PER_PAGE
+  )
+  const paths = Array.from({ length: totalPages }, (_, i) => ({ page: (i + 1).toString() }))
 
-export default function BlogPage() {
-  const posts = allCoreContent(sortPosts(filterBlogsByScriptVariant(allBlogs, 'zh-Hans')))
-  const pageNumber = 1
+  return paths
+}
+
+export default async function TraditionalBlogPaginationPage(props: {
+  params: Promise<{ page: string }>
+}) {
+  const params = await props.params
+  const posts = allCoreContent(sortPosts(filterBlogsByScriptVariant(allBlogs, 'zh-Hant')))
+  const pageNumber = parseInt(params.page as string)
   const initialDisplayPosts = posts.slice(
     POSTS_PER_PAGE * (pageNumber - 1),
     POSTS_PER_PAGE * pageNumber
@@ -24,7 +33,7 @@ export default function BlogPage() {
       posts={posts}
       initialDisplayPosts={initialDisplayPosts}
       pagination={pagination}
-      paginationBasePath="/blog"
+      paginationBasePath="/blog/zh-hant"
       title="All posts"
     />
   )

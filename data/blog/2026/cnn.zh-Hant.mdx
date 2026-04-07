@@ -1,0 +1,51 @@
+---
+title: CNN 卷積神經網絡
+date: '2026-03-15'
+tags:
+  - ml
+draft: false
+summary: 什麼是卷積，什麼是 CNN
+images:
+  - >-
+    https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260320174455494.png?imageMogr2/quality/80&imageSlim
+authors:
+  - default
+---
+
+卷積神經網絡（convolutional neural network，CNN）是一種適合處理**圖片數據**的網絡。
+
+圖片有複雜的像素信息，輸入是二維圖像，不是一維向量。對於這種高維感知數據，缺少結構的網絡，如 MLP，可能會變得不實用，且直接上 MLP 全部展平參數量爆炸，必須用一些取巧的辦法，如 CNN。
+
+CNN 的設計有兩個核心出發點：
+
+1. **平移不變性**：不管目標在圖片哪個位置，模型都能識別它。
+2. **局部性**：只看它附近的像素，遠處的像素不相關。
+
+簡單總結一下，CNN 相比 MLP 的核心區別：CNN 的每個輸出神經元，**只連接局部輸入**，且所有位置**共享同一組權重**。
+
+## 卷積
+
+卷積 $f * g$ 本質上是描述兩個函數之間關係的操作：把一個函數**翻轉後滑動**，測量兩個函數在每個位置的重疊程度。
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260320163720869.png?imageMogr2/quality/80&imageSlim)
+
+翻轉後滑動（平移）：
+
+```js
+g(a)          原始函数
+g(-a)         翻转（左右镜像）
+g(i - a)      翻转后，再平移 i 个单位
+```
+
+## 公式
+
+看懂卷積，再看公式就好理解了，輸出 H 是兩個函數的卷積結果，兩個函數分別是：
+
+1. **卷積核** V，理解為權重，也叫**濾波器**
+2. 輸入 X，一般是多維矩陣，如 $长\times 宽 \times 3(RGB)$
+   ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260319230459960.png?imageMogr2/quality/80&imageSlim)
+
+注意，嚴格來說，深度學習裡用的是互相關（cross-correlation），不是真正的卷積：
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260320165009192.png?imageMogr2/quality/80&imageSlim)
+
+CNN 美圖一張：
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260320174455494.png?imageMogr2/quality/80&imageSlim)

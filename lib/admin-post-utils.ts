@@ -1,4 +1,12 @@
 import { slug as githubSlug } from 'github-slugger'
+import {
+  appendBlogScriptVariant,
+  DEFAULT_BLOG_SCRIPT_VARIANT,
+  getBlogBaseSlugFromSourcePath,
+  getBlogScriptVariantFromSourcePath,
+  getLocalizedBlogHref,
+  type BlogScriptVariant,
+} from '~/lib/blog-script'
 import type { AdminContentType } from '~/types/admin'
 
 const BLOG_ROOT = 'data/blog'
@@ -24,30 +32,50 @@ export function getPostYear(date: string) {
   return year
 }
 
-export function buildBlogSourcePath(date: string, slug: string) {
-  return buildContentSourcePath(BLOG_ROOT, date, slug)
+export function buildBlogSourcePath(
+  date: string,
+  slug: string,
+  scriptVariant: BlogScriptVariant = DEFAULT_BLOG_SCRIPT_VARIANT
+) {
+  return buildContentSourcePath(BLOG_ROOT, date, slug, scriptVariant)
 }
 
 export function buildGallerySourcePath(date: string, slug: string) {
   return buildContentSourcePath(GALLERY_ROOT, date, slug)
 }
 
-export function buildSourcePath(contentType: AdminContentType, date: string, slug: string) {
+export function buildSourcePath(
+  contentType: AdminContentType,
+  date: string,
+  slug: string,
+  scriptVariant: BlogScriptVariant = DEFAULT_BLOG_SCRIPT_VARIANT
+) {
   return contentType === 'gallery'
     ? buildGallerySourcePath(date, slug)
-    : buildBlogSourcePath(date, slug)
+    : buildBlogSourcePath(date, slug, scriptVariant)
 }
 
-function buildContentSourcePath(root: string, date: string, slug: string) {
+function buildContentSourcePath(
+  root: string,
+  date: string,
+  slug: string,
+  scriptVariant: BlogScriptVariant = DEFAULT_BLOG_SCRIPT_VARIANT
+) {
   const year = getPostYear(date)
   const sanitizedSlug = sanitizePostSlug(slug)
   if (!sanitizedSlug) {
     throw new Error('slug is required')
   }
-  return `${root}/${year}/${sanitizedSlug}.mdx`
+
+  const basePath = `${root}/${year}/${sanitizedSlug}`
+  return `${appendBlogScriptVariant(basePath, root === BLOG_ROOT ? scriptVariant : 'zh-Hans')}.mdx`
 }
 
 export function getSlugFromSourcePath(path: string) {
+  if (path.startsWith(`${BLOG_ROOT}/`)) {
+    return getBlogBaseSlugFromSourcePath(path).split('/').pop() || ''
+  }
+
   return (
     path
       .split('/')
@@ -57,7 +85,9 @@ export function getSlugFromSourcePath(path: string) {
 }
 
 export function getPublicBlogPathFromSourcePath(path: string) {
-  return `/blog/${path.replace(/^data\/blog\//, '').replace(/\.mdx$/i, '')}`
+  const baseSlug = getBlogBaseSlugFromSourcePath(path)
+  const scriptVariant = getBlogScriptVariantFromSourcePath(path)
+  return getLocalizedBlogHref(baseSlug, scriptVariant)
 }
 
 export function getPublicGalleryPathFromSourcePath(path: string) {

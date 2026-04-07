@@ -1,0 +1,71 @@
+---
+title: Python項目找不到自定義module
+summary: Python項目找不到自定義module
+date: 2025-04-08T00:00:00.000Z
+tags:
+  - python
+draft: false
+images:
+  - /static/images/blog/2024/python-module/Pasted%20image%2020250408014336.webp
+authors:
+  - default
+---
+
+## WHAT IS MODULE
+
+module 模塊：module 是 python 中代碼重用的基本單元，一個 module 可以通過 `import` 語句導入到另一個 module。
+
+module 分為：
+
+1. `pure python module`（純 python 模塊）
+2. `extension module`（擴展模塊）
+3. `package`（包）
+
+## 報錯
+
+報錯belike：
+
+```bash
+ModuleNotFoundError: No module named 'open_r1.rewards'
+```
+
+目錄如下：
+
+![](/static/images/blog/2024/python-module/Pasted%20image%2020250408014336.webp)
+
+## Meth 1. setup.py
+
+一般好的項目的根目錄會有這樣一個setup.py設置packagedir（和一些其他依賴等等）：
+
+```python
+from setuptools import find_packages, setup
+
+setup(
+    # 包名到目录的映射
+    # ""表示顶层包
+    # 映射到src文件夹
+    package_dir={"": "src"},
+
+    packages=find_packages("src"),
+)
+```
+
+- **全局性**：通過 `setup.py` 腳本安裝包之後，Python 會記住這個包的安裝位置，後續在任何目錄下/任何 Python 進程中都能找到這個包（都能import）。
+
+## Meth 2. sys.path
+
+```python
+import sys
+
+sys.path.append('/home/zhangjie/openr1-gpu04/src')
+```
+
+- **動態性**：僅在當前 Python 進程運行期間有效。一旦 Python 進程結束，這個路徑設置就會失效。
+
+## Jupyter
+
+在jupyter中運行代碼時，如果使用`sys.path.append`的方式添加路徑，儘量寫**絕對路徑**，因為即使你在項目根目錄運行某一子目錄下的`ipynb`文件，默認運行路徑不是項目根目錄而是`ipynb`文件所在的子目錄，這一點和普通py文件不一樣。
+
+## REF
+
+- [Python 包構建教程 - cposture - 博客園](https://www.cnblogs.com/cposture/p/9029023.html#_label0)

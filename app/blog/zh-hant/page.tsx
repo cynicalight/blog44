@@ -5,10 +5,10 @@ import { filterBlogsByScriptVariant } from '~/lib/blog-script'
 import { ListLayout } from '~/layouts/list-layout'
 import { POSTS_PER_PAGE } from '~/utils/const'
 
-export const metadata = genPageMetadata({ title: 'Blog' })
+export const metadata = genPageMetadata({ title: 'Blog (Traditional Chinese)' })
 
-export default function BlogPage() {
-  const posts = allCoreContent(sortPosts(filterBlogsByScriptVariant(allBlogs, 'zh-Hans')))
+export default function TraditionalBlogPage() {
+  const posts = allCoreContent(sortPosts(filterBlogsByScriptVariant(allBlogs, 'zh-Hant')))
   const pageNumber = 1
   const initialDisplayPosts = posts.slice(
     POSTS_PER_PAGE * (pageNumber - 1),
@@ -24,7 +24,7 @@ export default function BlogPage() {
       posts={posts}
       initialDisplayPosts={initialDisplayPosts}
       pagination={pagination}
-      paginationBasePath="/blog"
+      paginationBasePath="/blog/zh-hant"
       title="All posts"
     />
   )

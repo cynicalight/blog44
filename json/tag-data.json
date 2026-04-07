@@ -4,11 +4,12 @@
   "php": 2,
   "python": 1,
   "others": 10,
+  "ml": 3,
+  "swfit": 1,
   "cs": 3,
   "embedded": 1,
   "linux": 1,
   "llm": 3,
-  "ml": 1,
   "rl": 1,
   "paper": 1
 }

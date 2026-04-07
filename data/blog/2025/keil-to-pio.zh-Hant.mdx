@@ -1,0 +1,153 @@
+---
+title: 使用 VSCode 做嵌入式開發 on macOS
+summary: 使用VSCode的pio插件做stm32嵌入式開發 on macOS
+date: 2025-05-23T00:00:00.000Z
+tags:
+  - embedded
+draft: false
+images:
+  - /static/images/blog/2025/keil-to-pio/Pasted%20image%2020250523201837.webp
+authors:
+  - default
+---
+
+- stm32 on macOS
+- `board = genericSTM32F407IGT6`
+
+## keil項目移植到pio項目
+
+- 為什麼要移植？
+  1.  keil的IDE太落後，gb2312編碼。。。
+  2.  pio主要用的是vscode的pio插件，而vscode是世界上最好的編輯器=)
+
+### 新建pio項目
+
+1. 下載好pio插件，可能有一些關於python環境和core的報錯自行解決一下
+2. 新建項目，如下
+
+![](/static/images/blog/2025/keil-to-pio/Pasted%20image%2020250501023604.webp)
+
+### 移植keil項目文件
+
+左邊是新建的pio項目，右邊是原來的keil項目
+
+![](/static/images/blog/2025/keil-to-pio/Pasted%20image%2020250501023702.webp)
+
+`Src Inc` 放到對應的 `src include` 中即可
+
+注意，`Drivers` 中的內容，pio會在編譯的時候自動放在 `.pio/build`，如下
+
+![](/static/images/blog/2025/keil-to-pio/Pasted%20image%2020250501023946.webp)
+
+按照上面的方式，默認ini配置下，直接編譯就沒有錯誤，並不需要在ini中更改設置。
+
+編譯和燒錄都在VSCode左下角的底欄：
+
+![](/static/images/blog/2025/keil-to-pio/Pasted%20image%2020250509125550.webp)
+
+### 燒錄
+
+首先需要修改ini文件，配置對應的燒錄協議，實驗課用的是stlink的仿真器，一般可能是serial，按自己情況來：
+
+![](/static/images/blog/2025/keil-to-pio/Pasted%20image%2020250509125744.webp)
+
+正常按上文配置，直接點VSCode左下角的燒錄即可：
+
+![](/static/images/blog/2025/keil-to-pio/Pasted%20image%2020250509125550.webp)
+
+#### 方法二：openocd手動燒錄
+
+openocd工具連接開發板
+
+```bash
+brew install openocd
+```
+
+找到 OpenOCD 的腳本目錄，其中存放了 **OpenOCD 所用的各種配置腳本**
+
+```
+/opt/homebrew/Cellar/open-ocd/0.12.0_1/share/openocd/scripts
+```
+
+`scripts` 目錄下常見的子目錄及其作用：
+
+| **子目錄**     | **內容**                                      | **作用**                  |
+| -------------- | --------------------------------------------- | ------------------------- |
+| board/         | 各種開發板配置文件（如 stm32f4discovery.cfg） | 一鍵配置目標板的調試環境  |
+| interface/     | 調試器接口配置（如 J-Link, ST-Link）          | 告訴 OpenOCD 用什麼調試器 |
+| target/        | 目標芯片的配置（如 stm32f4x.cfg）             | 配置具體芯片型號與架構    |
+| utils/         | 一些額外的腳本工具                            | 可選工具或宏命令          |
+| cpld/, dsp/ 等 | 特定硬件類別支持                              | 針對特殊硬件平臺          |
+
+e.g. OpenOCD 連接 STM32F407 開發板（例如使用 ST-Link），需要運行命令如下：
+
+```
+openocd \
+  -f interface/stlink.cfg \
+  -f target/stm32f4x.cfg
+```
+
+連接命令：
+
+```bash
+openocd \
+-f /opt/homebrew/Cellar/open-ocd/0.12.0_1/share/openocd/scripts/interface/stlink-v2-1.cfg \
+-f /opt/homebrew/Cellar/open-ocd/0.12.0_1/share/openocd/scripts/target/stm32f4x.cfg
+```
+
+![](/static/images/blog/2025/keil-to-pio/Pasted%20image%2020250509130108.webp)
+
+可以看到4444端口在監聽telnet，我們用telnet連接4444：
+
+![](/static/images/blog/2025/keil-to-pio/Pasted%20image%2020250509130201.webp)
+
+並輸入燒錄命令：
+
+```bash
+flash write_image erase /Volumes/44/embedded/pio/beep-pio/.pio/build/genericSTM32F407IGT6/firmware.bin 0x08000000
+```
+
+- `/Volumes/44/embedded/pio/beep-pio/.pio/build/genericSTM32F407IGT6/firmware.bin` 是編譯生成的文件的路徑
+
+注意，如果板子可能已經啟動了程序，需要reset才能燒錄，具體操作如下：
+
+![](/static/images/blog/2025/keil-to-pio/Pasted%20image%2020250509131014.webp)
+
+```bash
+reset halt # 重置 暂停
+flash write_image erase /Volumes/44/embedded/pio/beep-pio/.pio/build/genericSTM32F407IGT6/firmware.bin 0x08000000 # 烧录
+reset run # 启动
+```
+
+### 移植drivers
+
+假如 framework 選擇 stm32cube，則會默認使用這個目錄下的一些 drivers。如果需要 keil項目中特定（版本）的 drivers，可以從已有的 keil 項目中完整複製 drivers 替換圖中這個目錄下的文件夾。
+
+![](/static/images/blog/2025/keil-to-pio/Pasted%20image%2020250523201837.webp)
+
+### 補充
+
+#### lsusb
+
+mac查看stlink是否已經連接：
+
+```bash
+lsusb           # brew install usbutils
+```
+
+#### 找不到頭文件
+
+可以正常編譯，但是VSCode顯示報錯：一些頭文件 not found
+
+重新加載 IntelliSense 配置：
+
+1. 打開命令面板 `Cmd+Shift+P`
+2. 輸入並選擇 "C/C++: Reset IntelliSense Database"
+   1. 找到 pio 的 IntelliSense
+3. （可選）然後選擇 "PlatformIO: Rebuild IntelliSense Index"
+
+## REF
+
+- [vscode + PlatformIO嵌入式芯片開發環境搭建 - 閆良 - 博客園](https://www.cnblogs.com/savo-shen/p/18312608)
+- [搭建 Apple Mac M1 stm32 開發環境近期想學習 stm32 開發，看了些書和視頻，買了開發板。開發板到了 - 掘金](https://juejin.cn/post/7361688292352639003)
+- [Site Unreachable](https://zhuanlan.zhihu.com/p/77511228)

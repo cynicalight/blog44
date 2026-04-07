@@ -1,3 +1,5 @@
+import type { BlogScriptVariant } from '~/lib/blog-script'
+
 export type AdminContentType = 'blog' | 'gallery'
 
 export type AdminSessionUser = {
@@ -8,6 +10,7 @@ export type AdminPostSummary = {
   path: string
   contentType: AdminContentType
   slug: string
+  scriptVariant: BlogScriptVariant
   title: string
   date: string
   draft: boolean
@@ -24,6 +27,7 @@ export type AdminPostDetail = AdminPostSummary & {
 export type AdminPostInput = {
   contentType: AdminContentType
   slug: string
+  scriptVariant: BlogScriptVariant
   title: string
   date: string
   summary: string

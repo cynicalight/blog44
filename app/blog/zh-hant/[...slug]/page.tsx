@@ -19,14 +19,14 @@ const LAYOUTS = {
   PostBanner,
 }
 
-const SIMPLIFIED_BLOGS = filterBlogsByScriptVariant(allBlogs, 'zh-Hans')
+const TRADITIONAL_BLOGS = filterBlogsByScriptVariant(allBlogs, 'zh-Hant')
 
 export async function generateMetadata(props: {
   params: Promise<{ slug: string[] }>
 }): Promise<Metadata | undefined> {
   const params = await props.params
   const slug = decodeURI(params.slug.join('/'))
-  const post = SIMPLIFIED_BLOGS.find((p) => p.slug === slug)
+  const post = TRADITIONAL_BLOGS.find((p) => p.slug === slug)
   const authorList = post?.authors || ['default']
   const authorDetails = authorList.map((author) => {
     const authorResults = allAuthors.find((p) => p.slug === author)
@@ -56,7 +56,7 @@ export async function generateMetadata(props: {
       title: post.title,
       description: post.summary,
       siteName: SITE_METADATA.title,
-      locale: 'en_US',
+      locale: 'zh_TW',
       type: 'article',
       publishedTime: publishedAt,
       modifiedTime: modifiedAt,
@@ -71,7 +71,7 @@ export async function generateMetadata(props: {
       images: imageList,
     },
     alternates: {
-      canonical: getLocalizedBlogHref(post.slug, 'zh-Hans'),
+      canonical: getLocalizedBlogHref(post.slug, 'zh-Hant'),
       languages: {
         'zh-Hans': getLocalizedBlogHref(post.slug, 'zh-Hans'),
         'zh-Hant': getLocalizedBlogHref(post.slug, 'zh-Hant'),
@@ -81,14 +81,13 @@ export async function generateMetadata(props: {
 }
 
 export const generateStaticParams = async () => {
-  return SIMPLIFIED_BLOGS.map((p) => ({ slug: p.slug.split('/').map((name) => decodeURI(name)) }))
+  return TRADITIONAL_BLOGS.map((p) => ({ slug: p.slug.split('/').map((name) => decodeURI(name)) }))
 }
 
 export default async function Page(props: { params: Promise<{ slug: string[] }> }) {
   const params = await props.params
   const slug = decodeURI(params.slug.join('/'))
-  // Filter out drafts in production
-  const sortedCoreContents = allCoreContent(sortPosts(SIMPLIFIED_BLOGS))
+  const sortedCoreContents = allCoreContent(sortPosts(TRADITIONAL_BLOGS))
   const postIndex = sortedCoreContents.findIndex((p) => p.slug === slug)
   if (postIndex === -1) {
     return notFound()
@@ -96,7 +95,7 @@ export default async function Page(props: { params: Promise<{ slug: string[] }> 
 
   const prev = sortedCoreContents[postIndex + 1]
   const next = sortedCoreContents[postIndex - 1]
-  const post = SIMPLIFIED_BLOGS.find((p) => p.slug === slug) as Blog
+  const post = TRADITIONAL_BLOGS.find((p) => p.slug === slug) as Blog
   const authorList = post?.authors || ['default']
   const authorDetails = authorList.map((author) => {
     const authorResults = allAuthors.find((p) => p.slug === author)

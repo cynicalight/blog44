@@ -7,6 +7,7 @@ import {
   encodeAdminApiPath,
   getPublicPathFromSourcePath,
 } from '~/lib/admin-post-utils'
+import { type BlogScriptVariant } from '~/lib/blog-script'
 import type { AdminContentType, AdminPostDetail, AdminPostInput } from '~/types/admin'
 
 type PostEditorProps = {
@@ -17,6 +18,7 @@ type PostEditorProps = {
 const EMPTY_FORM: AdminPostInput = {
   contentType: 'blog',
   slug: '',
+  scriptVariant: 'zh-Hans',
   title: '',
   date: new Date().toISOString().slice(0, 10),
   summary: '',
@@ -96,6 +98,7 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
         setForm({
           contentType: post.contentType,
           slug: post.slug,
+          scriptVariant: post.scriptVariant,
           title: post.title,
           date: post.date,
           summary: post.summary,
@@ -125,11 +128,11 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
 
   const previewPath = useMemo(() => {
     try {
-      return buildSourcePath(form.contentType, form.date, form.slug)
+      return buildSourcePath(form.contentType, form.date, form.slug, form.scriptVariant)
     } catch {
       return ''
     }
-  }, [form.contentType, form.date, form.slug])
+  }, [form.contentType, form.date, form.slug, form.scriptVariant])
 
   const previewPublicPath = useMemo(() => {
     if (!previewPath) {
@@ -279,6 +282,31 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
             />
           </label>
 
+          {form.contentType === 'blog' ? (
+            <div className="space-y-2">
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                当前稿件字形
+              </span>
+              <div className="flex flex-wrap gap-2">
+                <ToggleButton
+                  active={form.scriptVariant === 'zh-Hans'}
+                  onClick={() => updateField('scriptVariant', 'zh-Hans' as BlogScriptVariant)}
+                >
+                  简体
+                </ToggleButton>
+                <ToggleButton
+                  active={form.scriptVariant === 'zh-Hant'}
+                  onClick={() => updateField('scriptVariant', 'zh-Hant' as BlogScriptVariant)}
+                >
+                  繁體
+                </ToggleButton>
+              </div>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                保存时会自动生成另一套字形版本，并一起提交到仓库。
+              </p>
+            </div>
+          ) : null}
+
           <div className="space-y-2">
             <span className="text-sm font-medium text-gray-700 dark:text-gray-200">状态</span>
             <div className="flex flex-wrap gap-2">
@@ -358,6 +386,9 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
           <div className="font-medium text-gray-700 dark:text-gray-200">发布预览</div>
           <div className="mt-2 space-y-1 text-gray-600 dark:text-gray-300">
             <div>内容类型：{form.contentType === 'gallery' ? 'Gallery' : 'Blog'}</div>
+            {form.contentType === 'blog' ? (
+              <div>当前稿件：{form.scriptVariant === 'zh-Hant' ? '繁體' : '简体'}</div>
+            ) : null}
             <div>仓库路径：{previewPath || '请先填写合法日期和 slug'}</div>
             <div>公开链接：{previewPublicPath || '请先填写合法日期和 slug'}</div>
           </div>

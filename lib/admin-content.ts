@@ -7,6 +7,15 @@ import {
   isManagedContentPath,
   normalizeTags,
 } from '~/lib/admin-post-utils'
+import {
+  convertBlogBodyScript,
+  convertBlogTextScript,
+  DEFAULT_BLOG_SCRIPT_VARIANT,
+  getBlogScriptVariantFromSourcePath,
+  getPairedBlogScriptVariant,
+  getPairedBlogSourcePath,
+  type BlogScriptVariant,
+} from '~/lib/blog-script'
 import type { AdminPostDetail, AdminPostInput, AdminPostSummary } from '~/types/admin'
 
 const BLOG_ROOT = 'data/blog'
@@ -15,6 +24,7 @@ const GALLERY_ROOT = 'data/gallery'
 const postInputSchema = z.object({
   contentType: z.enum(['blog', 'gallery']),
   slug: z.string().min(1),
+  scriptVariant: z.enum(['zh-Hans', 'zh-Hant']).default(DEFAULT_BLOG_SCRIPT_VARIANT),
   title: z.string().min(1),
   date: z.string().min(10),
   summary: z.string().optional().default(''),
@@ -238,12 +248,15 @@ function parsePost(path: string, source: string): ParsedPost {
     ? data.images.find((value) => typeof value === 'string') || ''
     : ''
   const contentType = getContentTypeFromSourcePath(path)
+  const scriptVariant =
+    contentType === 'blog' ? getBlogScriptVariantFromSourcePath(path) : 'zh-Hans'
 
   return {
     detail: {
       path,
       contentType,
       slug: getSlugFromSourcePath(path),
+      scriptVariant,
       title: typeof data.title === 'string' ? data.title : '',
       date: normalizeDate(data.date),
       summary: typeof data.summary === 'string' ? data.summary : '',
@@ -294,6 +307,73 @@ function serializePost(input: AdminPostInput, existingFrontmatter?: Record<strin
   return matter.stringify(normalizedBody ? `${normalizedBody}\n` : '', next)
 }
 
+function createMirroredBlogInput(input: AdminPostInput): AdminPostInput {
+  const targetVariant = getPairedBlogScriptVariant(input.scriptVariant)
+
+  return {
+    ...input,
+    scriptVariant: targetVariant,
+    title: convertBlogTextScript(input.title, targetVariant),
+    summary: convertBlogTextScript(input.summary, targetVariant),
+    body: convertBlogBodyScript(input.body, targetVariant),
+  }
+}
+
+function buildBlogVariantFiles(
+  input: AdminPostInput,
+  existingFrontmatter?: Partial<Record<BlogScriptVariant, Record<string, unknown>>>
+) {
+  const authoredPath = buildSourcePath('blog', input.date, input.slug, input.scriptVariant)
+  const mirroredInput = createMirroredBlogInput(input)
+  const mirroredPath = buildSourcePath(
+    'blog',
+    mirroredInput.date,
+    mirroredInput.slug,
+    mirroredInput.scriptVariant
+  )
+
+  const hansInput = input.scriptVariant === 'zh-Hans' ? input : mirroredInput
+  const hantInput = input.scriptVariant === 'zh-Hant' ? input : mirroredInput
+
+  const hansPath = buildSourcePath('blog', hansInput.date, hansInput.slug, 'zh-Hans')
+  const hantPath = buildSourcePath('blog', hantInput.date, hantInput.slug, 'zh-Hant')
+
+  return {
+    authoredPath,
+    authoredSource:
+      input.scriptVariant === 'zh-Hans'
+        ? serializePost(input, existingFrontmatter?.['zh-Hans'])
+        : serializePost(input, existingFrontmatter?.['zh-Hant']),
+    mirroredPath,
+    mirroredSource:
+      mirroredInput.scriptVariant === 'zh-Hans'
+        ? serializePost(mirroredInput, existingFrontmatter?.['zh-Hans'])
+        : serializePost(mirroredInput, existingFrontmatter?.['zh-Hant']),
+    hansPath,
+    hansSource: serializePost(hansInput, existingFrontmatter?.['zh-Hans']),
+    hantPath,
+    hantSource: serializePost(hantInput, existingFrontmatter?.['zh-Hant']),
+  }
+}
+
+function getExistingFrontmatterByVariant(
+  currentPath: string,
+  currentFrontmatter: Record<string, unknown>,
+  pairedFrontmatter?: Record<string, unknown>
+) {
+  if (getBlogScriptVariantFromSourcePath(currentPath) === 'zh-Hant') {
+    return {
+      'zh-Hans': pairedFrontmatter,
+      'zh-Hant': currentFrontmatter,
+    } satisfies Partial<Record<BlogScriptVariant, Record<string, unknown>>>
+  }
+
+  return {
+    'zh-Hans': currentFrontmatter,
+    'zh-Hant': pairedFrontmatter,
+  } satisfies Partial<Record<BlogScriptVariant, Record<string, unknown>>>
+}
+
 export function parseAdminPostInput(input: unknown) {
   return postInputSchema.parse(input)
 }
@@ -331,6 +411,57 @@ export async function getAdminPost(path: string): Promise<AdminPostDetail> {
 
 export async function createAdminPost(input: AdminPostInput): Promise<AdminPostDetail> {
   const normalized = parseAdminPostInput(input)
+  if (normalized.contentType === 'blog') {
+    const variantFiles = buildBlogVariantFiles(normalized)
+    const conflicts = await Promise.all([
+      getFile(variantFiles.hansPath),
+      getFile(variantFiles.hantPath),
+    ])
+
+    const conflictingPath =
+      conflicts[0] && variantFiles.hansPath
+        ? variantFiles.hansPath
+        : conflicts[1] && variantFiles.hantPath
+          ? variantFiles.hantPath
+          : null
+
+    if (conflictingPath) {
+      throw new GitHubContentError(`Post already exists at ${conflictingPath}`, 409)
+    }
+
+    const [hansBlobSha, hantBlobSha] = await Promise.all([
+      createBlob(variantFiles.hansSource),
+      createBlob(variantFiles.hantSource),
+    ])
+    const parentCommitSha = await getBranchHead()
+    const commit = await getCommit(parentCommitSha)
+    const treeSha = await createTree(commit.tree.sha, [
+      {
+        path: variantFiles.hansPath,
+        mode: '100644',
+        type: 'blob',
+        sha: hansBlobSha,
+      },
+      {
+        path: variantFiles.hantPath,
+        mode: '100644',
+        type: 'blob',
+        sha: hantBlobSha,
+      },
+    ])
+    const commitSha = await createCommit(
+      `content: create post ${getSlugFromSourcePath(variantFiles.authoredPath)}`,
+      treeSha,
+      parentCommitSha
+    )
+    await updateBranch(commitSha)
+
+    return parsePost(
+      variantFiles.authoredPath,
+      normalized.scriptVariant === 'zh-Hans' ? variantFiles.hansSource : variantFiles.hantSource
+    ).detail
+  }
+
   const nextPath = buildSourcePath(normalized.contentType, normalized.date, normalized.slug)
   const existing = await getFile(nextPath)
   if (existing) {
@@ -370,6 +501,94 @@ export async function updateAdminPost(
   }
 
   const currentParsed = parsePost(currentPath, currentFile.content)
+
+  if (normalized.contentType === 'blog') {
+    const pairedCurrentPath = getPairedBlogSourcePath(currentPath)
+    const pairedCurrentFile = await getFile(pairedCurrentPath)
+    const pairedCurrentParsed = pairedCurrentFile
+      ? parsePost(pairedCurrentPath, pairedCurrentFile.content)
+      : null
+
+    const variantFiles = buildBlogVariantFiles(
+      normalized,
+      getExistingFrontmatterByVariant(
+        currentPath,
+        currentParsed.frontmatter,
+        pairedCurrentParsed?.frontmatter
+      )
+    )
+
+    const currentPaths = new Set([currentPath])
+    if (pairedCurrentFile) {
+      currentPaths.add(pairedCurrentPath)
+    }
+
+    const nextPaths = [variantFiles.hansPath, variantFiles.hantPath]
+
+    const conflicts = await Promise.all(
+      nextPaths.map(async (path) => {
+        if (currentPaths.has(path)) {
+          return null
+        }
+
+        return getFile(path)
+      })
+    )
+
+    const conflictingIndex = conflicts.findIndex(Boolean)
+    if (conflictingIndex !== -1) {
+      throw new GitHubContentError(
+        `Another post already exists at ${nextPaths[conflictingIndex]}`,
+        409
+      )
+    }
+
+    const [hansBlobSha, hantBlobSha] = await Promise.all([
+      createBlob(variantFiles.hansSource),
+      createBlob(variantFiles.hantSource),
+    ])
+    const parentCommitSha = await getBranchHead()
+    const commit = await getCommit(parentCommitSha)
+    const treeEntries: Array<{ path: string; mode: '100644'; type: 'blob'; sha: string | null }> = [
+      {
+        path: variantFiles.hansPath,
+        mode: '100644',
+        type: 'blob',
+        sha: hansBlobSha,
+      },
+      {
+        path: variantFiles.hantPath,
+        mode: '100644',
+        type: 'blob',
+        sha: hantBlobSha,
+      },
+    ]
+
+    currentPaths.forEach((path) => {
+      if (!nextPaths.includes(path)) {
+        treeEntries.push({
+          path,
+          mode: '100644',
+          type: 'blob',
+          sha: null,
+        })
+      }
+    })
+
+    const treeSha = await createTree(commit.tree.sha, treeEntries)
+    const commitLabel =
+      variantFiles.hansPath === currentPath || variantFiles.hantPath === currentPath
+        ? `content: update post ${getSlugFromSourcePath(variantFiles.authoredPath)}`
+        : `content: rename post ${getSlugFromSourcePath(currentPath)} -> ${getSlugFromSourcePath(variantFiles.authoredPath)}`
+    const commitSha = await createCommit(commitLabel, treeSha, parentCommitSha)
+    await updateBranch(commitSha)
+
+    return parsePost(
+      variantFiles.authoredPath,
+      normalized.scriptVariant === 'zh-Hans' ? variantFiles.hansSource : variantFiles.hantSource
+    ).detail
+  }
+
   const nextPath = buildSourcePath(normalized.contentType, normalized.date, normalized.slug)
   if (nextPath !== currentPath) {
     const conflicting = await getFile(nextPath)
@@ -415,6 +634,39 @@ export async function deleteAdminPost(currentPath: string) {
   const currentFile = await getFile(currentPath)
   if (!currentFile) {
     throw new GitHubContentError(`Post not found: ${currentPath}`, 404)
+  }
+
+  if (getContentTypeFromSourcePath(currentPath) === 'blog') {
+    const pairedPath = getPairedBlogSourcePath(currentPath)
+    const pairedFile = await getFile(pairedPath)
+    const parentCommitSha = await getBranchHead()
+    const commit = await getCommit(parentCommitSha)
+    const treeEntries: Array<{ path: string; mode: '100644'; type: 'blob'; sha: string | null }> = [
+      {
+        path: currentPath,
+        mode: '100644',
+        type: 'blob',
+        sha: null,
+      },
+    ]
+
+    if (pairedFile) {
+      treeEntries.push({
+        path: pairedPath,
+        mode: '100644',
+        type: 'blob',
+        sha: null,
+      })
+    }
+
+    const treeSha = await createTree(commit.tree.sha, treeEntries)
+    const commitSha = await createCommit(
+      `content: delete post ${getSlugFromSourcePath(currentPath)}`,
+      treeSha,
+      parentCommitSha
+    )
+    await updateBranch(commitSha)
+    return
   }
 
   const parentCommitSha = await getBranchHead()

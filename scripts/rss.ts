@@ -5,12 +5,13 @@ import path from 'path'
 import { sortPosts } from 'pliny/utils/contentlayer'
 import { escape } from 'pliny/utils/htmlEscaper'
 import { allBlogs, allSnippets, allGalleries } from '~/.contentlayer/generated/index.mjs'
+import { filterBlogsByScriptVariant } from '~/lib/blog-script'
 import { AUTHOR_INFO } from '~/data/author-info'
 import { SITE_METADATA } from '~/data/site-metadata'
 import tagData from '~/json/tag-data.json' assert { type: 'json' }
 import mime from 'mime'
 
-const blogs = allBlogs as unknown as Blog[]
+const blogs = filterBlogsByScriptVariant(allBlogs as unknown as Blog[], 'zh-Hans')
 const snippets = allSnippets as unknown as Snippet[]
 const galleries = allGalleries as unknown as Gallery[]
 const RSS_PAGE = 'feed.xml'

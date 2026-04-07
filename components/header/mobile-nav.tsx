@@ -60,14 +60,10 @@ export function MobileNav() {
             className="fixed inset-0 bg-black/25"
             onClick={onToggleNav}
           />
-          <div className="fixed left-0 top-0 z-70 h-full w-full bg-white opacity-95 duration-300 dark:bg-gray-950 dark:opacity-[0.98]">
-            <div className="flex items-center gap-3 pl-10 pt-8">
-              <Logo />
-              <span className="font-medium">{SITE_METADATA.headerTitle}</span>
-            </div>
+          <div className="fixed left-0 top-0 z-70 h-full w-full bg-white opacity-90 duration-300 dark:bg-gray-950 dark:opacity-[0.98]">
             <nav
               ref={navRef}
-              className="mt-4 flex h-full basis-0 flex-col items-start gap-4 overflow-y-auto pl-10 pt-2"
+              className="rounded-20 mt-4 flex flex-col items-start gap-4 overflow-y-auto pl-10 pt-2"
             >
               {[...HEADER_NAV_LINKS, ...MORE_NAV_LINKS].map((link) => (
                 <Link

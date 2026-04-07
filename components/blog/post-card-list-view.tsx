@@ -16,12 +16,12 @@ export function PostCardListView({
   post: CoreContent<Blog>
   loading?: 'lazy' | 'eager'
 }) {
-  const { slug, date, title, summary, tags, images, readingTime } = post
+  const { path, date, title, summary, tags, images, readingTime } = post
   return (
     <article>
       <div className="flex flex-col gap-2 space-y-3 md:flex-row md:gap-8">
         <Link
-          href={`/blog/${slug}`}
+          href={`/${path}`}
           className={clsx([
             'relative block shrink-0',
             'md:h-70 h-auto w-full md:w-80',
@@ -56,7 +56,7 @@ export function PostCardListView({
                 </dd>
               </dl>
               <h2 className="pb-1 text-xl font-bold tracking-tight md:text-2xl">
-                <Link href={`/blog/${slug}`} className="text-gray-900 dark:text-gray-100">
+                <Link href={`/${path}`} className="text-gray-900 dark:text-gray-100">
                   <GrowingUnderline data-umami-event="latest-post-title" duration={500}>
                     {title}
                   </GrowingUnderline>
@@ -70,7 +70,7 @@ export function PostCardListView({
           </div>
           <div className="text-base font-medium leading-6">
             <Link
-              href={`/blog/${slug}`}
+              href={`/${path}`}
               className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-300"
               aria-label={`Read "${title}"`}
             >

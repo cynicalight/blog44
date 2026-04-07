@@ -1,0 +1,82 @@
+---
+title: frp內網穿透
+summary: 一文講解frp，從原理到實操
+date: 2025-05-01T00:00:00.000Z
+tags:
+  - others
+draft: false
+images:
+  - /static/images/blog/2025/frp/Pasted%20image%2020250427134703.webp
+authors:
+  - default
+---
+
+## frp
+
+- A fast reverse proxy to help you expose a local server behind a NAT or firewall to the internet.
+- [GitHub - fatedier/frp: A fast reverse proxy to help you expose a local server behind a NAT or firewall to the internet.](https://github.com/fatedier/frp)
+
+## 內網服務器ssh穿透
+
+### 原理
+
+- server：公網IP服務器作frps
+- client：需要穿透的內網服務器作frpc
+- 最終效果：本機通過frps連接到frpc，即在非內網通過訪問公網服務器的方式，連接到內網服務器
+
+### 實操
+
+github下載對應版本的release，放到公網服務器和內網服務器上。
+
+在公網IP服務器設置：
+
+```toml
+# frps.toml
+bindPort = 7000
+```
+
+啟動 `frps`：
+
+```bash
+./frps -c frps.toml
+```
+
+在內網服務器設置：
+
+```toml
+# frpc.toml
+serverAddr = "x.x.x.x"
+serverPort = 7000
+
+[[proxies]]
+name = "ssh"
+type = "tcp"
+localIP = "127.0.0.1"
+localPort = 22
+remotePort = 6000
+```
+
+- `serverAddr` 是公網IP
+- `serverPort` 和 `remotePort` 都是需要在公網IP服務器上設置允許訪問的端口
+
+啟動 `frpc`：
+
+```bash
+./frpc -c frpc.toml
+```
+
+兩個服務器都啟動了：
+
+![](/static/images/blog/2025/frp/Pasted%20image%2020250427135057.webp)
+
+之後在本機通過公網服務器連接內網服務器：
+
+```bash
+ssh -p 6000 username@x.x.x.x -i ~/.ssh/privatekey
+```
+
+- `x.x.x.x` 是**公網IP服務器**的IP地址
+- `username` 需要寫**內網服務器**的用戶名
+- `-i ~/.ssh/privatekey` 私鑰登錄是可選項，私鑰是**內網服務器**的私鑰
+
+![](/static/images/blog/2025/frp/Pasted%20image%2020250427134703.webp)

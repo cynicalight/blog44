@@ -1,0 +1,559 @@
+---
+title: 機器學習基礎
+summary: 參考李宏毅機器學習、動手學深度學習
+date: '2025-04-09'
+tags:
+  - ml
+  - llm
+draft: false
+images:
+  - /static/images/blog/2025/ml-lee/Pasted%20image%2020250409171949.png
+authors:
+  - default
+---
+
+- [ML 2022 Spring](https://speech.ee.ntu.edu.tw/~hylee/ml/2022-spring.php)
+- [ML 2025 Spring](https://speech.ee.ntu.edu.tw/~hylee/ml/2025-spring.php)
+- [GitHub - datawhalechina/leedl-tutorial](https://github.com/datawhalechina/leedl-tutorial)
+- [《動手學深度學習》 — 動手學深度學習 2.0.0 documentation](https://zh-v2.d2l.ai/index.html)
+- 本文是datawhale蘋果書、李宏毅教授2021-2025ML課程、李沐動手學深度學習的筆記
+
+# 機器學習基礎
+
+![](../../../../img/Pasted%20image%2020250406124453.png)
+
+## 數學基礎
+
+### 標量函數關於向量的導數
+
+在機器學習中，標量函數對向量求導數的結果是一個**梯度向量**。梯度向量包含了函數對向量中每個分量的偏導數。
+
+#### 梯度的定義
+
+梯度 $\nabla_{\mathbf{b}} z$ 實際上是由所有偏導數組成的向量：
+
+$$
+\nabla_{\mathbf{b}} z = \frac{\partial z}{\partial \mathbf{b}} =
+\begin{bmatrix}
+\frac{\partial z}{\partial b_1} \\
+\frac{\partial z}{\partial b_2} \\
+\frac{\partial z}{\partial b_3}
+\end{bmatrix}
+$$
+
+#### 實例
+
+我們展開：
+
+$$
+z = \mathbf{b}^\top \mathbf{b} = \sum_{i=1}^n b_i^2
+$$
+
+對每個分量 $b_i$ 求導：$\frac{\partial z}{\partial b_i} = 2b_i$
+
+所以整體梯度就是：
+
+$$
+\nabla_{\mathbf{b}} z =
+\begin{bmatrix}
+\frac{\partial z}{\partial b_1} \\
+\frac{\partial z}{\partial b_2} \\
+\vdots \\
+\frac{\partial z}{\partial b_n}
+\end{bmatrix}
+= 2\mathbf{b}
+$$
+
+```python
+
+b = torch.tensor([1.0, 2.0, 3.0], requires_grad=True)
+print(f"向量 b = {b}")
+print(f"b 的维度: {b.shape}")
+
+# 计算 z = ||b||² = b^T b
+z = torch.dot(b, b)  # 这是一个标量
+print(f"z = ||b||² = {z}")
+print(f"z 的维度: {z.shape} (标量)")
+
+# 计算梯度
+z.backward()
+print(f"∂z/∂b = {b.grad}")
+print(f"梯度的维度: {b.grad.shape}")
+# 梯度应该是 2b
+```
+
+## ML Framework
+
+target: **looking for function**
+
+1. function with unknown
+2. define loss
+3. optimization
+
+具體可以分為 5 步：
+
+1. 讀取數據：分 batch
+2. 初始化參數：給出事的權重 w 偏置 b
+3. 前向傳播：計算出預測值
+4. 計算損失
+5. 反向傳播，更新參數
+
+### function with unknown
+
+Hard Sigmoid 是常見的目標 function。
+
+- 可以用 Sigmoid Function 逼近 Hard Sigmoid
+
+![](../../../../img/Pasted%20image%2020250329201159.png)
+
+多個 sigmoid 合成 red curve
+
+![550](../../../../img/Pasted%20image%2020250329232523.png)
+
+最終的 function with unknown
+
+![550](../../../../img/Pasted%20image%2020250329233420.png)
+
+### loss
+
+![550](../../../../img/Pasted%20image%2020250330092849.png)
+
+最常見的損失函數是平方誤差 square error：預測值與實際值的差的平方。
+
+### optimize
+
+不斷更新 gradient
+
+![550](../../../../img/Pasted%20image%2020250330092745.png)
+
+總的數據集會分成很多 batch：
+
+- 遍歷所有batch稱為一次epoch
+- update指更新一次batch
+
+![550](../../../../img/Pasted%20image%2020250330093114.png)
+
+### more layers
+
+可以把模型進一步改成多層：
+
+![](../../../../img/Pasted%20image%2020250330102015.png)
+
+每一層都是一個 Sigmoid 或 ReLU 的 function，稱為神經元（neuron），很多的神經元稱為神經網絡 （neural network）。
+
+神經網絡不是新的技術，80、90 年代就已經用過了，後來為了要重振神經網絡的雄風，所以需要新的名字。每一層，稱為隱藏層（hidden layer），很多的隱藏層就“深”，這套技術稱為**深度學習**。
+
+但是層數不一定越深越好，可能會出現過擬合 overfitting 的問題：
+
+![](../../../../img/Pasted%20image%2020250330102509.png)
+
+### 常見的機器學習問題
+
+1. 監督學習
+   1. 迴歸
+   2. 分類
+   3. 標記問題
+   4. 搜索
+   5. 推薦系統
+   6. 序列學習
+2. 無監督學習
+   1. 聚類 clustering ：沒有標籤的情況下，給數據分類/聚類
+   2. 主成分分析 principal component analysis：找到少量的參數來準確地捕捉數據的線性相關屬性，比如，一個球的運動軌跡可以用球的速度、直徑和質量來描述。
+   3. 因果關係 causality 和 概率圖模型 probabilistic graphical models 問題：描述觀察到的許多數據的根本原因。
+   4. 生成對抗性網絡 generative adversarial networks ：為我們提供一種合成數據的方法，甚至像圖像和音頻這樣複雜的非結構化數據。
+3. 離線學習：與環境交互學習
+4. 強化學習
+
+是否**監督**的核心區別是有無**標籤數據**，但這背後反映的是更本質的差異。
+
+- 監督學習有標籤，模型學的是**輸入→輸出**的映射關係
+  - 目標明確，e.g. 給你一張圖，告訴你是貓還是狗，模型就去學這個判斷規則
+- 無監督學習沒有標籤，模型**只有輸入數據**
+  - 目標是自己發現數據內部的結構、規律或分佈，比如聚類、降維、密度估計
+
+## Model Bias
+
+假設模型過於簡單，一個有未知參數的函數代 θ1 得到一個函數 fθ1(x)，同理可得到另一個函數 fθ2(x)，把所有的函數集合起來得到一個函數的集合。但是該函數的集合太小了，沒有包含任何一個函數，可以讓損失變低的函數不在模 型可以描述的範圍內。在這種情況下，就算找出了一個 θ∗ ，雖然它是這些藍色的函數里面最好的一個，但損失還是不夠低。
+
+![](../../../../img/Pasted%20image%2020250406132016.png)
+
+## Optimization
+
+一般只會用到梯度下降進行優化，這種優化的方法很多的問題。比如(a)可能會卡在局部最小值的地方，無法找到一個真的可以讓損失很低的參數。
+
+![](../../../../img/Pasted%20image%2020250406132147.png)
+
+## Overfitting
+
+過擬合的表現為：訓練數據上面的損失小，測試數據上的損失大。
+
+例子：模型過於靈活
+
+在這 3 個藍點（訓練數據）上面，要讓損失低，所以模型的這個曲線會通過這 3 個點，但是其它沒有訓練集做為限制的地方，因為它的靈活性很大，所以模型可以變成各式各樣的函數，沒有給它數據做為訓練，可以產生各式各樣奇怪的結果（“隨意”）。
+
+最終，表現為訓練數據loss為0，測試數據loss很大。
+
+![](../../../../img/Pasted%20image%2020250406140220.png)
+
+可以用數據增強和限制模型的方法，降低 overfitting
+
+### data augmentation
+
+根據問題的理解創造出新的數據。舉個例子，在做圖像識別的時候，常做的 一個招式是，假設訓練集裡面有某一張圖片，把它左右翻轉，或者是把它其中一塊截出來放大 等等。
+
+### limitation
+
+限制模型，讓模型不要有過大的靈活性。
+
+- 減少模型參數：對於神經網絡，可以減少每層的參數
+- 減少數據特徵值
+- 早停（early stopping）、正則化（regularization）和丟棄法（dropout method）
+
+## Cross Validation
+
+交叉驗證 Cross Validation 是為了避免在測試集上面過擬合。
+
+k 折交叉驗證就是先把訓練集切成 k 等份。在這個例子，訓練集被切成 3 等份，切完以後，拿其中一份當作驗證集，另外兩份當訓練集。
+
+- 這件事情要重複 3 次：第一份第 2 份當訓練，第 3 份當驗證；第一份第 3 份當訓練，第 2 份當驗證；第 1 份當驗證，第 2 份第 3 份當訓練。
+
+![](../../../../img/Pasted%20image%2020250408204230.png)
+
+## Mismatch
+
+不匹配，簡單理解就是一種反常的情況發生了。
+
+![](../../../../img/Pasted%20image%2020250408234008.png)
+
+而且，增加數據也不能讓模型做得更好，**到底有沒有mismatch，要看人對數據本身的理解**。
+
+## Local Minima and Saddle Point
+
+1. local minima 是局部極小值
+2. saddle point 是鞍點，不是極小，可以向其他方向 escape
+
+這兩者一般統稱為 critical point 臨界點。
+
+![](../../../../img/Pasted%20image%2020250409010004.png)
+
+### determining the types of critical point
+
+損失函數可由於泰勒級數近似為：
+
+$$
+L({\theta}) \approx L\left({\theta}'\right) + \left({\theta} - {\theta}'\right)^{\mathrm{T}} {g} + \frac{1}{2} \left({\theta} - {\theta}'\right)^{\mathrm{T}} {H} \left({\theta} - {\theta}'\right)
+$$
+
+其中，H 裡面放的是 L 的二次微分，可以通過 $\frac{1}{2} \left({\theta} - {\theta}'\right)^{\mathrm{T}} {H} \left({\theta} - {\theta}'\right)$ 的正負判斷是否是極小值。
+
+### batch size
+
+大的批量往往在訓練的時候結果比較差，小的批量優化的結果是比較好的，這個是優化的問題。
+
+local minima 也分好壞，如下圖：
+
+- flat minima 是好的
+- sharp minima 是壞的
+  ![](../../../../img/Pasted%20image%2020250409151833.png)
+
+評價 local minima 好壞的根本在於：
+
+- train 和 test 的 loss 一般有一些差別
+- 兩者的 flat minima 往往很接近
+- 但是 sharp minima 很有可能會有很大差別
+
+批量大小對梯度下降法的影響的直觀理解：
+
+大的批量大小會讓我們傾向於走到“峽谷”裡面，而小的批量大小傾向於讓我們走到“盆地” 裡面。小的批量有很多的損失，其更新方向比較隨機，其每次更新的方向都不太一樣。即使 “峽谷”非常窄，它也可以跳出去，之後如果有一個非常寬的“盆地”，它才會停下來。
+
+### momentum method
+
+- 動量法是另一種可以對抗 local minima 和 saddle point 的方法
+
+假設誤差表面就是真正的斜坡，參數是一個球，把球從斜坡上滾下來，如果使用梯度下降，球走到或鞍點就停住了。
+
+但是在物理的世界裡，一個球如果從高處滾下來，就算滾到鞍點或局部最小值點，因為慣性的關係它還是會繼續往前走。**如果球的動量足夠大，其甚至翻過小坡繼續往前走，它並不一定會被鞍點或局部最小值點卡住**，如果將其應用到梯度下降中，這就是動量。
+
+引入動量後，可以從兩個角度來理解動量法：
+
+- 一個角度是動量是梯度的反方向加上前一次移動的方向
+- 另外一個角度是當加上動量的時候，更新的方向不是隻考慮現在的梯度，而是考慮過去所有梯度的總和
+
+![](../../../../img/Pasted%20image%2020250409143631.png)
+
+- 其中 η 是學習率， λ 是前一個方向的權重參數，是需要調的。
+
+## Adaptive Learning Rate
+
+不同學習率：
+
+![](../../../../img/Pasted%20image%2020250409162257.png)
+
+- 圖中誤差表面的最低點在叉號處
+- 學習率太大會導致訓練時參數不斷震盪，如圖a
+- 學習率變小可以解決震盪的問題，但是在左拐以後，BC 段的坡度已經非常平坦了（指梯度很小），這種小的學習率無法再讓參數前進到目標位置，如圖b
+
+### AdaGrad
+
+AdaGrad（Adaptive Gradient）是典型的自適應學習率方法，其能夠**根據梯度大小自動調整學習率**。AdaGrad 可以做到梯度比較大的時候，學習率就減小，梯度比較小的時候，學習率就放大。
+
+原始的梯度下降更新某個參數 θ 的過程為（學習率固定）：
+
+$$
+\boldsymbol{\theta}_{t + 1}^i \leftarrow \boldsymbol{\theta}_{t}^i - \eta \boldsymbol{g}_{t}^i
+$$
+
+AdaGrad 的更新過程，學習率不再固定：
+$$ \boldsymbol{\theta}_{t + 1}^i \leftarrow \boldsymbol{\theta}_{t}^i - \frac{\eta}{\sigma*{t}^i} \boldsymbol{g}*{t}^i $$
+
+新引入的符號的說明，要點就是學習率就變得參數相關（parameter dependent）：
+![](../../../../img/Pasted%20image%2020250409171150.png)
+
+最終自適應的效果如下：
+
+![](../../../../img/Pasted%20image%2020250409160207.png)
+
+### RMSProp
+
+RMSprop（Root Mean Squared propagation）是 Geoffrey Hinton 在 Coursera 上的深度學習的課程中提到的，沒有論文，屬於黑科技了...
+
+RMSProp 第一步跟 Adagrad 的方法是相同的，即
+
+$$
+\sigma_{0}^{i} = \sqrt{\left(g_{0}^{i}\right)^{2}} = \vert \boldsymbol{g}_{0}^{i}\vert
+$$
+
+第二步更新過程為
+
+$$
+\boldsymbol{\theta}_{2}^{i} \leftarrow \boldsymbol{\theta}_{1}^{i}-\frac{\eta}{\sigma_{1}^{i}}\boldsymbol{g}_{1}^{i} \quad
+
+\sigma_{1}^{i}=\sqrt{\alpha\left(\sigma_{0}^{i}\right)^{2}+(1 - \alpha)\left(\boldsymbol{g}_{1}^{i}\right)^{2}}
+$$
+
+- 這裡額外引入了一個超參數 α，且 0 < α < 1。
+
+通過 α 可以在計算算均方根的時候，**調整現在這個梯度的重要性**。如果 α 設很大趨近於 1，代表 g1i 比較不重要，之前算出來的梯度比較重要。
+
+而上一節的 Adagrad 則是每一個梯度都有同等的重要性，不夠靈活。
+
+### Adam
+
+- Adam（Adaptive moment estimation）是最常用的優化策略/優化器 optimizer
+
+Adam 可以看作 RMSprop 加上動量，其使用動量作為參數更新方向，並且能夠自適應調整學習率。PyTorch 裡面已經寫好了 Adam 優化器，這個優化器裡面有一些超參數需 要人為決定，但是往往用 PyTorch 預設的參數就足夠好了。
+
+### Learning Rate Scheduling
+
+學習率調度（learning rate scheduling）中 η 跟時間有關，最常見的策略是學習率衰減（learning rate decay）。
+
+![](../../../../img/Pasted%20image%2020250409172932.png)
+
+還有一種策略是 warmup，即先上升一小段，到達一定值再下降。
+
+BERT 和 Transformer 的訓練都使用了 warmup，但 warmup 比較像一個 trick，沒有人嚴謹解釋為什麼，一個可能的原因是：統計的結果需要足夠多的數據才精準，一開始統計結果 σ 是不精準的，所以需要先上升一段時間，以收集有關 σ 的統計數據。
+
+## 神經網絡的兩個核心
+
+### 線性和非線性交替
+
+線性和非線性處理單元的交替（稱為“層”）。
+
+神經網絡的每一層通常由兩種處理單元構成：
+
+- **線性變換**：例如矩陣乘法  
+   y=Wx+by = Wx + b  
+   這一步是對輸入進行**線性組合**，本質上相當於傳統的線性模型，比如線性迴歸、感知機。
+- **非線性激活函數**：例如 ReLU、Sigmoid、Tanh 等  
+   a=σ(y)a = \sigma(y)  
+   非線性激活函數用於**打破線性限制**，讓網絡能夠逼近複雜的非線性函數。
+
+### 鏈式法則
+
+一句話總結，鏈式法則的本質是 --- 複合函數求導，逐層相乘。
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260313102527601.png?imageMogr2/quality/80&imageSlim)
+
+鏈式法則（反向傳播）用於一次性調整全部參數。
+
+- 神經網絡訓練的目標是最小化一個損失函數（loss function），如分類任務中的交叉熵。
+- 但網絡中的參數成百上千，分佈在多層中，如何計算它們對 loss 的影響？
+
+這就用到了鏈式法則（Chain Rule）：在複合函數中，整體導數是**各層導數的乘積**。
+
+例如：
+
+$$
+\frac{\partial L}{\partial x} = \frac{\partial L}{\partial z} \cdot \frac{\partial z}{\partial y} \cdot \frac{\partial y}{\partial x}
+$$
+
+反向傳播（backpropagation）正是利用鏈式法則：
+
+- 從**輸出層開始**，逐層向後傳播梯度
+- 每層根據自身的輸入、輸出和激活函數，計算梯度
+- 所有參數的梯度在一次前向-反向傳播中完成計算
+
+> [!NOTE] 梯度為什麼是向後傳的
+> 因為損失 L 是在最後一層算出來的，我們只知道"輸出錯了多少"。
+>
+> 要知道第一層的參數該怎麼調，必須把這個"錯誤信號"一層層往回傳，從數學上看，就是從後往前求損失函數對於每一層的參數的導數（梯度）。
+>
+> 為什麼必須要回傳，其實是複合函數求導法則（鏈式法則）可以通過函數套函數來理解，我們所說的從最後一層開始算導數，最後一層就是最外層的函數，複合函數求導要求我們從最外層開始鏈式求導，所以如果想知道最內層的導數（第一層），必須先求出最外層的導數，一層層求出來。
+
+### 總結
+
+| 原則                | 內容                                 | 作用                       |
+| ------------------- | ------------------------------------ | -------------------------- |
+| 線性 + 非線性層交替 | $Wx + b$ + 激活函數 $\sigma$         | 提升表達能力，逼近複雜函數 |
+| 鏈式法則 / 反向傳播 | 用鏈式求導法一次性計算所有參數的梯度 | 高效訓練整個網絡           |
+
+## 分類與迴歸
+
+分類與迴歸是深度學習最常見的兩種問題。
+
+![](../../../../img/Pasted%20image%2020250714152645.png)
+
+### 迴歸
+
+最基礎的單層線性迴歸：
+
+```python
+from torch import nn
+# Sequential = the list of layers
+net = nn.Sequential(nn.Linear(2, 1))
+```
+
+#### 線性迴歸原理
+
+在機器學習領域，我們通常使用的是高維數據集，建模時採用線性代數表示法會比較方便。
+當我們的輸入包含$d$個特徵時，我們將預測結果$\hat{y}$表示為：
+
+$$\hat{y} = w_1  x_1 + ... + w_d  x_d + b.$$
+
+將所有特徵放到向量$\mathbf{x} \in \mathbb{R}^d$中，並將所有權重放到向量$\mathbf{w} \in \mathbb{R}^d$中，我們可以用點積形式來簡潔地表達模型：
+
+$$\hat{y} = \mathbf{w}^\top \mathbf{x} + b.$$
+
+- 向量$\mathbf{x}$對應於單個數據樣本的特徵。
+
+用符號表示的矩陣$\mathbf{X} \in \mathbb{R}^{n \times d}$可以很方便地引用我們整個數據集的$n$個樣本。其中，$\mathbf{X}$的每一行是一個樣本，每一列是一種特徵。
+
+對於特徵集合$\mathbf{X}$，預測值$\hat{\mathbf{y}} \in \mathbb{R}^n$可以通過矩陣-向量乘法表示為：
+
+$${\hat{\mathbf{y}}} = \mathbf{X} \mathbf{w} + b$$
+
+- 其中$\mathbf{X}$是特徵矩陣，$\mathbf{w}$是權重向量，$b$是偏置項。
+- 假如把矩陣向量乘法的式子看成`线性方程组求解`，那麼$\mathbf{w}$是需要求的解。
+
+### 分類
+
+分類的核心在於 Class as one-hot vector 。
+
+使用 one-hot vector （獨熱編碼）每個 vector 的距離是一樣的，直接用數字 1 2 3 的話，三者之間的距離不同。
+
+![](../../../../img/Pasted%20image%2020250410152509.png)
+
+#### Softmax
+
+Softmax 迴歸可以看作是**線性迴歸**在分類問題上的擴展。
+
+Softmax 函數的作用是將**未規範化**的預測變換為**非負數並且總和為1**，同時讓模型保持可導的性質。
+
+公式省流：
+
+1. **歸一化**：對每個未規範化的預測求冪，這樣可以確保輸出非負。
+2. 保證**概率和是1**：每個求冪後的結果除以它們的總和。
+   $$\hat{\mathbf{y}} = \mathrm{softmax}(\mathbf{o})\quad \text{其中}\quad \hat{y}_j = \frac{\exp(o_j)}{\sum_k \exp(o_k)}$$
+
+#### 對數似然
+
+對數似然是**似然函數的對數**。
+
+- 似然可以理解為概率，區別是似然的思維是固定數據，變化參數，概率相反。
+
+在多分類問題中，每個樣本服從**多項式分佈**，其概率質量函數為：
+
+$$P(\mathbf{y} \mid \mathbf{x}) = \prod_{j=1}^q (\hat{y}_j)^{y_j}$$
+
+在softmax迴歸中：
+
+1. **似然函數**：表示給定所有特徵 $\mathbf{X}$，觀測到所有標籤 $\mathbf{Y}$ 的**概率**
+   $$P(\mathbf{Y} \mid \mathbf{X}) = \prod_{i=1}^n P(\mathbf{y}^{(i)} \mid \mathbf{x}^{(i)})$$
+
+2. **對數似然**：取似然函數的對數
+   $$\log P(\mathbf{Y} \mid \mathbf{X}) = \sum_{i=1}^n \log P(\mathbf{y}^{(i)} \mid \mathbf{x}^{(i)})$$
+
+$$\log P(\mathbf{y} \mid \mathbf{x}) = \log \prod_{j=1}^q (\hat{y}_j)^{y_j} = \sum_{j=1}^q y \log \hat{y}_j$$
+
+另外，由於概率總小於 1 ，概率的對數總是**負的**，所以一般 loss 都要用**負**對數似然，這樣 loss 負負得正，是一個正值，這時候就是最小化 loss 就是最小化負對數似然。
+
+#### 交叉熵損失
+
+交叉熵損失是分類問題最常用的損失函數，衡量的是兩個概率分佈 p（真實標籤）和 q（模型預測）之間的距離。
+
+交叉熵公式：
+
+$$
+H(p,q)=\sum_{i}-p_{i}\log q_{i}
+$$
+
+注意，交叉熵損失在獨熱編碼的情況下退化為**負對數似然**：
+
+$$
+l(y,\hat{y}) = -\sum_{i}y_{i} \log(\hat{y_{i}}) = -\log(\hat{y_{y}})
+$$
+
+- 由於 $\mathbf{y}$ 是一個長度為 $q$ 的**獨熱編碼**向量，所以除了一個值為1項以外，其他所有項都為0
+
+梯度計算：
+
+$$
+\frac{\partial}{\partial o_i} l(y, \hat{y}) = \text{softmax}(o)_i - y_i
+$$
+
+Pytorch 的交叉熵計算函數內部使用了 LogSumExp 技巧，避免原始公式容易出現的溢出問題。
+
+```python
+loss = nn.CrossEntropyLoss(reduction='none')
+```
+
+---
+
+# 多層感知機
+
+多層感知機由多層神經元組成， 每一層與它的上一層相連，從中接收輸入； 同時每一層也與它的下一層相連，影響當前層的神經元。 當我們訓練容量較大的模型時，我們面臨著**過擬合**的風險。
+
+## 全連接網絡
+
+![](../../../../img/Pasted%20image%2020250508181439.png)
+
+## 加入隱藏層
+
+直接的輸入到輸出的線性模型往往難以符合實際，所以我們需要在網絡中加入隱藏層，最簡單的做法是多層全連接網絡：
+
+![](../../../../img/Pasted%20image%2020250717113910.png)
+
+### 非線性的激活函數
+
+為了發揮多層架構的潛力，我們還需要在仿射變換之後對每個隱藏單元應用非線性的**激活函數**（activation function）$\sigma$。
+
+一般每個隱藏層之後都會加一層激活函數。
+
+---
+
+# CNN
+
+- [CNN](https://www.bu44er.ink/blog/2026/cnn)
+
+---
+
+# RNN
+
+- [RNN](https://www.bu44er.ink/blog/2026/rnn)
+
+---
+
+# REF
+
+- [zhihu](https://zhuanlan.zhihu.com/p/104576756)
+
+![](../../../../img/Pasted%20image%2020250409171949.png)

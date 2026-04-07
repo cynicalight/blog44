@@ -21,11 +21,10 @@ interface ListLayoutProps {
   title: string
   initialDisplayPosts?: CoreContent<Blog>[]
   pagination?: PaginationProps
+  paginationBasePath?: string
 }
 
-function Pagination({ totalPages, currentPage }: PaginationProps) {
-  const pathname = usePathname()
-  const basePath = pathname.split('/')[1]
+function Pagination({ totalPages, currentPage, basePath }: PaginationProps & { basePath: string }) {
   const prevPage = currentPage - 1 > 0
   const nextPage = currentPage + 1 <= totalPages
 
@@ -35,7 +34,7 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
         {prevPage ? (
           <Link
             className="cursor-pointer"
-            href={currentPage - 1 === 1 ? `/${basePath}/` : `/${basePath}/page/${currentPage - 1}`}
+            href={currentPage - 1 === 1 ? basePath : `${basePath}/page/${currentPage - 1}`}
             rel="prev"
           >
             <GrowingUnderline className="inline-flex items-center gap-2">
@@ -55,7 +54,7 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
           {currentPage} / {totalPages}
         </span>
         {nextPage ? (
-          <Link className="cursor-pointer" href={`/${basePath}/page/${currentPage + 1}`} rel="next">
+          <Link className="cursor-pointer" href={`${basePath}/page/${currentPage + 1}`} rel="next">
             <GrowingUnderline className="inline-flex items-center gap-2">
               <span>Next</span>
               <ArrowRight className="h-4 w-4" />
@@ -79,7 +78,9 @@ export function ListLayout({
   title,
   initialDisplayPosts = [],
   pagination,
+  paginationBasePath,
 }: ListLayoutProps) {
+  const pathname = usePathname()
   const [searchValue, setSearchValue] = useState('')
   const filteredBlogPosts = posts.filter((post) => {
     const searchContent = post.title + post.summary + post.tags?.join(' ')
@@ -109,7 +110,11 @@ export function ListLayout({
         </div>
       )}
       {pagination && pagination.totalPages > 1 && !searchValue && (
-        <Pagination currentPage={pagination.currentPage} totalPages={pagination.totalPages} />
+        <Pagination
+          currentPage={pagination.currentPage}
+          totalPages={pagination.totalPages}
+          basePath={paginationBasePath || pathname}
+        />
       )}
     </Container>
   )

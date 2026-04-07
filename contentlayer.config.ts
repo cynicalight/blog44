@@ -24,6 +24,12 @@ import rehypeCitation from 'rehype-citation'
 import rehypePresetMinify from 'rehype-preset-minify'
 import rehypePrismPlus from 'rehype-prism-plus'
 import { SITE_METADATA } from './data/site-metadata'
+import {
+  DEFAULT_BLOG_SCRIPT_VARIANT,
+  getBlogBaseSlugFromFlattenedPath,
+  getLocalizedContentPath,
+  isDefaultBlogScriptVariant,
+} from './lib/blog-script'
 import { extractTocHeadings } from './server/emark-toc-headings.server'
 
 const root = process.cwd()
@@ -44,8 +50,14 @@ const icon = fromHtmlIsomorphic(
 
 const computedFields: ComputedFields = {
   readingTime: { type: 'json', resolve: (doc) => readingTime(doc.body.raw) },
-  slug: { type: 'string', resolve: (doc) => doc._raw.flattenedPath.replace(/^.+?(\/)/, '') },
-  path: { type: 'string', resolve: (doc) => doc._raw.flattenedPath },
+  slug: {
+    type: 'string',
+    resolve: (doc) =>
+      doc._raw.flattenedPath.startsWith('blog/')
+        ? getBlogBaseSlugFromFlattenedPath(doc._raw.flattenedPath)
+        : doc._raw.flattenedPath.replace(/^.+?(\/)/, ''),
+  },
+  path: { type: 'string', resolve: (doc) => getLocalizedContentPath(doc._raw.flattenedPath) },
   filePath: { type: 'string', resolve: (doc) => doc._raw.sourceFilePath },
   toc: { type: 'json', resolve: (doc) => extractTocHeadings(doc.body.raw) },
 }
@@ -71,13 +83,14 @@ function createTagCount(documents) {
 }
 
 function createSearchIndex(allBlogs) {
+  const defaultVariantBlogs = allBlogs.filter((post) => isDefaultBlogScriptVariant(post))
   if (
     SITE_METADATA?.search?.provider === 'kbar' &&
     SITE_METADATA.search.kbarConfig.searchDocumentsPath
   ) {
     writeFileSync(
       `public/${path.basename(SITE_METADATA.search.kbarConfig.searchDocumentsPath)}`,
-      JSON.stringify(allCoreContent(sortPosts(allBlogs)))
+      JSON.stringify(allCoreContent(sortPosts(defaultVariantBlogs)))
     )
     console.log('Local search index generated...')
   }
@@ -135,7 +148,7 @@ export const Blog = defineDocumentType(() => ({
         dateModified: doc.lastmod || doc.date,
         description: doc.summary,
         image: doc.images ? doc.images[0] : SITE_METADATA.socialBanner,
-        url: `${SITE_METADATA.siteUrl}/${doc._raw.flattenedPath}`,
+        url: `${SITE_METADATA.siteUrl}/${getLocalizedContentPath(doc._raw.flattenedPath)}`,
       }),
     },
   },
@@ -330,7 +343,11 @@ export default makeSource({
   },
   onSuccess: async (importData) => {
     const { allBlogs, allSnippets, allGalleries } = await importData()
-    createTagCount([...allBlogs, ...allSnippets, ...allGalleries])
+    createTagCount([
+      ...allBlogs.filter((post) => isDefaultBlogScriptVariant(post)),
+      ...allSnippets,
+      ...allGalleries,
+    ])
     createSearchIndex(allBlogs)
   },
 })

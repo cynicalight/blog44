@@ -1,0 +1,115 @@
+---
+title: LLM日記
+summary: LLM日記
+date: 2025-05-31T00:00:00.000Z
+tags:
+  - llm
+draft: true
+images:
+  - /static/images/blog/2025/llm-diary/Pasted%20image%2020250523203336.webp
+authors:
+  - default
+---
+
+## Concept
+
+### 復讀機現象
+
+- 模型傾向於無限地複製輸入的文本或者以過度頻繁的方式重複相同的句子或短語。
+
+原因：
+
+- data bias：大量的重複文本，質量低
+- 任務太單一
+
+### logits
+
+logits 是模型的“原始輸出”（在softmax層之前），表示每個 token 的打分，沒經過任何概率歸一化處理。
+
+- 一般表示為向量 $z = (z_1, z_2, …, z_n)$
+
+在訓練中，logits 會傳入 softmax 轉為概率，再計算 loss：
+
+$$
+\text{softmax}(z_i) = \frac{e^{z_i}}{\sum_j e^{z_j}}
+$$
+
+#### logprobs
+
+logprobs 是 token 被預測為某個值的對數概率，即：
+
+$$
+\text{logprobs}(z_i) = \log \left( \frac{e^{z_i}}{\sum_j e^{z_j}} \right) = z_i - \log\left( \sum_j e^{z_j} \right)
+$$
+
+- logprobs 是 logits 經過 softmax 後的 log 值（log softmax）；
+
+通常用於：
+
+- 預測 top-k 的 token（概率最大的 token）
+- 計算 perplexity
+- 分析 token 被預測的置信度
+
+由logits計算logprobs：
+
+```python
+import numpy as np
+
+# 假设从模型中得到的logits
+logits = np.array([2.0, 1.0, 0.1])
+
+# 计算Softmax概率
+exp_logits = np.exp(logits)
+probabilities = exp_logits / np.sum(exp_logits)
+
+# 计算logprobs
+logprobs = np.log(probabilities)
+
+# 输出结果
+print("Logits: ", logits)
+print("Probabilities: ", probabilities)
+print("Log-probabilities: ", logprobs)
+```
+
+## Coding
+
+### world_size
+
+報錯信息：
+
+```bash
+Config mesh_device None world_size = 8
+```
+
+world_size 等於 num_processes，約等於分佈式訓練中GPU的個數。
+
+可以在訓練命令中通過修改 num_processes 參數來修改 world_size:
+
+```bash
+accelerate launch --num_processes=2
+```
+
+### hugging face
+
+#### 401
+
+權限問題，cli登錄：
+
+```bash
+huggingface-cli login
+```
+
+#### 403
+
+```bash
+OSError: You are trying to access a gated repo. Make sure to have access to it at [https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html). 403 Client Error.
+```
+
+訪問權限錯誤，因為Meta-Llama-3-8B-Instruct模型是一個受限訪問的倉庫。
+
+需要**申請訪問權限**：
+
+- 訪問[https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct__BLOG_SCRIPT_PROTECTED_7__
+- 點擊"Access Request"
+
+![](/static/images/blog/2025/llm-diary/Pasted%20image%2020250523203336.webp)

@@ -1,10 +1,17 @@
 import { allBlogs, allSnippets, allGalleries } from 'contentlayer/generated'
 import type { MetadataRoute } from 'next'
+import { filterBlogsByScriptVariant } from '~/lib/blog-script'
 import { SITE_METADATA } from '~/data/site-metadata'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const siteUrl = SITE_METADATA.siteUrl
-  const blogRoutes = allBlogs
+  const blogRoutes = filterBlogsByScriptVariant(allBlogs, 'zh-Hans')
+    .filter((p) => !p.draft)
+    .map(({ path, lastmod, date }) => ({
+      url: `${siteUrl}/${path}`,
+      lastModified: lastmod || date,
+    }))
+  const traditionalBlogRoutes = filterBlogsByScriptVariant(allBlogs, 'zh-Hant')
     .filter((p) => !p.draft)
     .map(({ path, lastmod, date }) => ({
       url: `${siteUrl}/${path}`,
@@ -26,6 +33,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const routes = [
     '',
     'blog',
+    'blog/zh-hant',
     'gallery',
     'snippets',
     'projects',
@@ -38,5 +46,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: new Date().toISOString().split('T')[0],
   }))
 
-  return [...routes, ...blogRoutes, ...snippetRoutes, ...galleryRoutes]
+  return [...routes, ...blogRoutes, ...traditionalBlogRoutes, ...snippetRoutes, ...galleryRoutes]
 }
