@@ -17,6 +17,7 @@ import { SITE_METADATA } from '~/data/site-metadata'
 import { ThemeProviders } from './theme-providers'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { FONT_JETBRAINS_MONO, FONT_PLAYPEN_SANS, FONT_EXO_2 } from '~/lib/fonts'
+import { Analytics } from '@vercel/analytics/next'
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_METADATA.siteUrl),
@@ -116,6 +117,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
           <SpeedInsights />
         </ThemeProviders>
+        <Analytics />
       </body>
     </html>
   )
