@@ -16,15 +16,7 @@ import { TiltedGridBackground } from '~/components/ui/tilted-grid-background'
 import { SITE_METADATA } from '~/data/site-metadata'
 import { ThemeProviders } from './theme-providers'
 import { SpeedInsights } from '@vercel/speed-insights/next'
-import {
-  FONT_JETBRAINS_MONO,
-  FONT_NUNITO,
-  FONT_PLAYPEN_SANS,
-  FONT_YUJI_BOKU,
-  FONT_ATHITI,
-  FONT_TINOS,
-  FONT_EXO_2,
-} from '~/lib/fonts'
+import { FONT_JETBRAINS_MONO, FONT_PLAYPEN_SANS, FONT_EXO_2 } from '~/lib/fonts'
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_METADATA.siteUrl),
@@ -74,12 +66,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang={SITE_METADATA.language}
       className={clsx(
         'scroll-smooth',
-        FONT_NUNITO.variable,
         FONT_JETBRAINS_MONO.variable,
         FONT_PLAYPEN_SANS.variable,
-        FONT_YUJI_BOKU.variable,
-        FONT_ATHITI.variable,
-        FONT_TINOS.variable,
         FONT_EXO_2.variable
       )}
       suppressHydrationWarning

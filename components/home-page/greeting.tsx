@@ -5,6 +5,7 @@ export function Greeting() {
   return (
     <div
       className={clsx(
+        'mx-auto max-w-4xl space-y-8 text-center',
         'font-greeting font-extrabold',
         'text-[40px] leading-[56px] md:text-[68px] md:leading-[80px]', // 放大字体尺寸
 

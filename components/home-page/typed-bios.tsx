@@ -29,6 +29,7 @@ export function TypedBios() {
   return (
     <div
       className={clsx([
+        'text-lg leading-8 md:text-xl md:leading-9',
         'flex min-h-8 items-center justify-center gap-0.5', // 添加 justify-center 居中对齐
         [
           '[&_.typed-cursor]:inline-block',
@@ -44,7 +45,7 @@ export function TypedBios() {
         {/* <li>
           I'm aliased as <span className="font-medium">Xiaoke</span> at work.
         </li> */}
-        <li>I work mostly with Swift and Python.</li>
+        <li>I work mostly with Swift and TypeScript.</li>
         <li>I love street photography.</li>
         <li>
           My first programming language was <b className="font-medium">C on Arduino</b>.

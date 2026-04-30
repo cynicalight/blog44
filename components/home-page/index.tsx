@@ -21,7 +21,7 @@ export function Home({
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY
-      const threshold = 200 // 滚动超过200px时显示内容
+      const threshold = 200
 
       if (scrollY > threshold) {
         setShowLatestPosts(true)
@@ -40,21 +40,11 @@ export function Home({
     <Container as="div" className="pt-0">
       {/* 主内容区域 - 全宽居中，稍微偏上显示 */}
       <div
-        className="relative flex min-h-screen flex-col items-center py-8"
+        className="relative flex min-h-screen flex-col items-center space-y-6 py-8"
         style={{ justifyContent: 'center', paddingTop: '15vh', paddingBottom: '25vh' }}
       >
-        <div className="mx-auto max-w-4xl space-y-8 text-center">
-          <Greeting />
-          <div className="text-lg leading-8 text-gray-600 dark:text-gray-400 md:text-xl md:leading-9">
-            <TypedBios />
-            <div className="mb-6 mt-6 md:mb-8 md:mt-8">
-              {/* <p className="text-xl md:text-2xl leading-relaxed">
-                This is the track of my journey along the way, the path I have paved with my
-                experiences and thoughts.{' '}
-              </p> */}
-            </div>
-          </div>
-        </div>
+        <Greeting />
+        <TypedBios />
 
         {/* 首页下拉箭头 滚动提示箭头 - 固定在屏幕底部 */}
         {showScrollHint && (

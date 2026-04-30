@@ -112,14 +112,6 @@ samp {
 }
 
 @font-face {
-  font-family: 'Playwrite AU SA';
-  src: url('/fonts/PlaywriteAUSA-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
   font-family: 'GenWanMin';
   src: url('/fonts/GenWanMin2TC-R.otf') format('opentype');
   /* font-weight: 600; */
