@@ -1,0 +1,116 @@
+---
+title: Python Duck Typing
+date: '2026-07-04'
+tags:
+  - python
+draft: false
+summary: Duck typing 的核心思想、它的優勢場景，以及和 C++/Swift/TypeScript 中類似機制的對比。
+authors:
+  - default
+---
+### 背景
+
+Duck typing 是 Python 的一種類型哲學：不關心對象的類型名，只關心對象有沒有需要的方法/屬性。名字來自"如果一個東西走起來像鴨子、叫起來像鴨子，那它就是鴨子"。這種"只看行為不看血統"的寫法一開始容易讓人困惑，尤其是從 C++/Swift 這類強類型語言過來時。
+
+### 核心示例
+
+```python
+class Duck:
+    def quack(self): print("嘎嘎")
+
+class Person:
+    def quack(self): print("我在模仿鸭子")
+
+def make_it_quack(thing):
+    thing.quack()  # 不关心 thing 的类型，只要有 quack() 方法就行
+```
+
+`Duck` 和 `Person` 完全沒有繼承關係，`make_it_quack` 也不做任何類型檢查，運行到 `thing.quack()` 時才會去看這個方法存不存在。
+
+### 優勢：別的語言能不能這樣寫？
+
+能，但通常需要**提前顯式聲明**繼承/遵循關係。
+
+**C++：必須有公共基類**
+
+```cpp
+class Quackable {
+public:
+    virtual void quack() = 0;
+};
+
+class Duck : public Quackable {
+public:
+    void quack() override { cout << "嘎嘎"; }
+};
+
+class Person : public Quackable {
+public:
+    void quack() override { cout << "我在模仿鸭子"; }
+};
+
+void make_it_quack(Quackable& thing) {
+    thing.quack();
+}
+```
+
+**Swift：必須顯式遵循 Protocol**
+
+```swift
+protocol Quackable {
+    func quack()
+}
+
+class Duck: Quackable {
+    func quack() { print("嘎嘎") }
+}
+
+class Person: Quackable {
+    func quack() { print("我在模仿鸭子") }
+}
+
+func makeItQuack(_ thing: Quackable) {
+    thing.quack()
+}
+```
+
+**關鍵場景**：如果 `Duck` 和 `Person` 是第三方庫裡定義的類，你根本沒法修改它們的源碼去加繼承關係。C++/Swift 遇到這種情況通常得寫適配器（wrapper）包一層；Python 則完全不用做任何聲明，直接傳對象進去就行，因為檢查發生在調用那一刻，不關心"血統"。
+
+這也是 duck typing 最大的實際價值：**解耦**。不需要強迫毫不相關的類共享一個基類才能被同一個函數使用。
+
+### 注意事項
+
+純運行時 duck typing 也有真實的代價：
+
+- **沒有編譯期保證**：傳錯對象時，程序要跑到調用 `.quack()` 那一行才會報 `AttributeError`，而不是在傳參那一刻就報錯。
+- **隱式契約難維護**：函數簽名看不出"到底需要對象具備哪些方法"，必須讀函數體才知道。
+
+### 折中方案：結構化類型 + 靜態檢查
+
+現代實踐更傾向於"聲明形狀，但不強制繼承"，把 duck typing 的靈活性和靜態類型的安全性結合起來：
+
+- **Python `typing.Protocol`**：聲明一個"形狀"，`Duck` 類完全不用改，只要它恰好有 `quack()` 方法，類型檢查器（mypy/pyright）就認為它滿足 `Quackable`，且能在寫代碼時就檢查出錯誤，而不是等運行時炸。
+
+  ```python
+  from typing import Protocol
+
+  class Quackable(Protocol):
+      def quack(self) -> None: ...
+
+  def make_it_quack(thing: Quackable) -> None:
+      thing.quack()
+  ```
+
+- **TypeScript**：類型系統本身就是結構化類型（structural typing），`interface` 匹配看的是形狀而不是名字——相當於"靜態檢查版的 duck typing"，不需要顯式寫 `implements`。
+
+- **Swift**：`Protocol` 更接近顯式聲明遵循關係（必須寫 `: Quackable`），但本質上也是行為導向而非繼承導向。
+
+### 小結
+
+| 語言 | 類型判斷方式 | 是否需要顯式聲明 | 檢查時機 |
+|------|------|------|------|
+| Python（純 duck typing） | 看方法是否存在 | 不需要 | 運行時 |
+| Python（`typing.Protocol`） | 看方法是否存在 | 不需要（但可加類型檢查） | 靜態檢查 + 運行時 |
+| C++ | 看繼承關係 | 需要（`public Quackable`） | 編譯期 |
+| Swift | 看是否遵循 Protocol | 需要（`: Quackable`） | 編譯期 |
+| TypeScript | 看結構是否匹配 | 不需要 | 編譯期（結構化類型） |
