@@ -1,15 +1,1 @@
-{
-  "java": 3,
-  "sec": 8,
-  "php": 2,
-  "python": 1,
-  "others": 10,
-  "cs": 3,
-  "embedded": 1,
-  "linux": 1,
-  "llm": 3,
-  "ml": 3,
-  "rl": 1,
-  "paper": 1,
-  "swfit": 1
-}
+{"ml":3,"myself":1,"python":2,"swfit":1,"java":3,"sec":8,"php":2,"others":10,"cs":3,"embedded":1,"linux":1,"llm":3,"rl":1,"paper":1}

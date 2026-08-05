@@ -6,10 +6,10 @@ export default async function EditAdminPostPage(props: {
   const searchParams = await props.searchParams
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">编辑文章</h1>
-        <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+        <h2 className="text-2xl font-semibold tracking-tight">编辑文章</h2>
+        <p className="text-sm text-muted-foreground">
           修改会直接提交到 GitHub main，并触发 Vercel 重建。
         </p>
       </div>

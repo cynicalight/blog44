@@ -1,4 +1,6 @@
-# bu44er.ink 管理后台系统 - 第一阶段完成
+# bu44er.ink 管理后台系统 - 第一阶段完成（历史记录）
+
+> 本文记录早期原型，当前实现已由同一 Next.js 应用中的 `app/api/admin/*` Route Handlers 提供，不再使用独立 Go 后端；请以 `app/admin/`、`app/api/admin/`、`lib/admin-auth.ts` 和 `lib/admin-content.ts` 为准。
 
 ## ✅ 已完成的功能
 

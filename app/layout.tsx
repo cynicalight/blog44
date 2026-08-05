@@ -10,8 +10,7 @@ import type { Metadata } from 'next'
 import type { SearchConfig } from 'pliny/search'
 import { SearchProvider } from 'pliny/search'
 import { UmamiAnalytics } from '~/components/analytics/umami'
-import { Footer } from '~/components/footer'
-import { Header } from '~/components/header'
+import { SiteChrome } from '~/components/site-chrome'
 import { TiltedGridBackground } from '~/components/ui/tilted-grid-background'
 import { SITE_METADATA } from '~/data/site-metadata'
 import { ThemeProviders } from './theme-providers'
@@ -109,12 +108,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProviders>
           <UmamiAnalytics websiteId={SITE_METADATA.analytics.umamiAnalytics.websiteId} />
           <SearchProvider searchConfig={SITE_METADATA.search as SearchConfig}>
-            <Header className="site-header" />
-            <main className="site-main mb-auto grow">{children}</main>
+            <SiteChrome>{children}</SiteChrome>
           </SearchProvider>
-          <div className="site-footer">
-            <Footer />
-          </div>
           <SpeedInsights />
         </ThemeProviders>
         <Analytics />

@@ -1,7 +1,21 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+import { format } from 'date-fns'
+import { zhCN } from 'date-fns/locale'
+import { CalendarIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { Alert, AlertDescription } from '~/components/ui/alert'
+import { Badge } from '~/components/ui/badge'
+import { Button } from '~/components/ui/button'
+import { Calendar } from '~/components/ui/calendar'
+import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
+import { Input } from '~/components/ui/input'
+import { Label } from '~/components/ui/label'
+import { Popover, PopoverContent, PopoverTrigger } from '~/components/ui/popover'
+import { Skeleton } from '~/components/ui/skeleton'
+import { Textarea } from '~/components/ui/textarea'
+import { cn } from '~/lib/utils'
 import {
   buildSourcePath,
   encodeAdminApiPath,
@@ -23,14 +37,11 @@ const EMPTY_FORM: AdminPostInput = {
   date: new Date().toISOString().slice(0, 10),
   summary: '',
   tags: [],
-  draft: true,
+  draft: false,
   coverImage: '',
   canonicalUrl: '',
   body: '',
 }
-
-const TOGGLE_BASE =
-  'inline-flex items-center justify-center rounded-full border px-4 py-2 text-sm font-medium transition-all duration-200 ease-out active:scale-[0.98]'
 
 function ToggleButton({
   active,
@@ -42,17 +53,9 @@ function ToggleButton({
   children: React.ReactNode
 }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={
-        active
-          ? `${TOGGLE_BASE} border-indigo-300 bg-indigo-600 text-white shadow-[0_10px_30px_rgba(79,70,229,0.24)] hover:bg-indigo-500`
-          : `${TOGGLE_BASE} border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:hover:border-gray-600 dark:hover:bg-gray-800`
-      }
-    >
+    <Button type="button" onClick={onClick} variant={active ? 'default' : 'outline'} size="sm">
       {children}
-    </button>
+    </Button>
   )
 }
 
@@ -225,209 +228,250 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
 
   if (isLoading) {
     return (
-      <div className="rounded-lg bg-white p-6 shadow dark:bg-gray-800">正在加载文章内容...</div>
+      <Card>
+        <CardContent className="space-y-3 p-6">
+          <Skeleton className="h-9 w-48" />
+          <Skeleton className="h-24 w-full" />
+          <Skeleton className="h-80 w-full" />
+        </CardContent>
+      </Card>
     )
   }
 
   return (
     <div className="space-y-6">
-      <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-900/40 dark:bg-amber-950/30 dark:text-amber-100">
-        保存后会直接提交到 GitHub `main`，并由 Vercel 自动重新部署。图片请填写已上传到 COS 的 URL。
-      </div>
+      <Alert>
+        <AlertDescription>
+          保存后会直接提交到 GitHub `main`，并由 Vercel 自动重新部署。图片请填写已上传到 COS 的
+          URL。
+        </AlertDescription>
+      </Alert>
 
       {error ? (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-900/40 dark:bg-red-950/30 dark:text-red-200">
-          {error}
-        </div>
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       ) : null}
 
       {success ? (
-        <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-700 dark:border-emerald-900/40 dark:bg-emerald-950/30 dark:text-emerald-200">
-          {success}
-        </div>
+        <Alert>
+          <AlertDescription>{success}</AlertDescription>
+        </Alert>
       ) : null}
 
       <form className="space-y-6" onSubmit={handleSubmit}>
-        <div className="grid gap-6 lg:grid-cols-2">
-          <label className="space-y-2">
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-200">标题</span>
-            <input
-              value={form.title}
-              onChange={(event) => updateField('title', event.target.value)}
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none ring-indigo-500 focus:ring-2 dark:border-gray-700 dark:bg-gray-900"
-              placeholder="文章标题"
-              required
-            />
-          </label>
-
-          <label className="space-y-2">
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Slug</span>
-            <input
-              value={form.slug}
-              onChange={(event) => updateField('slug', event.target.value)}
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none ring-indigo-500 focus:ring-2 dark:border-gray-700 dark:bg-gray-900"
-              placeholder="my-post"
-              required
-            />
-          </label>
-
-          <label className="space-y-2">
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-200">日期</span>
-            <input
-              type="date"
-              value={form.date}
-              onChange={(event) => updateField('date', event.target.value)}
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none ring-indigo-500 focus:ring-2 dark:border-gray-700 dark:bg-gray-900"
-              required
-            />
-          </label>
-
-          {form.contentType === 'blog' ? (
+        <Card>
+          <CardHeader>
+            <CardTitle>基本信息</CardTitle>
+          </CardHeader>
+          <CardContent className="grid gap-6 lg:grid-cols-2">
             <div className="space-y-2">
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
-                当前稿件字形
-              </span>
+              <Label>类型</Label>
               <div className="flex flex-wrap gap-2">
                 <ToggleButton
-                  active={form.scriptVariant === 'zh-Hans'}
-                  onClick={() => updateField('scriptVariant', 'zh-Hans' as BlogScriptVariant)}
+                  active={form.contentType === 'blog'}
+                  onClick={() => updateField('contentType', 'blog' as AdminContentType)}
                 >
-                  简体
+                  Blog
                 </ToggleButton>
                 <ToggleButton
-                  active={form.scriptVariant === 'zh-Hant'}
-                  onClick={() => updateField('scriptVariant', 'zh-Hant' as BlogScriptVariant)}
+                  active={form.contentType === 'gallery'}
+                  onClick={() => updateField('contentType', 'gallery' as AdminContentType)}
                 >
-                  繁體
+                  Gallery
                 </ToggleButton>
               </div>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
-                保存时会自动生成另一套字形版本，并一起提交到仓库。
-              </p>
             </div>
-          ) : null}
 
-          <div className="space-y-2">
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-200">状态</span>
-            <div className="flex flex-wrap gap-2">
-              <ToggleButton active={!form.draft} onClick={() => updateField('draft', false)}>
-                已发布
-              </ToggleButton>
-              <ToggleButton active={form.draft} onClick={() => updateField('draft', true)}>
-                草稿
-              </ToggleButton>
+            <div className="space-y-2">
+              <Label>状态</Label>
+              <div className="flex flex-wrap gap-2">
+                <ToggleButton active={!form.draft} onClick={() => updateField('draft', false)}>
+                  发布
+                </ToggleButton>
+                <ToggleButton active={form.draft} onClick={() => updateField('draft', true)}>
+                  草稿
+                </ToggleButton>
+              </div>
             </div>
-          </div>
 
-          <div className="space-y-2">
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-200">类型</span>
-            <div className="flex flex-wrap gap-2">
-              <ToggleButton
-                active={form.contentType === 'blog'}
-                onClick={() => updateField('contentType', 'blog' as AdminContentType)}
-              >
-                Blog
-              </ToggleButton>
-              <ToggleButton
-                active={form.contentType === 'gallery'}
-                onClick={() => updateField('contentType', 'gallery' as AdminContentType)}
-              >
-                Gallery
-              </ToggleButton>
+            <div className="space-y-2">
+              <Label htmlFor="post-title">标题</Label>
+              <Input
+                id="post-title"
+                value={form.title}
+                onChange={(event) => updateField('title', event.target.value)}
+                placeholder="文章标题"
+                required
+              />
             </div>
-          </div>
 
-          <label className="space-y-2 lg:col-span-2">
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-200">摘要</span>
-            <textarea
-              value={form.summary}
-              onChange={(event) => updateField('summary', event.target.value)}
-              className="min-h-24 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none ring-indigo-500 focus:ring-2 dark:border-gray-700 dark:bg-gray-900"
-              placeholder="文章摘要"
-            />
-          </label>
+            <div className="space-y-2">
+              <Label htmlFor="post-slug">Slug</Label>
+              <Input
+                id="post-slug"
+                value={form.slug}
+                onChange={(event) => updateField('slug', event.target.value)}
+                placeholder="my-post"
+                required
+              />
+            </div>
 
-          <label className="space-y-2 lg:col-span-2">
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
-              Tags（逗号分隔）
-            </span>
-            <input
-              value={tagInput}
-              onChange={(event) => setTagInput(event.target.value)}
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none ring-indigo-500 focus:ring-2 dark:border-gray-700 dark:bg-gray-900"
-              placeholder="sec, java"
-            />
-          </label>
+            <div className="space-y-2">
+              <Label>日期</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className={cn(
+                      'w-full justify-start text-left font-normal',
+                      !form.date && 'text-muted-foreground'
+                    )}
+                  >
+                    <CalendarIcon />
+                    {form.date ? (
+                      format(new Date(`${form.date}T00:00:00`), 'PPP', { locale: zhCN })
+                    ) : (
+                      <span>选择日期</span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={form.date ? new Date(`${form.date}T00:00:00`) : undefined}
+                    onSelect={(date) => {
+                      if (date) updateField('date', format(date, 'yyyy-MM-dd'))
+                    }}
+                    locale={zhCN}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
 
-          <label className="space-y-2 lg:col-span-2">
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-200">封面图 URL</span>
-            <input
-              value={form.coverImage}
-              onChange={(event) => updateField('coverImage', event.target.value)}
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none ring-indigo-500 focus:ring-2 dark:border-gray-700 dark:bg-gray-900"
-              placeholder="https://cos.example.com/blog/cover.webp"
-            />
-          </label>
+            {form.contentType === 'blog' ? (
+              <div className="space-y-2">
+                <Label>当前稿件字形</Label>
+                <div className="flex flex-wrap gap-2">
+                  <ToggleButton
+                    active={form.scriptVariant === 'zh-Hans'}
+                    onClick={() => updateField('scriptVariant', 'zh-Hans' as BlogScriptVariant)}
+                  >
+                    简体
+                  </ToggleButton>
+                  <ToggleButton
+                    active={form.scriptVariant === 'zh-Hant'}
+                    onClick={() => updateField('scriptVariant', 'zh-Hant' as BlogScriptVariant)}
+                  >
+                    繁體
+                  </ToggleButton>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  保存时会自动生成另一套字形版本，并一起提交到仓库。
+                </p>
+              </div>
+            ) : null}
 
-          <label className="space-y-2 lg:col-span-2">
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
-              canonicalUrl
-            </span>
-            <input
-              value={form.canonicalUrl}
-              onChange={(event) => updateField('canonicalUrl', event.target.value)}
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none ring-indigo-500 focus:ring-2 dark:border-gray-700 dark:bg-gray-900"
-              placeholder="https://example.com/original-post"
-            />
-          </label>
-        </div>
+            <div className="space-y-2 lg:col-span-2">
+              <Label htmlFor="post-summary">摘要</Label>
+              <Textarea
+                id="post-summary"
+                value={form.summary}
+                onChange={(event) => updateField('summary', event.target.value)}
+                className="min-h-24"
+                placeholder="文章摘要"
+              />
+            </div>
 
-        <div className="rounded-lg border border-gray-200 bg-white p-4 text-sm dark:border-gray-700 dark:bg-gray-900">
-          <div className="font-medium text-gray-700 dark:text-gray-200">发布预览</div>
-          <div className="mt-2 space-y-1 text-gray-600 dark:text-gray-300">
-            <div>内容类型：{form.contentType === 'gallery' ? 'Gallery' : 'Blog'}</div>
+            <div className="space-y-2 lg:col-span-2">
+              <Label htmlFor="post-tags">Tags（逗号分隔）</Label>
+              <Input
+                id="post-tags"
+                value={tagInput}
+                onChange={(event) => setTagInput(event.target.value)}
+                placeholder="sec, java"
+              />
+            </div>
+
+            <div className="space-y-2 lg:col-span-2">
+              <Label htmlFor="post-cover">封面图 URL</Label>
+              <Input
+                id="post-cover"
+                value={form.coverImage}
+                onChange={(event) => updateField('coverImage', event.target.value)}
+                placeholder="https://cos.example.com/blog/cover.webp"
+              />
+            </div>
+
+            <div className="space-y-2 lg:col-span-2">
+              <Label htmlFor="post-canonical">canonicalUrl</Label>
+              <Input
+                id="post-canonical"
+                value={form.canonicalUrl}
+                onChange={(event) => updateField('canonicalUrl', event.target.value)}
+                placeholder="https://example.com/original-post"
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>发布预览</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <span>内容类型：</span>
+              <Badge variant="secondary">
+                {form.contentType === 'gallery' ? 'Gallery' : 'Blog'}
+              </Badge>
+            </div>
             {form.contentType === 'blog' ? (
               <div>当前稿件：{form.scriptVariant === 'zh-Hant' ? '繁體' : '简体'}</div>
             ) : null}
-            <div>仓库路径：{previewPath || '请先填写合法日期和 slug'}</div>
-            <div>公开链接：{previewPublicPath || '请先填写合法日期和 slug'}</div>
-          </div>
-        </div>
+            <div className="break-all">仓库路径：{previewPath || '请先填写合法日期和 slug'}</div>
+            <div className="break-all">
+              公开链接：{previewPublicPath || '请先填写合法日期和 slug'}
+            </div>
+          </CardContent>
+        </Card>
 
-        <label className="block space-y-2">
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-200">正文</span>
-          <textarea
-            value={form.body}
-            onChange={(event) => updateField('body', event.target.value)}
-            className="min-h-[520px] w-full rounded-lg border border-gray-300 bg-white px-4 py-3 font-mono text-sm outline-none ring-indigo-500 focus:ring-2 dark:border-gray-700 dark:bg-gray-900"
-            placeholder="# 标题"
-          />
-        </label>
+        <Card>
+          <CardHeader>
+            <CardTitle>正文</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Label htmlFor="post-body" className="sr-only">
+              正文
+            </Label>
+            <Textarea
+              id="post-body"
+              value={form.body}
+              onChange={(event) => updateField('body', event.target.value)}
+              className="min-h-[520px] font-mono"
+              placeholder="# 标题"
+            />
+          </CardContent>
+        </Card>
 
         <div className="flex flex-wrap items-center gap-3">
-          <button
-            type="submit"
-            disabled={isSaving}
-            className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
-          >
+          <Button type="submit" disabled={isSaving}>
             {isSaving ? '保存中...' : mode === 'edit' ? '保存修改' : '创建文章'}
-          </button>
-          <button
-            type="button"
-            onClick={() => router.push('/admin/posts')}
-            className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800"
-          >
+          </Button>
+          <Button type="button" variant="outline" onClick={() => router.push('/admin/posts')}>
             返回文章列表
-          </button>
+          </Button>
           {mode === 'edit' && sourcePath ? (
-            <button
+            <Button
               type="button"
+              variant="destructive"
               onClick={handleDelete}
               disabled={isDeleting}
-              className="rounded-lg border border-red-300 px-4 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-red-900/60 dark:text-red-300 dark:hover:bg-red-950/40"
             >
               {isDeleting ? '删除中...' : '删除文章'}
-            </button>
+            </Button>
           ) : null}
         </div>
       </form>

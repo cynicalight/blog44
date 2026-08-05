@@ -1,31 +1,20 @@
-/* 管理后台专用样式 */
-:root {
-  --admin-bg: 250 250 250;
-  --admin-sidebar: 255 255 255;
-  --admin-border: 229 231 235;
-  --admin-accent: 99 102 241;
+html:has(.admin-layout-root) {
+  font-size: 16px;
 }
 
-.dark {
-  --admin-bg: 17 24 39;
-  --admin-sidebar: 31 41 55;
-  --admin-border: 55 65 81;
+body:has(.admin-layout-root) {
+  --radius: 0.625rem;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
 }
 
-.admin-layout {
-  background-color: rgb(var(--admin-bg));
-}
-
-.admin-sidebar {
-  background-color: rgb(var(--admin-sidebar));
-  border-color: rgb(var(--admin-border));
-}
-
-body.admin-route .site-header,
-body.admin-route .site-footer {
-  display: none;
-}
-
-body.admin-route .site-main {
+body:has(.admin-layout-root) .site-main {
   margin-bottom: 0;
 }
