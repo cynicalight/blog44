@@ -1,5 +1,6 @@
 import { clsx } from 'clsx'
 import { type Gallery } from 'contentlayer/generated'
+import Image from 'next/image'
 import { type CoreContent } from 'pliny/utils/contentlayer'
 import { Link } from '~/components/ui/link'
 import type { BrandsMap } from '~/components/ui/brand'
@@ -8,7 +9,13 @@ import { GradientBorder } from '~/components/ui/gradient-border'
 import { GrowingUnderline } from '~/components/ui/growing-underline'
 import { TiltedGridBackground } from '~/components/ui/tilted-grid-background'
 
-export function GalleryCard({ gallery }: { gallery: CoreContent<Gallery> }) {
+export function GalleryCard({
+  gallery,
+  preloadCover = false,
+}: {
+  gallery: CoreContent<Gallery>
+  preloadCover?: boolean
+}) {
   const { title, summary, path, images } = gallery
   const cover = Array.isArray(images) ? images[0] : images
 
@@ -26,11 +33,14 @@ export function GalleryCard({ gallery }: { gallery: CoreContent<Gallery> }) {
       >
         <TiltedGridBackground className="inset-0" />
         {cover && (
-          <img
+          <Image
             src={cover}
             alt={title}
+            width={1200}
+            height={720}
+            sizes="(max-width: 767px) calc(100vw - 2rem), 50vw"
+            preload={preloadCover}
             className="h-48 w-full rounded-2xl object-cover"
-            loading="lazy"
           />
         )}
         <div className="relative w-full px-4 pb-6 pt-6">

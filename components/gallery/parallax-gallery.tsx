@@ -1,6 +1,7 @@
 'use client'
 
 import { useScroll, useTransform, motion } from 'framer-motion'
+import Image from 'next/image'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Zoom } from '~/components/ui/image'
 import { useWindowSize } from 'react-use'
@@ -58,11 +59,11 @@ export function ParallaxGallery({ images }: { images: { src: string; aspectRatio
           >
             {col.map((img, i) => (
               <div key={`${colIndex}-${i}`} className="relative w-full rounded-lg">
-                <img
+                <GalleryImage
                   src={img.src}
-                  alt="Gallery Image"
-                  className="h-auto w-full object-contain"
-                  loading="lazy"
+                  aspectRatio={img.aspectRatio}
+                  alt={`Gallery Image ${i + 1}`}
+                  preload={colIndex === 0 && i === 0}
                 />
               </div>
             ))}
@@ -85,11 +86,11 @@ export function ParallaxGallery({ images }: { images: { src: string; aspectRatio
               canSwipeToUnzoom={true}
               zoomMargin={40}
             >
-              <img
+              <GalleryImage
                 src={img.src}
+                aspectRatio={img.aspectRatio}
                 alt={`Gallery Image ${i + 1}`}
-                className="h-auto w-full rounded-2xl object-contain"
-                loading="lazy"
+                preload={i === 0}
               />
             </Zoom>
           </div>
@@ -107,14 +108,49 @@ export function ParallaxGallery({ images }: { images: { src: string; aspectRatio
       className="gallery-container box-border flex min-h-[200vh] gap-[2vw] overflow-hidden p-[2vw]"
       style={{ paddingBottom: maxOffset }}
     >
-      <Column images={columns[0]} y={y} />
+      <Column images={columns[0]} y={y} preloadFirst />
       <Column images={columns[1]} y={y2} />
       <Column images={columns[2]} y={y3} />
     </div>
   )
 }
 
-const Column = ({ images, y }: { images: { src: string; aspectRatio: number }[]; y: any }) => {
+function GalleryImage({
+  src,
+  aspectRatio,
+  alt,
+  preload = false,
+}: {
+  src: string
+  aspectRatio: number
+  alt: string
+  preload?: boolean
+}) {
+  const width = 1600
+  const height = Math.max(1, Math.round(width / aspectRatio))
+
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      sizes="(max-width: 767px) calc(100vw - 1rem), 33vw"
+      preload={preload}
+      className="h-auto w-full rounded-2xl object-contain"
+    />
+  )
+}
+
+const Column = ({
+  images,
+  y,
+  preloadFirst = false,
+}: {
+  images: { src: string; aspectRatio: number }[]
+  y: any
+  preloadFirst?: boolean
+}) => {
   return (
     <motion.div
       suppressHydrationWarning
@@ -132,11 +168,11 @@ const Column = ({ images, y }: { images: { src: string; aspectRatio: number }[];
               canSwipeToUnzoom={true}
               zoomMargin={40}
             >
-              <img
+              <GalleryImage
                 src={img.src}
-                alt={`Gallery Image`}
-                className="h-auto w-full rounded-2xl object-contain"
-                loading="lazy"
+                aspectRatio={img.aspectRatio}
+                alt="Gallery Image"
+                preload={preloadFirst && i === 0}
               />
             </Zoom>
           </div>

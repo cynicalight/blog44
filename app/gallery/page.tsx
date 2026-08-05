@@ -19,8 +19,8 @@ export default function GalleryPage() {
       />
       <div className="py-10">
         <div className="grid-cols-2 gap-x-6 gap-y-10 space-y-10 md:grid md:space-y-0">
-          {galleries.map((gallery) => (
-            <GalleryCard gallery={gallery} key={gallery.path} />
+          {galleries.map((gallery, index) => (
+            <GalleryCard gallery={gallery} preloadCover={index === 0} key={gallery.path} />
           ))}
         </div>
       </div>
