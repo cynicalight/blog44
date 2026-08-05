@@ -199,7 +199,7 @@ export function TypedBios() {
 
   return (
     <div
-      className="relative mx-auto grid w-full max-w-3xl cursor-none select-none"
+      className="relative mx-auto h-8 w-full max-w-3xl cursor-none select-none md:h-9"
       onPointerEnter={(event) => {
         const rect = event.currentTarget.getBoundingClientRect()
         pointerRef.current = { x: event.clientX - rect.left, y: event.clientY - rect.top, active: true }
@@ -215,12 +215,12 @@ export function TypedBios() {
     >
       <span
         ref={textRef}
-        className="col-start-1 row-start-1 w-full text-left text-lg leading-8 text-neutral-900 opacity-0 dark:text-neutral-200 md:text-xl md:leading-9"
+        className="absolute inset-0 w-full text-left text-lg leading-8 text-gray-700 opacity-0 dark:text-gray-300 md:text-xl md:leading-9"
         style={{ fontFamily: 'var(--font-exo-2)' }}
       >
         {text}
       </span>
-      <canvas ref={canvasRef} aria-hidden="true" className="pointer-events-none col-start-1 row-start-1" />
+      <canvas ref={canvasRef} aria-hidden="true" className="pointer-events-none absolute inset-0" />
     </div>
   )
 }

@@ -40,7 +40,7 @@ export function Home({
     <Container as="div" className="pt-0">
       {/* 主内容区域 - 全宽居中，稍微偏上显示 */}
       <div
-        className="relative flex min-h-screen flex-col items-center space-y-6 py-8"
+        className="relative flex min-h-screen flex-col items-center space-y-3 py-8"
         style={{ justifyContent: 'center', paddingTop: '15vh', paddingBottom: '25vh' }}
       >
         <Greeting />
