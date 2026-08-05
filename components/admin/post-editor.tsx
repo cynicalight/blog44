@@ -345,7 +345,6 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
                       if (date) updateField('date', format(date, 'yyyy-MM-dd'))
                     }}
                     locale={zhCN}
-                    initialFocus
                   />
                 </PopoverContent>
               </Popover>
