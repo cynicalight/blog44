@@ -6,6 +6,34 @@ html {
   font-size: 14px;
 }
 
+@media (hover: hover) and (pointer: fine) {
+  .particle-cursor-active,
+  .particle-cursor-active * {
+    cursor: none !important;
+  }
+}
+
+.particle-cursor {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 120ms ease;
+  will-change: opacity;
+}
+
+.particle-burst {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+}
+
 /* 自定义 h1 标题间距 */
 .prose h1 {
   margin-top: 1em !important;

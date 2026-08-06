@@ -44,17 +44,12 @@ export function Header({ className }: { className?: string }) {
       as="header"
       className={clsx(
         className,
-        // 现代化背景和毛玻璃效果
-        'border border-gray-200/50 bg-white/80 backdrop-blur-md',
-        'dark:border-gray-800/50 dark:bg-zinc-900',
-        // 优化阴影效果
-        'shadow-lg shadow-gray-200/20 dark:shadow-gray-900/40',
-        // 圆角和内边距
-        'px-2 py-3 md:rounded-2xl',
-        // 悬停效果
-        'transition-all duration-300 ease-in-out',
-        'hover:shadow-xl hover:shadow-gray-200/30 dark:hover:shadow-gray-900/60',
-        'hover:bg-white/90 dark:hover:bg-zinc-900',
+        'rounded-full border border-white/35 bg-white/30 px-2 py-2 backdrop-blur-sm',
+        'ring-1 ring-inset ring-white/20 shadow-sm shadow-slate-950/10',
+        'dark:border-white/15 dark:bg-zinc-950/30 dark:ring-white/10 dark:shadow-black/20',
+        'transition-[background-color,border-color,box-shadow] duration-200 ease-out',
+        'hover:bg-white/40 hover:shadow-md hover:shadow-slate-950/10',
+        'dark:hover:bg-zinc-950/40 dark:hover:shadow-black/30',
         // 粘性定位
         SITE_METADATA.stickyNav && 'sticky top-3 z-50 lg:top-4'
       )}
@@ -65,9 +60,8 @@ export function Header({ className }: { className?: string }) {
           href="/"
           className={clsx(
             'rounded-lg px-4 py-2 text-lg font-bold transition-all duration-200',
-            'hover:bg-gray-100 dark:hover:bg-gray-800',
             pathname === '/'
-              ? 'bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-white'
+              ? 'text-gray-900 dark:text-white'
               : 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
           )}
         >
