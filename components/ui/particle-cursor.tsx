@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 
-type Particle = {
+type CursorParticle = {
   originX: number
   originY: number
   x: number
@@ -13,9 +13,18 @@ type Particle = {
   phase: number
 }
 
+type TitleParticle = {
+  originX: number
+  originY: number
+  x: number
+  y: number
+  vx: number
+  vy: number
+}
+
 type Burst = {
   opacity: number
-  particles: Array<Pick<Particle, 'x' | 'y' | 'vx' | 'vy' | 'size' | 'phase'>>
+  particles: Array<Pick<CursorParticle, 'x' | 'y' | 'vx' | 'vy' | 'size' | 'phase'>>
 }
 
 type PointerSample = {
@@ -30,6 +39,10 @@ const CURSOR_HOTSPOT = { x: 28, y: 22 }
 const CURSOR_CENTER = { x: 35, y: 37 }
 const CURSOR_OUTER_RADIUS = 15
 const TRAIL_DURATION_MS = 180
+const TITLE_SCATTER_RADIUS = 128
+const TITLE_SCATTER_FORCE = 0.85
+const TITLE_GRAVITY_RADIUS = 220
+const TITLE_GRAVITY_FORCE = 0.16
 const CURSOR_OUTLINE: Array<[number, number]> = [
   [28, 22],
   [28, 42],
@@ -42,10 +55,14 @@ const CURSOR_OUTLINE: Array<[number, number]> = [
 
 function isInsideCursorOutline(x: number, y: number) {
   let inside = false
-  for (let index = 0, previous = CURSOR_OUTLINE.length - 1; index < CURSOR_OUTLINE.length; previous = index++) {
+  for (
+    let index = 0, previous = CURSOR_OUTLINE.length - 1;
+    index < CURSOR_OUTLINE.length;
+    previous = index++
+  ) {
     const [x1, y1] = CURSOR_OUTLINE[index]
     const [x2, y2] = CURSOR_OUTLINE[previous]
-    const crossesEdge = (y1 > y) !== (y2 > y)
+    const crossesEdge = y1 > y !== y2 > y
     const edgeX = ((x2 - x1) * (y - y1)) / (y2 - y1) + x1
     if (crossesEdge && x < edgeX) inside = !inside
   }
@@ -66,26 +83,29 @@ const CURSOR_PARTICLE_ORIGINS = (() => {
 
 export function ParticleCursor() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const burstCanvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
     const canvas = canvasRef.current
-    const burstCanvas = burstCanvasRef.current
     const desktopPointer = window.matchMedia('(hover: hover) and (pointer: fine)')
-    if (!canvas || !burstCanvas) return
+    if (!canvas) return
 
     let frame: number | null = null
-    let context: CanvasRenderingContext2D | null = null
-    let burstContext: CanvasRenderingContext2D | null = null
+    const context = canvas.getContext('2d')
+    if (!context) return
+
     let visible = false
     let pressed = false
     let pressOpacity = 1
     let pointer = { x: -CURSOR_SIZE, y: -CURSOR_SIZE }
     let previousFrameTime: number | null = null
     let reformProgress = 1
+    let disposed = false
+    let title: HTMLElement | null = null
+    let titleParticles: TitleParticle[] = []
+    let titleObserver: ResizeObserver | null = null
     const bursts: Burst[] = []
     const pointerHistory: PointerSample[] = []
-    const particles: Particle[] = CURSOR_PARTICLE_ORIGINS.map(({ x, y }, index) => {
+    const cursorParticles: CursorParticle[] = CURSOR_PARTICLE_ORIGINS.map(({ x, y }, index) => {
       return {
         originX: x,
         originY: y,
@@ -98,36 +118,80 @@ export function ParticleCursor() {
       }
     })
 
-    const resizeCanvases = () => {
-      if (!context || !burstContext) return
+    const resizeCanvas = () => {
       const density = Math.min(window.devicePixelRatio || 1, 2)
       canvas.width = window.innerWidth * density
       canvas.height = window.innerHeight * density
-      burstCanvas.width = window.innerWidth * density
-      burstCanvas.height = window.innerHeight * density
       context.setTransform(density, 0, 0, density, 0, 0)
-      burstContext.setTransform(density, 0, 0, density, 0, 0)
     }
 
-    const setUp = () => {
-      if (!desktopPointer.matches || context) return
-      context = canvas.getContext('2d')
-      burstContext = burstCanvas.getContext('2d')
-      resizeCanvases()
-      document.documentElement.classList.add('particle-cursor-active')
+    const buildTitleParticles = () => {
+      if (disposed) return
+      if (!title) {
+        titleParticles = []
+        return
+      }
+
+      const rect = title.getBoundingClientRect()
+      const styles = window.getComputedStyle(title)
+      const width = Math.ceil(rect.width)
+      const height = Math.ceil(rect.height)
+      if (!width || !height) return
+
+      const source = document.createElement('canvas')
+      source.width = width * 2
+      source.height = height * 2
+      const sourceContext = source.getContext('2d', { willReadFrequently: true })
+      if (!sourceContext) return
+      sourceContext.scale(2, 2)
+      sourceContext.fillStyle = '#000'
+      sourceContext.font = `${styles.fontStyle} ${styles.fontWeight} ${styles.fontSize}/${styles.lineHeight} ${styles.fontFamily}`
+      sourceContext.textAlign = 'center'
+      sourceContext.textBaseline = 'middle'
+      sourceContext.letterSpacing = styles.letterSpacing
+      sourceContext.fillText(title.textContent || '', width / 2, height / 2 + 1)
+
+      const pixels = sourceContext.getImageData(0, 0, source.width, source.height).data
+      const particles: TitleParticle[] = []
+      for (let y = 0; y < source.height; y += 3) {
+        for (let x = 0; x < source.width; x += 3) {
+          if (pixels[(y * source.width + x) * 4 + 3] < 110) continue
+          const originX = x / 2
+          const originY = y / 2
+          particles.push({ originX, originY, x: originX, y: originY, vx: 0, vy: 0 })
+        }
+      }
+      titleParticles = particles
+      startAnimation()
     }
 
-    const tearDown = () => {
-      document.documentElement.classList.remove('particle-cursor-active')
-      context = null
-      burstContext = null
-      visible = false
-      canvas.style.opacity = '0'
+    const findTitle = () => {
+      const nextTitle = document.querySelector<HTMLElement>('[data-particle-title]')
+      if (nextTitle === title) return
+      titleObserver?.disconnect()
+      title = nextTitle
+      titleParticles = []
+      if (!title) return
+      titleObserver = new ResizeObserver(buildTitleParticles)
+      titleObserver.observe(title)
+      buildTitleParticles()
     }
 
     const updateCapability = () => {
-      if (desktopPointer.matches) setUp()
-      else tearDown()
+      document.documentElement.classList.toggle('particle-cursor-active', desktopPointer.matches)
+      if (!desktopPointer.matches) {
+        pressed = false
+        pressOpacity = 1
+        reformProgress = 1
+        bursts.length = 0
+        for (const particle of cursorParticles) {
+          particle.x = particle.originX
+          particle.y = particle.originY
+          particle.vx = 0
+          particle.vy = 0
+        }
+      }
+      startAnimation()
     }
 
     const move = (event: PointerEvent) => {
@@ -141,8 +205,9 @@ export function ParticleCursor() {
     }
 
     const press = () => {
+      if (!desktopPointer.matches) return
       pressed = true
-      for (const particle of particles) {
+      for (const particle of cursorParticles) {
         particle.x = particle.originX
         particle.y = particle.originY
         particle.vx = 0
@@ -156,12 +221,13 @@ export function ParticleCursor() {
     }
 
     const release = () => {
+      if (!desktopPointer.matches || !pressed) return
       pressed = false
       reformProgress = 0
       if (pressOpacity > 0.01) {
         bursts.push({
           opacity: pressOpacity,
-          particles: particles.map(({ x, y, vx, vy, size, phase }) => ({
+          particles: cursorParticles.map(({ x, y, vx, vy, size, phase }) => ({
             x: pointer.x - CURSOR_HOTSPOT.x + x,
             y: pointer.y - CURSOR_HOTSPOT.y + y,
             vx,
@@ -171,7 +237,7 @@ export function ParticleCursor() {
           })),
         })
       }
-      for (const particle of particles) {
+      for (const particle of cursorParticles) {
         particle.x = CURSOR_CENTER.x
         particle.y = CURSOR_CENTER.y
         particle.vx = 0
@@ -199,103 +265,226 @@ export function ParticleCursor() {
     }
 
     const render = (time: number) => {
+      frame = null
+      if (!desktopPointer.matches && !titleParticles.length) {
+        canvas.style.opacity = '0'
+        return
+      }
       frame = requestAnimationFrame(render)
-      if (!context) return
       const frameScale = previousFrameTime
         ? Math.min(2.5, Math.max(0.5, (time - previousFrameTime) / (1000 / 60)))
         : 1
       previousFrameTime = time
-      canvas.style.opacity = visible ? '1' : '0'
+      const showCursor = visible && desktopPointer.matches
+      canvas.style.opacity = showCursor || titleParticles.length ? '1' : '0'
       const cursorX = pointer.x - CURSOR_HOTSPOT.x
       const cursorY = pointer.y - CURSOR_HOTSPOT.y
       context.clearRect(0, 0, window.innerWidth, window.innerHeight)
-      context.fillStyle = getComputedStyle(document.body).color
       pressOpacity += ((pressed ? 0 : 1) - pressOpacity) * (pressed ? 0.055 : 0.09)
       if (!pressed && reformProgress < 1) {
         reformProgress = Math.min(1, reformProgress + 0.075 * frameScale)
       }
 
-      if (burstContext) {
-        burstContext.clearRect(0, 0, window.innerWidth, window.innerHeight)
-        burstContext.fillStyle = context.fillStyle
-        for (let index = bursts.length - 1; index >= 0; index -= 1) {
-          const burst = bursts[index]
-          burst.opacity *= 0.955
-          if (burst.opacity < 0.01) {
-            bursts.splice(index, 1)
-            continue
-          }
-          for (const particle of burst.particles) {
-            particle.vx *= 0.88
-            particle.vy *= 0.88
-            particle.x += particle.vx
-            particle.y += particle.vy
-            burstContext.globalAlpha =
-              (0.48 + (Math.sin(time * 0.004 + particle.phase) + 1) * 0.2) * burst.opacity
-            burstContext.fillRect(Math.round(particle.x), Math.round(particle.y), particle.size, particle.size)
-          }
+      context.fillStyle = getComputedStyle(document.body).color
+      for (let index = bursts.length - 1; index >= 0; index -= 1) {
+        const burst = bursts[index]
+        burst.opacity *= 0.955
+        if (burst.opacity < 0.01) {
+          bursts.splice(index, 1)
+          continue
         }
-        burstContext.globalAlpha = 1
+        for (const particle of burst.particles) {
+          particle.vx *= 0.88
+          particle.vy *= 0.88
+          particle.x += particle.vx
+          particle.y += particle.vy
+          context.globalAlpha =
+            (0.48 + (Math.sin(time * 0.004 + particle.phase) + 1) * 0.2) * burst.opacity
+          context.fillRect(
+            Math.round(particle.x),
+            Math.round(particle.y),
+            particle.size,
+            particle.size
+          )
+        }
       }
 
-      for (const particle of particles) {
-        const lagProgress = Math.min(
-          1,
-          Math.hypot(particle.originX - CURSOR_CENTER.x, particle.originY - CURSOR_CENTER.y) /
-            CURSOR_OUTER_RADIUS
+      let titleRect: DOMRect | null = null
+      if (title) {
+        const currentTitle = title
+        const rect = currentTitle.getBoundingClientRect()
+        const isFullyOnscreen =
+          rect.top >= 0 &&
+          rect.left >= 0 &&
+          rect.bottom <= window.innerHeight &&
+          rect.right <= window.innerWidth
+        const samplePoints = [0.12, 0.5, 0.88].flatMap((x) =>
+          [0.15, 0.5, 0.85].map((y) => ({
+            x: rect.left + rect.width * x,
+            y: rect.top + rect.height * y,
+          }))
         )
-        const slowProgress = Math.pow(Math.max(0, (lagProgress - 0.25) / 0.75), 0.42)
-        let drawX: number
-        let drawY: number
-
-        if (pressed) {
-          particle.vx *= Math.pow(0.78, frameScale)
-          particle.vy *= Math.pow(0.78, frameScale)
-          particle.x += particle.vx * frameScale
-          particle.y += particle.vy * frameScale
-          drawX = cursorX + particle.x
-          drawY = cursorY + particle.y
-        } else if (reformProgress < 1) {
-          const expandProgress = 1 - Math.pow(1 - reformProgress, 3)
-          drawX = cursorX + CURSOR_CENTER.x + (particle.originX - CURSOR_CENTER.x) * expandProgress
-          drawY = cursorY + CURSOR_CENTER.y + (particle.originY - CURSOR_CENTER.y) * expandProgress
-        } else {
-          const trailPointer = pointerAt(time - slowProgress * TRAIL_DURATION_MS)
-          drawX = trailPointer.x - CURSOR_HOTSPOT.x + particle.originX
-          drawY = trailPointer.y - CURSOR_HOTSPOT.y + particle.originY
+        const isUncovered = samplePoints.every(({ x, y }) => {
+          const topElement = document.elementFromPoint(x, y)
+          return (
+            topElement === currentTitle || Boolean(topElement && currentTitle.contains(topElement))
+          )
+        })
+        if (isFullyOnscreen && isUncovered) {
+          titleRect = rect
         }
-        context.globalAlpha =
-          (0.48 + (Math.sin(time * 0.004 + particle.phase) + 1) * 0.2) * pressOpacity
-        context.fillRect(Math.round(drawX), Math.round(drawY), particle.size, particle.size)
+      }
+      let gravityTarget: { x: number; y: number; distance: number } | null = null
+      if (visible && titleRect) {
+        for (const particle of titleParticles) {
+          const x = titleRect.left + particle.x
+          const y = titleRect.top + particle.y
+          const distance = Math.hypot(x - pointer.x, y - pointer.y)
+          if (!gravityTarget || distance < gravityTarget.distance)
+            gravityTarget = { x, y, distance }
+        }
+      }
+
+      if (showCursor) {
+        for (const particle of cursorParticles) {
+          const lagProgress = Math.min(
+            1,
+            Math.hypot(particle.originX - CURSOR_CENTER.x, particle.originY - CURSOR_CENTER.y) /
+              CURSOR_OUTER_RADIUS
+          )
+          const slowProgress = Math.pow(Math.max(0, (lagProgress - 0.25) / 0.75), 0.42)
+          let drawX: number
+          let drawY: number
+
+          if (pressed) {
+            particle.vx *= Math.pow(0.78, frameScale)
+            particle.vy *= Math.pow(0.78, frameScale)
+            particle.x += particle.vx * frameScale
+            particle.y += particle.vy * frameScale
+            drawX = cursorX + particle.x
+            drawY = cursorY + particle.y
+          } else if (reformProgress < 1) {
+            const expandProgress = 1 - Math.pow(1 - reformProgress, 3)
+            drawX =
+              cursorX + CURSOR_CENTER.x + (particle.originX - CURSOR_CENTER.x) * expandProgress
+            drawY =
+              cursorY + CURSOR_CENTER.y + (particle.originY - CURSOR_CENTER.y) * expandProgress
+          } else {
+            const trailPointer = pointerAt(time - slowProgress * TRAIL_DURATION_MS)
+            drawX = trailPointer.x - CURSOR_HOTSPOT.x + particle.originX
+            drawY = trailPointer.y - CURSOR_HOTSPOT.y + particle.originY
+          }
+
+          if (
+            gravityTarget &&
+            gravityTarget.distance >= TITLE_SCATTER_RADIUS &&
+            gravityTarget.distance < TITLE_GRAVITY_RADIUS
+          ) {
+            const gravityProgress =
+              1 -
+              (gravityTarget.distance - TITLE_SCATTER_RADIUS) /
+                (TITLE_GRAVITY_RADIUS - TITLE_SCATTER_RADIUS)
+            const pull = gravityProgress * (0.4 + slowProgress * 0.6) * 18
+            const distanceToTarget =
+              Math.hypot(gravityTarget.x - drawX, gravityTarget.y - drawY) || 1
+            drawX += ((gravityTarget.x - drawX) / distanceToTarget) * pull
+            drawY += ((gravityTarget.y - drawY) / distanceToTarget) * pull
+          }
+
+          context.globalAlpha =
+            (0.48 + (Math.sin(time * 0.004 + particle.phase) + 1) * 0.2) * pressOpacity
+          context.fillRect(Math.round(drawX), Math.round(drawY), particle.size, particle.size)
+        }
       }
       context.globalAlpha = 1
+
+      if (title && titleRect) {
+        const interacting = Boolean(gravityTarget && gravityTarget.distance < TITLE_GRAVITY_RADIUS)
+        context.fillStyle = window.getComputedStyle(title).color
+
+        for (const particle of titleParticles) {
+          const globalX = titleRect.left + particle.x
+          const globalY = titleRect.top + particle.y
+          const dx = pointer.x - globalX
+          const dy = pointer.y - globalY
+          const distance = Math.hypot(dx, dy) || 0.01
+
+          if (visible && distance < TITLE_SCATTER_RADIUS) {
+            const strength = (1 - distance / TITLE_SCATTER_RADIUS) * TITLE_SCATTER_FORCE
+            particle.vx -= (dx / distance) * strength
+            particle.vy -= (dy / distance) * strength
+          } else if (visible && distance < TITLE_GRAVITY_RADIUS) {
+            const strength =
+              (1 -
+                (distance - TITLE_SCATTER_RADIUS) / (TITLE_GRAVITY_RADIUS - TITLE_SCATTER_RADIUS)) *
+              TITLE_GRAVITY_FORCE
+            particle.vx += (dx / distance) * strength
+            particle.vy += (dy / distance) * strength
+          }
+
+          particle.vx += (particle.originX - particle.x) * 0.075
+          particle.vy += (particle.originY - particle.y) * 0.075
+          particle.vx *= 0.76
+          particle.vy *= 0.76
+          particle.x += particle.vx
+          particle.y += particle.vy
+
+          const idleSignalOffset = interacting
+            ? 0
+            : Math.sin(particle.originY * 0.48 + time * 0.004) * 0.45 +
+              Math.sin(time * 0.0018) * 0.15
+          context.fillRect(
+            Math.round(titleRect.left + particle.x + idleSignalOffset),
+            Math.round(titleRect.top + particle.y),
+            1.7,
+            1.7
+          )
+        }
+
+        if (!interacting) {
+          context.save()
+          context.globalCompositeOperation = 'destination-out'
+          context.globalAlpha = 0.07
+          for (let y = titleRect.top + 1; y < titleRect.bottom; y += 4) {
+            context.fillRect(titleRect.left, y, titleRect.width, 1)
+          }
+          context.restore()
+        }
+      }
     }
 
+    function startAnimation() {
+      if (!disposed && frame === null) frame = requestAnimationFrame(render)
+    }
+
+    resizeCanvas()
     updateCapability()
+    findTitle()
+    const mutationObserver = new MutationObserver(findTitle)
+    mutationObserver.observe(document.body, { childList: true, subtree: true })
+    document.fonts.ready.then(buildTitleParticles)
     window.addEventListener('pointermove', move, { passive: true })
     window.addEventListener('pointerdown', press, { passive: true })
     window.addEventListener('pointerup', release, { passive: true })
     window.addEventListener('pointercancel', release, { passive: true })
-    window.addEventListener('resize', resizeCanvases, { passive: true })
+    window.addEventListener('resize', resizeCanvas, { passive: true })
     desktopPointer.addEventListener('change', updateCapability)
-    frame = requestAnimationFrame(render)
+    startAnimation()
 
     return () => {
+      disposed = true
       if (frame) cancelAnimationFrame(frame)
       window.removeEventListener('pointermove', move)
       window.removeEventListener('pointerdown', press)
       window.removeEventListener('pointerup', release)
       window.removeEventListener('pointercancel', release)
-      window.removeEventListener('resize', resizeCanvases)
+      window.removeEventListener('resize', resizeCanvas)
       desktopPointer.removeEventListener('change', updateCapability)
-      tearDown()
+      mutationObserver.disconnect()
+      titleObserver?.disconnect()
+      document.documentElement.classList.remove('particle-cursor-active')
     }
   }, [])
 
-  return (
-    <>
-      <canvas ref={burstCanvasRef} aria-hidden="true" className="particle-burst" />
-      <canvas ref={canvasRef} aria-hidden="true" className="particle-cursor" />
-    </>
-  )
+  return <canvas ref={canvasRef} aria-hidden="true" className="particle-cursor" />
 }
