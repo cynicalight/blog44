@@ -11,6 +11,8 @@ type CursorParticle = {
   vy: number
   size: number
   phase: number
+  renderX: number
+  renderY: number
 }
 
 type TitleParticle = {
@@ -43,6 +45,9 @@ const TITLE_SCATTER_RADIUS = 128
 const TITLE_SCATTER_FORCE = 0.85
 const TITLE_GRAVITY_RADIUS = 220
 const TITLE_GRAVITY_FORCE = 0.16
+const TITLE_MERGE_RADIUS = 22
+const TITLE_MERGE_COMPLETE_RADIUS = 6
+const TITLE_MERGE_STAGGER = 0.18
 const CURSOR_OUTLINE: Array<[number, number]> = [
   [28, 22],
   [28, 42],
@@ -99,9 +104,13 @@ export function ParticleCursor() {
     let pointer = { x: -CURSOR_SIZE, y: -CURSOR_SIZE }
     let previousFrameTime: number | null = null
     let reformProgress = 1
+    let mergeProgress = 0
     let disposed = false
     let title: HTMLElement | null = null
     let titleParticles: TitleParticle[] = []
+    let titleParticleSignature = ''
+    let cursorMergeTargets: number[] = []
+    let cursorTargetOwners = new Map<number, number>()
     let titleObserver: ResizeObserver | null = null
     const bursts: Burst[] = []
     const pointerHistory: PointerSample[] = []
@@ -115,6 +124,8 @@ export function ParticleCursor() {
         vy: 0,
         size: index % 9 === 0 ? 1.7 : 1.35,
         phase: index * 0.79,
+        renderX: -CURSOR_SIZE,
+        renderY: -CURSOR_SIZE,
       }
     })
 
@@ -137,6 +148,19 @@ export function ParticleCursor() {
       const width = Math.ceil(rect.width)
       const height = Math.ceil(rect.height)
       if (!width || !height) return
+      const signature = [
+        width,
+        height,
+        styles.fontStyle,
+        styles.fontWeight,
+        styles.fontSize,
+        styles.lineHeight,
+        styles.fontFamily,
+        styles.letterSpacing,
+        title.textContent,
+      ].join('|')
+      if (signature === titleParticleSignature && titleParticles.length) return
+      titleParticleSignature = signature
 
       const source = document.createElement('canvas')
       source.width = width * 2
@@ -162,6 +186,16 @@ export function ParticleCursor() {
         }
       }
       titleParticles = particles
+      const mergeParticleCount = Math.min(cursorParticles.length, particles.length)
+      cursorMergeTargets = Array.from({ length: cursorParticles.length }, (_, index) => {
+        if (index >= mergeParticleCount) return -1
+        return Math.floor(((index + 0.5) / mergeParticleCount) * particles.length)
+      })
+      cursorTargetOwners = new Map(
+        cursorMergeTargets
+          .map((targetIndex, cursorIndex) => [targetIndex, cursorIndex] as const)
+          .filter(([targetIndex]) => targetIndex >= 0)
+      )
       startAnimation()
     }
 
@@ -171,6 +205,10 @@ export function ParticleCursor() {
       titleObserver?.disconnect()
       title = nextTitle
       titleParticles = []
+      titleParticleSignature = ''
+      cursorMergeTargets = []
+      cursorTargetOwners = new Map()
+      mergeProgress = 0
       if (!title) return
       titleObserver = new ResizeObserver(buildTitleParticles)
       titleObserver.observe(title)
@@ -183,6 +221,7 @@ export function ParticleCursor() {
         pressed = false
         pressOpacity = 1
         reformProgress = 1
+        mergeProgress = 0
         bursts.length = 0
         for (const particle of cursorParticles) {
           particle.x = particle.originX
@@ -207,6 +246,7 @@ export function ParticleCursor() {
     const press = () => {
       if (!desktopPointer.matches) return
       pressed = true
+      mergeProgress = 0
       for (const particle of cursorParticles) {
         particle.x = particle.originX
         particle.y = particle.originY
@@ -227,9 +267,9 @@ export function ParticleCursor() {
       if (pressOpacity > 0.01) {
         bursts.push({
           opacity: pressOpacity,
-          particles: cursorParticles.map(({ x, y, vx, vy, size, phase }) => ({
-            x: pointer.x - CURSOR_HOTSPOT.x + x,
-            y: pointer.y - CURSOR_HOTSPOT.y + y,
+          particles: cursorParticles.map(({ renderX, renderY, vx, vy, size, phase }) => ({
+            x: renderX,
+            y: renderY,
             vx,
             vy,
             size,
@@ -264,6 +304,14 @@ export function ParticleCursor() {
       return oldest
     }
 
+    const cursorParticleMergeProgress = (cursorIndex: number) => {
+      const stagger =
+        (((cursorIndex * 47) % cursorParticles.length) / cursorParticles.length) *
+        TITLE_MERGE_STAGGER
+      const progress = Math.max(0, Math.min(1, (mergeProgress - stagger) / (1 - stagger)))
+      return 1 - Math.pow(1 - progress, 3)
+    }
+
     const render = (time: number) => {
       frame = null
       if (!desktopPointer.matches && !titleParticles.length) {
@@ -285,7 +333,9 @@ export function ParticleCursor() {
         reformProgress = Math.min(1, reformProgress + 0.075 * frameScale)
       }
 
-      context.fillStyle = getComputedStyle(document.body).color
+      const bodyColor = getComputedStyle(document.body).color
+      const titleColor = title ? getComputedStyle(title).color : bodyColor
+      context.fillStyle = bodyColor
       for (let index = bursts.length - 1; index >= 0; index -= 1) {
         const burst = bursts[index]
         burst.opacity *= 0.955
@@ -345,8 +395,27 @@ export function ParticleCursor() {
         }
       }
 
+      const desiredMergeProgress =
+        showCursor && !pressed && gravityTarget
+          ? Math.max(
+              0,
+              Math.min(
+                1,
+                1 -
+                  (gravityTarget.distance - TITLE_MERGE_COMPLETE_RADIUS) /
+                    (TITLE_MERGE_RADIUS - TITLE_MERGE_COMPLETE_RADIUS)
+              )
+            )
+          : 0
+      const mergeRate = desiredMergeProgress > mergeProgress ? 0.22 : 0.18
+      mergeProgress += (desiredMergeProgress - mergeProgress) * mergeRate * frameScale
+      if (Math.abs(desiredMergeProgress - mergeProgress) < 0.001) {
+        mergeProgress = desiredMergeProgress
+      }
+
       if (showCursor) {
-        for (const particle of cursorParticles) {
+        for (let cursorIndex = 0; cursorIndex < cursorParticles.length; cursorIndex += 1) {
+          const particle = cursorParticles[cursorIndex]
           const lagProgress = Math.min(
             1,
             Math.hypot(particle.originX - CURSOR_CENTER.x, particle.originY - CURSOR_CENTER.y) /
@@ -375,24 +444,22 @@ export function ParticleCursor() {
             drawY = trailPointer.y - CURSOR_HOTSPOT.y + particle.originY
           }
 
-          if (
-            gravityTarget &&
-            gravityTarget.distance >= TITLE_SCATTER_RADIUS &&
-            gravityTarget.distance < TITLE_GRAVITY_RADIUS
-          ) {
-            const gravityProgress =
-              1 -
-              (gravityTarget.distance - TITLE_SCATTER_RADIUS) /
-                (TITLE_GRAVITY_RADIUS - TITLE_SCATTER_RADIUS)
-            const pull = gravityProgress * (0.4 + slowProgress * 0.6) * 18
-            const distanceToTarget =
-              Math.hypot(gravityTarget.x - drawX, gravityTarget.y - drawY) || 1
-            drawX += ((gravityTarget.x - drawX) / distanceToTarget) * pull
-            drawY += ((gravityTarget.y - drawY) / distanceToTarget) * pull
+          const targetIndex = cursorMergeTargets[cursorIndex]
+          const mergeTarget = titleRect && titleParticles[targetIndex]
+          const particleMergeProgress = cursorParticleMergeProgress(cursorIndex)
+          if (titleRect && mergeTarget && particleMergeProgress > 0) {
+            const targetX = titleRect.left + mergeTarget.x
+            const targetY = titleRect.top + mergeTarget.y
+            drawX += (targetX - drawX) * particleMergeProgress
+            drawY += (targetY - drawY) * particleMergeProgress
           }
+          particle.renderX = drawX
+          particle.renderY = drawY
 
-          context.globalAlpha =
+          const cursorAlpha =
             (0.48 + (Math.sin(time * 0.004 + particle.phase) + 1) * 0.2) * pressOpacity
+          context.fillStyle = particleMergeProgress > 0 ? titleColor : bodyColor
+          context.globalAlpha = cursorAlpha + (1 - cursorAlpha) * particleMergeProgress
           context.fillRect(Math.round(drawX), Math.round(drawY), particle.size, particle.size)
         }
       }
@@ -400,9 +467,10 @@ export function ParticleCursor() {
 
       if (title && titleRect) {
         const interacting = Boolean(gravityTarget && gravityTarget.distance < TITLE_GRAVITY_RADIUS)
-        context.fillStyle = window.getComputedStyle(title).color
+        context.fillStyle = titleColor
 
-        for (const particle of titleParticles) {
+        for (let titleIndex = 0; titleIndex < titleParticles.length; titleIndex += 1) {
+          const particle = titleParticles[titleIndex]
           const globalX = titleRect.left + particle.x
           const globalY = titleRect.top + particle.y
           const dx = pointer.x - globalX
@@ -433,13 +501,20 @@ export function ParticleCursor() {
             ? 0
             : Math.sin(particle.originY * 0.48 + time * 0.004) * 0.45 +
               Math.sin(time * 0.0018) * 0.15
-          context.fillRect(
-            Math.round(titleRect.left + particle.x + idleSignalOffset),
-            Math.round(titleRect.top + particle.y),
-            1.7,
-            1.7
-          )
+          const cursorOwner = cursorTargetOwners.get(titleIndex)
+          const replacementProgress =
+            cursorOwner === undefined ? 0 : cursorParticleMergeProgress(cursorOwner)
+          if (replacementProgress < 1) {
+            context.globalAlpha = 1 - replacementProgress
+            context.fillRect(
+              Math.round(titleRect.left + particle.x + idleSignalOffset),
+              Math.round(titleRect.top + particle.y),
+              1.7,
+              1.7
+            )
+          }
         }
+        context.globalAlpha = 1
 
         if (!interacting) {
           context.save()
