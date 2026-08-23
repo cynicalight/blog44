@@ -16,6 +16,7 @@ type CursorParticle = {
 }
 
 type TitleParticle = {
+  characterIndex: number
   originX: number
   originY: number
   x: number
@@ -111,6 +112,7 @@ export function ParticleCursor() {
     let titleParticleSignature = ''
     let cursorMergeTargets: number[] = []
     let cursorTargetOwners = new Map<number, number>()
+    let activeMergeCharacter = -1
     let titleObserver: ResizeObserver | null = null
     const bursts: Burst[] = []
     const pointerHistory: PointerSample[] = []
@@ -173,7 +175,14 @@ export function ParticleCursor() {
       sourceContext.textAlign = 'center'
       sourceContext.textBaseline = 'middle'
       sourceContext.letterSpacing = styles.letterSpacing
-      sourceContext.fillText(title.textContent || '', width / 2, height / 2 + 1)
+      const titleText = title.textContent || ''
+      sourceContext.fillText(titleText, width / 2, height / 2 + 1)
+
+      const characters = Array.from(titleText)
+      const textStartX = width / 2 - sourceContext.measureText(titleText).width / 2
+      const characterEnds = characters.map((_, index) => {
+        return textStartX + sourceContext.measureText(characters.slice(0, index + 1).join('')).width
+      })
 
       const pixels = sourceContext.getImageData(0, 0, source.width, source.height).data
       const particles: TitleParticle[] = []
@@ -182,21 +191,48 @@ export function ParticleCursor() {
           if (pixels[(y * source.width + x) * 4 + 3] < 110) continue
           const originX = x / 2
           const originY = y / 2
-          particles.push({ originX, originY, x: originX, y: originY, vx: 0, vy: 0 })
+          const matchingCharacter = characterEnds.findIndex(
+            (characterEnd) => originX <= characterEnd
+          )
+          const characterIndex =
+            matchingCharacter === -1 ? characters.length - 1 : matchingCharacter
+          particles.push({
+            characterIndex,
+            originX,
+            originY,
+            x: originX,
+            y: originY,
+            vx: 0,
+            vy: 0,
+          })
         }
       }
       titleParticles = particles
-      const mergeParticleCount = Math.min(cursorParticles.length, particles.length)
+      cursorMergeTargets = []
+      cursorTargetOwners = new Map()
+      activeMergeCharacter = -1
+      startAnimation()
+    }
+
+    const assignCursorMergeTargets = (characterIndex: number) => {
+      if (characterIndex === activeMergeCharacter) return
+      if (activeMergeCharacter !== -1) mergeProgress = 0
+      activeMergeCharacter = characterIndex
+      const characterTargets = titleParticles.flatMap((particle, index) => {
+        return particle.characterIndex === characterIndex ? [index] : []
+      })
+      const mergeParticleCount = Math.min(cursorParticles.length, characterTargets.length)
       cursorMergeTargets = Array.from({ length: cursorParticles.length }, (_, index) => {
         if (index >= mergeParticleCount) return -1
-        return Math.floor(((index + 0.5) / mergeParticleCount) * particles.length)
+        return characterTargets[
+          Math.floor(((index + 0.5) / mergeParticleCount) * characterTargets.length)
+        ]
       })
       cursorTargetOwners = new Map(
         cursorMergeTargets
           .map((targetIndex, cursorIndex) => [targetIndex, cursorIndex] as const)
           .filter(([targetIndex]) => targetIndex >= 0)
       )
-      startAnimation()
     }
 
     const findTitle = () => {
@@ -208,6 +244,7 @@ export function ParticleCursor() {
       titleParticleSignature = ''
       cursorMergeTargets = []
       cursorTargetOwners = new Map()
+      activeMergeCharacter = -1
       mergeProgress = 0
       if (!title) return
       titleObserver = new ResizeObserver(buildTitleParticles)
@@ -384,16 +421,19 @@ export function ParticleCursor() {
           titleRect = rect
         }
       }
-      let gravityTarget: { x: number; y: number; distance: number } | null = null
+      let gravityTarget: { x: number; y: number; distance: number; characterIndex: number } | null =
+        null
       if (visible && titleRect) {
         for (const particle of titleParticles) {
-          const x = titleRect.left + particle.x
-          const y = titleRect.top + particle.y
+          const x = titleRect.left + particle.originX
+          const y = titleRect.top + particle.originY
           const distance = Math.hypot(x - pointer.x, y - pointer.y)
-          if (!gravityTarget || distance < gravityTarget.distance)
-            gravityTarget = { x, y, distance }
+          if (!gravityTarget || distance < gravityTarget.distance) {
+            gravityTarget = { x, y, distance, characterIndex: particle.characterIndex }
+          }
         }
       }
+      if (gravityTarget) assignCursorMergeTargets(gravityTarget.characterIndex)
 
       const desiredMergeProgress =
         showCursor && !pressed && gravityTarget
@@ -407,7 +447,7 @@ export function ParticleCursor() {
               )
             )
           : 0
-      const mergeRate = desiredMergeProgress > mergeProgress ? 0.22 : 0.18
+      const mergeRate = desiredMergeProgress > mergeProgress ? 0.11 : 0.18
       mergeProgress += (desiredMergeProgress - mergeProgress) * mergeRate * frameScale
       if (Math.abs(desiredMergeProgress - mergeProgress) < 0.001) {
         mergeProgress = desiredMergeProgress
