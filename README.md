@@ -1,3 +1,5 @@
+> ⚠️ 本仓库包含由 Git 跟踪的 `.env.local` 密钥文件，禁止将仓库设为公开。
+
 <h1 align="center">bu44er.ink 🧑‍💻</h1>
 
 <div align="center">

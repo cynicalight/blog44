@@ -1,0 +1,246 @@
+import { createHash } from 'node:crypto'
+import { readFile } from 'node:fs/promises'
+import path from 'node:path'
+import sizeOf from 'image-size'
+import mime from 'mime'
+import { z } from 'zod'
+
+const IMAGE_EXTENSIONS = new Set([
+  '.avif',
+  '.gif',
+  '.ico',
+  '.jpeg',
+  '.jpg',
+  '.png',
+  '.svg',
+  '.webp',
+])
+
+const FONT_EXTENSIONS = new Set(['.otf', '.ttf', '.woff', '.woff2'])
+
+export type AssetKind = 'image' | 'font'
+export type AssetMigration = 'upload' | 'review' | 'discard'
+
+export const AssetRecordSchema = z
+  .object({
+    sourcePath: z.string().min(1),
+    kind: z.enum(['image', 'font']),
+    migration: z.enum(['upload', 'review', 'discard']),
+    size: z.number().int().nonnegative(),
+    sha256: z.string().regex(/^[a-f0-9]{64}$/),
+    extension: z.string().regex(/^\.[a-z0-9]+$/),
+    contentType: z.string().min(1),
+    contentKey: z.string().min(1),
+    width: z.number().positive().optional(),
+    height: z.number().positive().optional(),
+  })
+  .strict()
+
+export const AssetSummarySchema = z
+  .object({
+    trackedPaths: z.number().int().nonnegative(),
+    uploadPaths: z.number().int().nonnegative(),
+    uploadObjects: z.number().int().nonnegative(),
+    uploadBytes: z.number().int().nonnegative(),
+    uniqueUploadBytes: z.number().int().nonnegative(),
+    reviewPaths: z.number().int().nonnegative(),
+    discardPaths: z.number().int().nonnegative(),
+  })
+  .strict()
+
+export const AssetManifestSchema = z
+  .object({
+    schemaVersion: z.literal(1),
+    includeFonts: z.boolean(),
+    assets: z.array(AssetRecordSchema),
+    summary: AssetSummarySchema,
+  })
+  .strict()
+
+export type AssetRecord = z.infer<typeof AssetRecordSchema>
+export type AssetManifest = z.infer<typeof AssetManifestSchema>
+export type AssetSummary = z.infer<typeof AssetSummarySchema>
+
+export type UploadAssetGroup = {
+  representative: AssetRecord
+  sourcePaths: string[]
+}
+
+export function normalizeRepoPath(filePath: string) {
+  return filePath.split(path.sep).join('/')
+}
+
+export function classifyAssetPath(filePath: string): {
+  kind: AssetKind
+  migration: AssetMigration
+} | null {
+  const repoPath = normalizeRepoPath(filePath)
+  const extension = path.posix.extname(repoPath).toLowerCase()
+
+  if (IMAGE_EXTENSIONS.has(extension)) {
+    return {
+      kind: 'image',
+      migration: repoPath.startsWith('output/playwright/') ? 'discard' : 'upload',
+    }
+  }
+
+  if (FONT_EXTENSIONS.has(extension)) {
+    return { kind: 'font', migration: 'review' }
+  }
+
+  return null
+}
+
+export function normalizePrefix(prefix: string) {
+  const normalized = prefix
+    .trim()
+    .replace(/^\/+|\/+$/g, '')
+    .replace(/\/{2,}/g, '/')
+  const segments = normalized.split('/').filter(Boolean)
+
+  if (segments.some((segment) => segment === '.' || segment === '..')) {
+    throw new Error('COS prefix cannot contain . or .. path segments')
+  }
+
+  return segments.join('/')
+}
+
+export function buildContentKey(sha256: string, extension: string) {
+  if (!/^[a-f0-9]{64}$/.test(sha256)) {
+    throw new Error('Asset SHA-256 must be a 64-character lowercase hexadecimal string')
+  }
+
+  const normalizedExtension = extension.toLowerCase()
+  if (!/^\.[a-z0-9]+$/.test(normalizedExtension)) {
+    throw new Error(`Unsupported asset extension: ${extension}`)
+  }
+
+  return `${sha256.slice(0, 2)}/${sha256}${normalizedExtension}`
+}
+
+export function buildObjectKey(prefix: string, contentKey: string) {
+  const normalizedPrefix = normalizePrefix(prefix)
+  return normalizedPrefix ? `${normalizedPrefix}/${contentKey}` : contentKey
+}
+
+export function buildPublicUrl(publicBaseUrl: string, objectKey: string) {
+  const baseUrl = new URL(`${publicBaseUrl.replace(/\/+$/, '')}/`)
+  if (baseUrl.protocol !== 'https:') {
+    throw new Error('COS public base URL must use HTTPS')
+  }
+
+  const encodedKey = objectKey
+    .split('/')
+    .map((segment) => encodeURIComponent(segment))
+    .join('/')
+
+  return new URL(encodedKey, baseUrl).toString()
+}
+
+export function groupUploadAssets(assets: AssetRecord[]): UploadAssetGroup[] {
+  const groups = new Map<string, UploadAssetGroup>()
+
+  for (const asset of assets) {
+    if (asset.migration !== 'upload') continue
+
+    const existing = groups.get(asset.contentKey)
+    if (existing) {
+      existing.sourcePaths.push(asset.sourcePath)
+      continue
+    }
+
+    groups.set(asset.contentKey, {
+      representative: asset,
+      sourcePaths: [asset.sourcePath],
+    })
+  }
+
+  return Array.from(groups.values())
+    .map((group) => ({
+      ...group,
+      sourcePaths: group.sourcePaths.sort((left, right) => left.localeCompare(right)),
+    }))
+    .sort((left, right) =>
+      left.representative.contentKey.localeCompare(right.representative.contentKey)
+    )
+}
+
+export function parseAssetManifest(value: unknown) {
+  return AssetManifestSchema.parse(value)
+}
+
+export function summarizeAssets(assets: AssetRecord[]): AssetSummary {
+  const uploadAssets = assets.filter((asset) => asset.migration === 'upload')
+  const uploadGroups = groupUploadAssets(uploadAssets)
+
+  return {
+    trackedPaths: assets.length,
+    uploadPaths: uploadAssets.length,
+    uploadObjects: uploadGroups.length,
+    uploadBytes: uploadAssets.reduce((total, asset) => total + asset.size, 0),
+    uniqueUploadBytes: uploadGroups.reduce((total, group) => total + group.representative.size, 0),
+    reviewPaths: assets.filter((asset) => asset.migration === 'review').length,
+    discardPaths: assets.filter((asset) => asset.migration === 'discard').length,
+  }
+}
+
+async function inspectAsset(
+  repoRoot: string,
+  sourcePath: string,
+  includeFonts: boolean
+): Promise<AssetRecord | null> {
+  const classification = classifyAssetPath(sourcePath)
+  if (!classification) return null
+
+  const absolutePath = path.join(repoRoot, sourcePath)
+  const contents = await readFile(absolutePath)
+  const sha256 = createHash('sha256').update(contents).digest('hex')
+  const extension = path.posix.extname(sourcePath).toLowerCase()
+  const migration =
+    classification.kind === 'font' && includeFonts ? 'upload' : classification.migration
+  const record: AssetRecord = {
+    sourcePath,
+    kind: classification.kind,
+    migration,
+    size: contents.byteLength,
+    sha256,
+    extension,
+    contentType: mime.getType(extension) || 'application/octet-stream',
+    contentKey: buildContentKey(sha256, extension),
+  }
+
+  if (classification.kind === 'image' && extension !== '.ico') {
+    try {
+      const dimensions = sizeOf(contents)
+      if (dimensions.width && dimensions.height) {
+        record.width = dimensions.width
+        record.height = dimensions.height
+      }
+    } catch {
+      // Some SVGs use percentages or omit a viewBox. They remain valid upload targets.
+    }
+  }
+
+  return record
+}
+
+export async function createAssetManifest(
+  repoRoot: string,
+  trackedPaths: string[],
+  options: { includeFonts: boolean }
+): Promise<AssetManifest> {
+  const records = await Promise.all(
+    trackedPaths
+      .map(normalizeRepoPath)
+      .sort((left, right) => left.localeCompare(right))
+      .map((sourcePath) => inspectAsset(repoRoot, sourcePath, options.includeFonts))
+  )
+  const assets = records.filter((record): record is AssetRecord => record !== null)
+
+  return {
+    schemaVersion: 1,
+    includeFonts: options.includeFonts,
+    assets,
+    summary: summarizeAssets(assets),
+  }
+}
