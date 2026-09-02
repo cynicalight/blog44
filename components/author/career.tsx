@@ -1,6 +1,5 @@
 import clsx from 'clsx'
 import { Minus, Plus } from 'lucide-react'
-import { Image } from '~/components/ui/image'
 import { Link } from '~/components/ui/link'
 import { Twemoji } from '~/components/ui/twemoji'
 import { GrowingUnderline } from '~/components/ui/growing-underline'
@@ -9,7 +8,6 @@ const EXPERIENCES = [
   {
     org: 'Google',
     url: 'https://google.com',
-    logo: '/static/images/career/google-logo.png',
     start: 'Mar 2022',
     end: 'Present',
     title: 'CTO / Co.Founder / Software Engineer',
@@ -32,7 +30,6 @@ const EXPERIENCES = [
   {
     org: 'mengke.me',
     url: 'https://mengke.me/',
-    logo: '/static/images/career/mengke-logo.jpeg',
     start: 'May 2021',
     end: 'Feb 2022',
     title: 'Senior Software Engineer',
@@ -55,7 +52,6 @@ const EXPERIENCES = [
   {
     org: 'Peking University',
     url: 'https://english.pku.edu.cn/',
-    logo: '/static/images/career/peking-logo.png',
     start: 'Sep 2013',
     end: 'Feb 2019',
     title: 'Student at EECS (School of Electronics Engineering and Computer Science)',
@@ -90,7 +86,7 @@ export function CareerTimeline() {
 }
 
 function TimelineItem({ exp, last }: { exp: (typeof EXPERIENCES)[0]; last?: boolean }) {
-  const { org, title, icon, url, logo, start, end, event, details: Details } = exp
+  const { org, title, icon, url, start, end, event, details: Details } = exp
   return (
     <div
       className={clsx(
@@ -104,14 +100,9 @@ function TimelineItem({ exp, last }: { exp: (typeof EXPERIENCES)[0]; last?: bool
         ]
       )}
     >
-      <Image
-        src={logo}
-        alt={org}
-        className="h-12 w-12 shrink-0 rounded-md"
-        style={{ objectFit: 'contain' }}
-        width={200}
-        height={200}
-      />
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-gray-100 font-semibold text-gray-600 dark:bg-gray-700 dark:text-gray-200">
+        {org.slice(0, 1)}
+      </div>
       <details className="w-full [&_.minus]:open:block [&_.plus]:open:hidden">
         <summary className="relative pr-10 marker:content-none">
           <Plus

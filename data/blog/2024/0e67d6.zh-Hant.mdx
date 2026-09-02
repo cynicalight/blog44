@@ -6,7 +6,7 @@ tags:
   - sec
 draft: false
 images:
-  - /static/images/blog/2024/0e67d6/Pasted%20image%2020250204125405.png
+  - https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/ca/cafa691534e04255fc78760328170075e797a123813abc51d8828ff7645ad03c.png
 authors:
   - default
 ---
@@ -130,11 +130,11 @@ java -jar ysoserial-all.jar
 
 payloads 文件夾中每個文件就是一個 payload （一個公共類），每個 payload 類中都會定義一個`getObject` 方法，這個方法會返回一個**對應 payload 的對象**，該對象會在之後被 ysoserial 工具進一步處理，最終生成**序列化的字節流**。
 
-![](/static/images/blog/2024/0e67d6/Pasted%20image%2020250123194017.png)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/98/98bb2689991876ec18f6fd52efd7ef1ebd0ab9b663ed2f2f6cd5ef9e8ca76529.png)
 
 另外，每個 payload 文件（比如後文調試了 URLDNS.java ），都會寫一個 main：
 
-![](/static/images/blog/2024/0e67d6/Pasted%20image%2020250123194916.png)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/2d/2d5309f74eeebf25d7f639ed0416faf09697803bebf751a08e69b9d9fa527d63.png)
 
 其中這個 `PayloadRunner.run` 會幹3件事：
 
@@ -172,31 +172,31 @@ payloads 文件夾中每個文件就是一個 payload （一個公共類），�
 
 反序列化的入口點是 `HashMap.readObject()`，直接去看這個函數，其中 `hash`函數是關鍵的利用點，先打個斷點，開始調試：
 
-![](/static/images/blog/2024/0e67d6/Pasted%20image%2020250123175832.png)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/38/38d0071354744488a278ad4c65ceda8e10ae4808dc4ee98f7424834db22df22f.png)
 
 - 注意，之前講到 payload 文件主函數的 `PayloadRunner` 會幹三件事，這邊斷點攔截到的是第三件事：反序列化，反序列化一定會觸發 `readObject`。
 
 步入 `hash` ：
 
-![](/static/images/blog/2024/0e67d6/Pasted%20image%2020250123175916.png)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/78/78475bf0d10033e9b75d08b8853ad8a1d99d23e98134dec09600f52987c9a85b.png)
 
 步入 `hashCode`:
 
-![](/static/images/blog/2024/0e67d6/Pasted%20image%2020250123180030.png)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/95/95e86f7b1716ac934e69775837787397a5a66149adb0e6f5f4b219b035d7f5b8.png)
 
 步入 `handler.hashCode`：
 
-![](/static/images/blog/2024/0e67d6/Pasted%20image%2020250123180129.png)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/91/918f6f0336634b7d8b14e7f676e7abef83c80b33d55cf7430603f7ab93e22641.png)
 
 步入 `getHostAddress`：
 
-![](/static/images/blog/2024/0e67d6/Pasted%20image%2020250123180225.png)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/35/35bfac2b1ebd598a5db05c80cede4e66645c8ea896a37fabfd97e49466db356d.png)
 
 最終找到 `InetAddress.getByName(host)` ，這個方法進行了 DNS 查詢操作。
 
 單步執行之後可以在反連平臺看到 DNS 查詢：
 
-![](/static/images/blog/2024/0e67d6/Pasted%20image%2020250123180534.png)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/6e/6ee5961adb84da349d2bb9cd17d94b3f85fda3aa1a6c733c89c6409698b9cfe0.png)
 
 URL 類的 hashCode 很簡單。如果 hashcode 不為 -1，則返回 hashcode。在序列化構造 payload 的時候，需要設置 hashcode 為 -1 的原因，就是防止進入到 `hashcode` 方法中，進而發送 DNS 請求，影響判斷。
 
@@ -310,7 +310,7 @@ public class Main {
 
 觸發CC1的核心在於向修飾過的map添加新元素，前面最簡demo中我們直接調用了put方法作為演示，但是實戰中一般沒有這個方法，在實際反序列化時，我們需要找到一個類，**它在反序列化的readObject邏輯裡有類似的寫入操作**，CC1中這個類是 AnnotationInvocationHandler。
 
-![](/static/images/blog/2024/0e67d6/Pasted%20image%2020250204155654.png)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/e8/e8ee6d9e2203b8d38eff4abaec3dd8893c812e78de61b40f3a38d17ac7207ea9.png)
 
 - readObject 中有 setValue 方法
 
@@ -357,7 +357,7 @@ Transformer[] transformers = new Transformer[]{
 
 動態調試發現此處 var7 == NULL 從而跳過了 setvalue：
 
-![](/static/images/blog/2024/0e67d6/Pasted%20image%2020250204161421.png)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/e8/e8f41fa42ce9f156ea100eae4fbeec8f1dbe86164b625fb4ab866a2a740d89e1.png)
 
 使得 var7 不為 NULL 有以下兩個條件：
 
@@ -366,7 +366,7 @@ Transformer[] transformers = new Transformer[]{
 
 而之前作為構造函數參數的 Retention 有一個方法，名為value；所以，為了再滿足第二個條件，需要給 Map 中放入一個 Key 是 value 的元素：
 
-![](/static/images/blog/2024/0e67d6/Pasted%20image%2020250204161915.png)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/a7/a757d4f99182cd4d79fde25eace1045968ff9e6dc2e630f1f061f69daf502ba4.png)
 
 這樣就可以成功執行了。
 
@@ -374,7 +374,7 @@ Transformer[] transformers = new Transformer[]{
 
 在 Java 8u71及之後的版本中，AnnotationInvocationHandler 作了如下修改：
 
-![](/static/images/blog/2024/0e67d6/Pasted%20image%2020250204125405.png)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/ca/cafa691534e04255fc78760328170075e797a123813abc51d8828ff7645ad03c.png)
 
 簡單來說，對 Map 的操作都是基於一個新的 LinkedHashMap 對象，而原來我們精心構造的 Map 不再執行 set 或 put 操作，也就不會觸發 RCE 了。
 

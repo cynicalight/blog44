@@ -5,7 +5,7 @@ date: 2025-05-23
 tags:
   - embedded
 draft: false
-images: ['/static/images/blog/2025/keil-to-pio/Pasted%20image%2020250523201837.webp']
+images: ['https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/69/69aa5bdf66d064dc52abaec49fdae0869fba1889a5e0186b565d173a80651196.webp']
 authors: ['default']
 ---
 
@@ -23,35 +23,35 @@ authors: ['default']
 1. 下载好pio插件，可能有一些关于python环境和core的报错自行解决一下
 2. 新建项目，如下
 
-![](/static/images/blog/2025/keil-to-pio/Pasted%20image%2020250501023604.webp)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/4f/4fcdac94c717e75ba096b4defacadb3d933ee4da0b09ba1bdd6c783028c897e4.webp)
 
 ### 移植keil项目文件
 
 左边是新建的pio项目，右边是原来的keil项目
 
-![](/static/images/blog/2025/keil-to-pio/Pasted%20image%2020250501023702.webp)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/60/6057f29530e98731a68f732bf393ccc74d49954fd15660efa78231c95f309161.webp)
 
 `Src Inc` 放到对应的 `src include` 中即可
 
 注意，`Drivers` 中的内容，pio会在编译的时候自动放在 `.pio/build`，如下
 
-![](/static/images/blog/2025/keil-to-pio/Pasted%20image%2020250501023946.webp)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/87/8777ff8a415854c53f0436b6816b40cbc172ff7353e23975fd9641549e8dfbf0.webp)
 
 按照上面的方式，默认ini配置下，直接编译就没有错误，并不需要在ini中更改设置。
 
 编译和烧录都在VSCode左下角的底栏：
 
-![](/static/images/blog/2025/keil-to-pio/Pasted%20image%2020250509125550.webp)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/15/159183e010cbba9af1a525f16f913129a744761cab190df3da9b534cb4b8d8d2.webp)
 
 ### 烧录
 
 首先需要修改ini文件，配置对应的烧录协议，实验课用的是stlink的仿真器，一般可能是serial，按自己情况来：
 
-![](/static/images/blog/2025/keil-to-pio/Pasted%20image%2020250509125744.webp)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/14/14777e374fc6e18ae52bcb05a5d94bede8bb5626e4496d35b9288f57c40533c3.webp)
 
 正常按上文配置，直接点VSCode左下角的烧录即可：
 
-![](/static/images/blog/2025/keil-to-pio/Pasted%20image%2020250509125550.webp)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/15/159183e010cbba9af1a525f16f913129a744761cab190df3da9b534cb4b8d8d2.webp)
 
 #### 方法二：openocd手动烧录
 
@@ -93,11 +93,11 @@ openocd \
 -f /opt/homebrew/Cellar/open-ocd/0.12.0_1/share/openocd/scripts/target/stm32f4x.cfg
 ```
 
-![](/static/images/blog/2025/keil-to-pio/Pasted%20image%2020250509130108.webp)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/42/42ec1e565be59f4ca69269f8e8f614a696191ecb17a9d15013b562922805fdf0.webp)
 
 可以看到4444端口在监听telnet，我们用telnet连接4444：
 
-![](/static/images/blog/2025/keil-to-pio/Pasted%20image%2020250509130201.webp)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/13/133a472a9ceb298652ab4d61be1735f7f338777f7e47129ea48b8ef5ad33468a.webp)
 
 并输入烧录命令：
 
@@ -109,7 +109,7 @@ flash write_image erase /Volumes/44/embedded/pio/beep-pio/.pio/build/genericSTM3
 
 注意，如果板子可能已经启动了程序，需要reset才能烧录，具体操作如下：
 
-![](/static/images/blog/2025/keil-to-pio/Pasted%20image%2020250509131014.webp)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/a1/a1ac7966d9fdbe61d51bce8ed59bbc9763403aa41168f152e7f770934794bb3e.webp)
 
 ```bash
 reset halt # 重置 暂停
@@ -121,7 +121,7 @@ reset run # 启动
 
 假如 framework 选择 stm32cube，则会默认使用这个目录下的一些 drivers。如果需要 keil项目中特定（版本）的 drivers，可以从已有的 keil 项目中完整复制 drivers 替换图中这个目录下的文件夹。
 
-![](/static/images/blog/2025/keil-to-pio/Pasted%20image%2020250523201837.webp)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/69/69aa5bdf66d064dc52abaec49fdae0869fba1889a5e0186b565d173a80651196.webp)
 
 ### 补充
 

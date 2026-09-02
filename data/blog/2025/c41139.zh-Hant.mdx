@@ -7,7 +7,7 @@ tags:
   - sec
 draft: false
 images:
-  - /static/images/blog/2025/c41139/Pasted%20image%2020250120204829.png
+  - https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/ef/efea9706062357a58e800656bd1aa42bcfe3dea4ec87e8c91240579ed12b10f5.png
 authors:
   - default
 ---
@@ -173,7 +173,7 @@ public class JMXServer {
 ```
 
 啟動：
-![](/static/images/blog/2025/c41139/Pasted%20image%2020250120204111.png)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/03/030e178acfab71b55cb57e0a4db650db97aa62fe274c08f36de61731ad86d0cb.png)
 
 ### exp
 
@@ -254,26 +254,26 @@ public class ExploitJMXByRemoteMBean {
 ```
 
 成功執行 `whoami`：
-![](/static/images/blog/2025/c41139/Pasted%20image%2020250120203429.png)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/e9/e95c48159131b521c274f2a6d495e9f8cce3992e3fb10b719496a18ef2cd0550.png)
 
 本地放惡意類的python小服務器上也有對應的請求：
-![](/static/images/blog/2025/c41139/Pasted%20image%2020250120204009.png)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/12/129718ae3a5264bfb2463667078a81f3bc82012922896e9d85a2c1d98976b522.png)
 
 ### jconsole 看看
 
 - java 自帶的小工具
 
 用 jconsole 看一下模擬的遠端JMX server：
-![](/static/images/blog/2025/c41139/Pasted%20image%2020250120204534.png)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/b3/b39e79a6b8a0a7ee1730678e3af2d82bfef6ad1346ad898a598cfafe6d6322b3.png)
 
 runCommand 成功寫入模擬遠端 server，可以RCE：
 
-![](/static/images/blog/2025/c41139/Pasted%20image%2020250120204617.png)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/45/45cf4ff8bb835954782b17de50eabde1e4dfa22aef3209ec7dee4637d777c07f.png)
 
 彈個計算器：
-![](/static/images/blog/2025/c41139/Pasted%20image%2020250120204758.png)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/98/987a05963fa8fd95194d3c8c150b045d03bf8f68854abf6ecb5b78611743aaf3.png)
 
-![](/static/images/blog/2025/c41139/Pasted%20image%2020250120204829.png)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/ef/efea9706062357a58e800656bd1aa42bcfe3dea4ec87e8c91240579ed12b10f5.png)
 
 ---
 

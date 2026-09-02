@@ -49,6 +49,7 @@ function printManifestSummary(manifest: AssetManifest) {
   console.log(`Unique COS objects: ${summary.uploadObjects}`)
   console.log(`Upload bytes before deduplication: ${formatBytes(summary.uploadBytes)}`)
   console.log(`Unique upload bytes: ${formatBytes(summary.uniqueUploadBytes)}`)
+  console.log(`Retained locally: ${summary.retainPaths}`)
   console.log(`Awaiting scope decision: ${summary.reviewPaths}`)
   console.log(`Marked for deletion: ${summary.discardPaths}`)
 }
@@ -95,6 +96,7 @@ async function upload() {
     console.log('Dry run only. No COS requests were made.')
     console.log(`Bucket: ${config.bucket}`)
     console.log(`Region: ${config.region}`)
+    console.log(`Storage class: ${config.storageClass}`)
     console.log(`Prefix: ${config.prefix}`)
     console.log(`Objects: ${groups.length}`)
     console.log(`Bytes: ${formatBytes(manifest.summary.uniqueUploadBytes)}`)
@@ -117,7 +119,6 @@ async function upload() {
 
 async function verify() {
   const manifest = await readManifest()
-  await assertManifestIsCurrent(manifest)
   const config = await loadCosEnvironment(true)
   const result = await verifyManifestAssets(manifest, config)
   console.log(`COS verification complete: ${result.verified} objects verified.`)

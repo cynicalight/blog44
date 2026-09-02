@@ -5,27 +5,27 @@
   "start_url": "/",
   "icons": [
     {
-      "src": "/static/favicons/favicon-16x16.png",
+      "src": "https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/f5/f5b8b2d932c1482a26a85c0c7c36ea6c784d46deceb4c81308d5df38d575e464.png",
       "sizes": "16x16",
       "type": "image/png"
     },
     {
-      "src": "/static/favicons/favicon-32x32.png",
+      "src": "https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/c0/c0ca457521ea2a6fd618257bcf2584c162d25ce298889774ed337623fe183d35.png",
       "sizes": "32x32",
       "type": "image/png"
     },
     {
-      "src": "/static/favicons/favicon-76x76.png",
+      "src": "https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/1c/1c1c9199d03d4c269536b34f05d8605de0c28640502f06cb1208913211760d34.png",
       "sizes": "76x76",
       "type": "image/png"
     },
     {
-      "src": "/static/favicons/favicon-150x150.png",
+      "src": "https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/63/6353e00ad8ec7ae9f15e6e34ccbd4b096f29601343015c5319cab75b732c097a.png",
       "sizes": "150x150",
       "type": "image/png"
     },
     {
-      "src": "/static/favicons/favicon-800x800.png",
+      "src": "https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/64/64195aff6edba6ee5209b41f03e9bb297d477ccf919a926f834f7b02f8d811df.png",
       "sizes": "800x800",
       "type": "image/png"
     }

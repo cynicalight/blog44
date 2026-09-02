@@ -16,7 +16,7 @@ export function Logo({ className }: { className?: string }) {
       ])}
     >
       <Image
-        src="/static/images/nikon11.webp"
+        src="https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/39/395993d7b60a20be9e1c5f2dfb93f8573d5cda5b848b9753c2d65ac2f5d8c215.webp"
         alt={SITE_METADATA.headerTitle}
         width={100}
         height={100}

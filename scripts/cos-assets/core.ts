@@ -19,13 +19,13 @@ const IMAGE_EXTENSIONS = new Set([
 const FONT_EXTENSIONS = new Set(['.otf', '.ttf', '.woff', '.woff2'])
 
 export type AssetKind = 'image' | 'font'
-export type AssetMigration = 'upload' | 'review' | 'discard'
+export type AssetMigration = 'upload' | 'retain' | 'review' | 'discard'
 
 export const AssetRecordSchema = z
   .object({
     sourcePath: z.string().min(1),
     kind: z.enum(['image', 'font']),
-    migration: z.enum(['upload', 'review', 'discard']),
+    migration: z.enum(['upload', 'retain', 'review', 'discard']),
     size: z.number().int().nonnegative(),
     sha256: z.string().regex(/^[a-f0-9]{64}$/),
     extension: z.string().regex(/^\.[a-z0-9]+$/),
@@ -43,6 +43,7 @@ export const AssetSummarySchema = z
     uploadObjects: z.number().int().nonnegative(),
     uploadBytes: z.number().int().nonnegative(),
     uniqueUploadBytes: z.number().int().nonnegative(),
+    retainPaths: z.number().int().nonnegative(),
     reviewPaths: z.number().int().nonnegative(),
     discardPaths: z.number().int().nonnegative(),
   })
@@ -80,7 +81,12 @@ export function classifyAssetPath(filePath: string): {
   if (IMAGE_EXTENSIONS.has(extension)) {
     return {
       kind: 'image',
-      migration: repoPath.startsWith('output/playwright/') ? 'discard' : 'upload',
+      migration:
+        extension === '.svg'
+          ? 'retain'
+          : repoPath.startsWith('output/playwright/')
+            ? 'discard'
+            : 'upload',
     }
   }
 
@@ -179,6 +185,7 @@ export function summarizeAssets(assets: AssetRecord[]): AssetSummary {
     uploadObjects: uploadGroups.length,
     uploadBytes: uploadAssets.reduce((total, asset) => total + asset.size, 0),
     uniqueUploadBytes: uploadGroups.reduce((total, group) => total + group.representative.size, 0),
+    retainPaths: assets.filter((asset) => asset.migration === 'retain').length,
     reviewPaths: assets.filter((asset) => asset.migration === 'review').length,
     discardPaths: assets.filter((asset) => asset.migration === 'discard').length,
   }
@@ -217,7 +224,7 @@ async function inspectAsset(
         record.height = dimensions.height
       }
     } catch {
-      // Some SVGs use percentages or omit a viewBox. They remain valid upload targets.
+      // Some retained SVGs use percentages or omit a viewBox, so dimensions are optional.
     }
   }
 

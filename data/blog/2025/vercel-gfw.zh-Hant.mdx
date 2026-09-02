@@ -6,7 +6,7 @@ tags:
   - others
 draft: false
 images:
-  - /static/images/blog/2025/vercel-gfw/Pasted%20image%2020250413211315.png
+  - https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/6e/6e5e777a539284c8fdb2cbd59c6e6fd37ed86cc8b21c04c714da2dd9f07c751a.png
 authors:
   - default
 ---
@@ -25,37 +25,37 @@ authors:
 
 註冊 Cloudflare，首頁點擊加一個域名，我這已經加好了：
 
-![](/static/images/blog/2025/vercel-gfw/Pasted%20image%2020250413205849.png)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/28/28bcf36ca97021029759dff371c94f01d76fc114fce5a1251f6a52ccc3e9884f.png)
 
 然後選擇計劃，直接 free：
-![](/static/images/blog/2025/vercel-gfw/Pasted%20image%2020250413210100.png)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/56/5681683a1b850fe55a0510d7da53686805b899f0ee3f17885f825f81a81fcc2c.png)
 
 重點：Cloudflare 會生成兩個 DNS 服務器域名，這兩個域名要用
 
-![](/static/images/blog/2025/vercel-gfw/Pasted%20image%2020250413210417.png)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/1b/1bd2e1be4210b86d48d3e0ba0741cbefac8af291bcbfaa8a0257563d5f18a2c4.png)
 
 在國內域名解析控制檯，找到 DN S修改的選項，我用的是阿里雲，在左側菜單：
 
-![](/static/images/blog/2025/vercel-gfw/Pasted%20image%2020250413210602.png)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/18/184c0f4e6d240940c77e644083d7bf8f62678d978c6140eb8225c46dbb23ac4c.png)
 
 點擊修改，填入剛才 Cloudflare 提供的兩個 DNS 域名服務器，我這裡已經填過了：
 
-![](/static/images/blog/2025/vercel-gfw/Pasted%20image%2020250413210726.png)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/38/388577f84aca7df8e6b4fe27e6315336839f2c9996cb74b1406fd8eb24f2e160.png)
 
 去 Cloudflare 添加 DNS解析，如果你之前在配置過國內域名解析，Cloudflare 這裡是會自動繼承的：
 
-![](/static/images/blog/2025/vercel-gfw/Pasted%20image%2020250413210948.png)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/f1/f1cd0d1f2b7ceb6b33fa2602f9af7456cc8ad46cc7d89096f1063c99d935ce09.png)
 
 Vercel project 裡面的 domain 設置一下：
 
-![](/static/images/blog/2025/vercel-gfw/Pasted%20image%2020250413211151.png)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/bc/bcb6923b8ba5d7b724e0019b9a135e0d5330b8c703af8189b2f594e5fa0c0b53.png)
 
 最後需要在 Cloudflare 中設置一下 SSL，避免多次重定向的問題：
-![](/static/images/blog/2025/vercel-gfw/Pasted%20image%2020250413211245.png)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/57/571ba1e972e1b655de86a51bdc0fd8b13234c6f30ec14edbd1c3b5ec1a5593a9.png)
 
 選擇 full strict：
 
-![](/static/images/blog/2025/vercel-gfw/Pasted%20image%2020250413211315.png)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/6e/6e5e777a539284c8fdb2cbd59c6e6fd37ed86cc8b21c04c714da2dd9f07c751a.png)
 
 ## REF
 

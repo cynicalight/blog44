@@ -72,18 +72,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       )}
       suppressHydrationWarning
     >
-      <link rel="apple-touch-icon" sizes="76x76" href={`${basePath}/static/favicons/favicon.ico`} />
+      <link rel="apple-touch-icon" sizes="76x76" href={`https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/18/1863a330ef629f70969df36034f2105c3d49b63107bc6dc352860c7e17c919b4.ico`} />
       <link
         rel="icon"
         type="image/png"
         sizes="32x32"
-        href={`${basePath}/static/favicons/favicon.png`}
+        href={`https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/c0/c0ca457521ea2a6fd618257bcf2584c162d25ce298889774ed337623fe183d35.png`}
       />
       <link
         rel="icon"
         type="image/png"
         sizes="16x16"
-        href={`${basePath}/static/favicons/favicon.png`}
+        href={`https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/c0/c0ca457521ea2a6fd618257bcf2584c162d25ce298889774ed337623fe183d35.png`}
       />
       <link rel="manifest" href={`${basePath}/static/favicons/site.webmanifest`} />
       <link

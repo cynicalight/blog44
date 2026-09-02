@@ -8,7 +8,7 @@
 
 </div>
 
-<img style="border-radius: 6px" src="./public/static/images/home-page.png">
+<img style="border-radius: 6px" src="https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/68/68ab6148d93fc412cfebeec56ed74512cd395461c88f25a3fc436c62367301b5.png">
 
 ## Project Structure
 
@@ -90,7 +90,7 @@ You can see what the blog looks like here: <https://bu44er.ink>
 >   type: 'trip',
 >   title: 'Your Gallery Title',
 >   description: 'Description of your gallery',
->   imgSrc: '/static/images/blog/YYYY/gallery-slug/cover-image.webp',
+>   imgSrc: 'https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/path/to/cover.webp',
 >   url: '/gallery/gallery-slug',
 > }
 > ```

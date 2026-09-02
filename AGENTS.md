@@ -100,7 +100,7 @@
 - 内容由 `data/blog`、`data/gallery`、`data/snippets` 等 MDX 源文件进入 Contentlayer；构建时生成标签数据和本地搜索索引。新增画廊 MDX 后仍需手动更新 `data/gallery.ts`。
 - 浏览量 Route Handlers 通过 Prisma `views` 表读写；开发环境的 POST 不会自增，生产环境才会写入。
 - 管理后台通过同源 `/api/admin/*` 工作：凭据由环境变量校验，签名会话放入 HttpOnly Cookie；文章 CRUD 通过 GitHub API 读取并提交仓库中的 MDX 内容，而不是写入本地文件或独立数据库。
-- COS 资源迁移尚未切换站点运行时引用。工具按 SHA-256 去重当前 Git 资源，上传前要求清单与工作树完全一致；字体仍是待确认范围，Playwright 截图只删除、不上传。
+- 当前分支的位图引用已经切换到 Tencent COS，430 个本地位图和 4 个 Playwright 截图已删除。冻结清单按本地原图 SHA-256 将 430 个路径映射为 402 个远端对象；Bucket 工作流会在上传后压缩图片并可能转换格式。SVG 明确保留在 Git 且不上传，字体仍是待确认范围；Git 历史清理尚未执行。
 
 **来源**
 
@@ -136,7 +136,7 @@
 
 - Next 侧配置主要分布在 `next.config.js`、`data/site-metadata.ts` 和 `contentlayer.config.ts`，覆盖 CSP、安全头、图片远程域和第三方内容功能。
 - 浏览量使用 Prisma 的 `DATABASE_URL`。管理后台在部署环境需要认证变量，以及具有内容读写权限的 GitHub token、仓库所有者、仓库名和目标分支配置。
-- COS 工具从根目录 `.env.local` 读取 Bucket、Region、前缀、公开域名和访问凭据；按维护者明确要求，该文件由 Git 跟踪，因此仓库不得改为公开，任何输出都不得显示变量值。
+- COS 工具从根目录 `.env.local` 读取 Bucket、Region、存储类型、前缀、公开域名和访问凭据；`STANDARD` 与 `MAZ_STANDARD` 必须分别匹配单可用区和多可用区 Bucket。按维护者明确要求，该文件由 Git 跟踪，因此仓库不得改为公开，任何输出都不得显示变量值。
 
 **来源**
 
@@ -168,7 +168,7 @@
 - 主站、管理页面和 `app/api/*` Route Handlers 一并部署到 Vercel；`vercel.json` 定义 pnpm 安装和构建命令，并将 `/stats/*` 重写到 Umami。
 - 管理后台依赖 GitHub API 持久化内容变更；向目标分支提交内容后，由仓库与 Vercel 的部署集成发布新的站点构建。
 - 站点还接入 Umami、Giscus、Buttondown、Spotify 与 GitHub GraphQL，接入点分散在 `data/site-metadata.ts`、`app/api/*` 和 `server/*`。
-- Tencent COS 当前只用于迁移工具，尚未成为站点运行时资源源；真实上传依赖 `cos-nodejs-sdk-v5`，公开 URL 切换应在完整校验后单独实施。
+- Tencent COS 已成为站点位图的运行时资源源；迁移工具依赖 `cos-nodejs-sdk-v5`，`data/cos-assets-manifest.json` 保留本次本地路径到对象键的冻结映射。
 
 **来源**
 

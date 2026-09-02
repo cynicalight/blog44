@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto'
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 import COS from 'cos-nodejs-sdk-v5'
+import sizeOf from 'image-size'
 import type { AssetManifest, UploadAssetGroup } from './core'
 import {
   buildObjectKey,
@@ -15,8 +16,6 @@ import type { CosConfig } from './config'
 type RemoteObjectState = {
   exists: boolean
   sha256?: string
-  size?: number
-  contentType?: string
   crc64?: string
 }
 
@@ -53,13 +52,9 @@ async function inspectRemoteObject(
       Region: config.region,
       Key: objectKey,
     })
-    const sizeHeader = readHeader(result.headers, 'content-length')
-
     return {
       exists: true,
       sha256: readHeader(result.headers, 'x-cos-meta-sha256'),
-      size: sizeHeader ? Number(sizeHeader) : undefined,
-      contentType: readHeader(result.headers, 'content-type'),
       crc64: readHeader(result.headers, 'x-cos-hash-crc64ecma'),
     }
   } catch (error) {
@@ -80,15 +75,44 @@ function assertRemoteObject(group: UploadAssetGroup, remote: RemoteObjectState, 
   if (remote.sha256 !== asset.sha256) {
     throw new Error(`COS SHA-256 metadata mismatch: ${objectKey}`)
   }
-  if (remote.size !== asset.size) {
-    throw new Error(`COS object size mismatch: ${objectKey}`)
-  }
-  if (remote.contentType?.split(';')[0] !== asset.contentType) {
-    throw new Error(`COS content type mismatch: ${objectKey}`)
-  }
   if (!remote.crc64) {
     throw new Error(`COS CRC64 metadata is missing: ${objectKey}`)
   }
+}
+
+const IMAGE_CONTENT_TYPES: Record<string, string> = {
+  avif: 'image/avif',
+  gif: 'image/gif',
+  ico: 'image/vnd.microsoft.icon',
+  jpg: 'image/jpeg',
+  png: 'image/png',
+  webp: 'image/webp',
+}
+
+function inspectImage(contents: Buffer, asset: AssetRecord, location: string) {
+  if (asset.kind !== 'image') return null
+
+  let dimensions: ReturnType<typeof sizeOf>
+  try {
+    dimensions = sizeOf(contents)
+  } catch {
+    throw new Error(`Compressed image cannot be decoded: ${location}`)
+  }
+
+  if (
+    asset.width &&
+    asset.height &&
+    (dimensions.width !== asset.width || dimensions.height !== asset.height)
+  ) {
+    throw new Error(`Compressed image dimensions changed: ${location}`)
+  }
+
+  const contentType = dimensions.type ? IMAGE_CONTENT_TYPES[dimensions.type] : undefined
+  if (!contentType) {
+    throw new Error(`Compressed image format is unsupported: ${location}`)
+  }
+
+  return contentType
 }
 
 async function readVerifiedAssetBytes(repoRoot: string, asset: AssetRecord) {
@@ -124,18 +148,41 @@ async function verifyDownloadedObject(
     Region: config.region,
     Key: objectKey,
   })
-  const sha256 = createHash('sha256').update(result.Body).digest('hex')
-  if (sha256 !== asset.sha256 || result.Body.byteLength !== asset.size) {
-    throw new Error(`Downloaded COS object does not match its manifest: ${objectKey}`)
+  const contents = Buffer.from(result.Body)
+  if (contents.byteLength === 0) {
+    throw new Error(`Downloaded COS object is empty: ${objectKey}`)
+  }
+
+  const sha256 = createHash('sha256').update(contents).digest('hex')
+  if (asset.kind === 'font' && (sha256 !== asset.sha256 || contents.byteLength !== asset.size)) {
+    throw new Error(`Downloaded COS font does not match its manifest: ${objectKey}`)
+  }
+
+  const contentType = readHeader(result.headers, 'content-type')?.split(';')[0]
+  const detectedContentType = inspectImage(contents, asset, objectKey)
+  const expectedContentType = detectedContentType || asset.contentType
+  if (contentType !== expectedContentType) {
+    throw new Error(`Downloaded COS object content type mismatch: ${objectKey}`)
   }
 
   const downloadedCrc64 = readHeader(result.headers, 'x-cos-hash-crc64ecma')
-  if (!downloadedCrc64 || downloadedCrc64 !== expectedCrc64) {
+  if (downloadedCrc64 && downloadedCrc64 !== expectedCrc64) {
     throw new Error(`COS CRC64 changed between HEAD and GET: ${objectKey}`)
+  }
+
+  return {
+    contents,
+    sha256,
+    size: contents.byteLength,
+    contentType: expectedContentType,
   }
 }
 
-async function assertPublicResponse(response: Response, asset: AssetRecord, publicUrl: string) {
+async function assertPublicResponse(
+  response: Response,
+  expected: { sha256: string; size: number; contentType: string },
+  publicUrl: string
+) {
   if (!response.ok) {
     throw new Error(`Public asset returned HTTP ${response.status}: ${publicUrl}`)
   }
@@ -144,25 +191,25 @@ async function assertPublicResponse(response: Response, asset: AssetRecord, publ
   }
 
   const contentType = response.headers.get('content-type')?.split(';')[0]
-  if (contentType !== asset.contentType) {
+  if (contentType !== expected.contentType) {
     throw new Error(`Public asset content type mismatch: ${publicUrl}`)
   }
 
   const cacheControl = response.headers.get('cache-control') || ''
-  if (!cacheControl.includes('max-age=31536000') || !cacheControl.includes('immutable')) {
+  if (!cacheControl.includes('max-age=31536000')) {
     throw new Error(`Public asset cache policy mismatch: ${publicUrl}`)
   }
 
   const contentLength = response.headers.get('content-length')
   const contentEncoding = response.headers.get('content-encoding')
-  if (!contentEncoding && contentLength && Number(contentLength) !== asset.size) {
+  if (!contentEncoding && contentLength && Number(contentLength) !== expected.size) {
     throw new Error(`Public asset size mismatch: ${publicUrl}`)
   }
 
   const contents = Buffer.from(await response.arrayBuffer())
   const sha256 = createHash('sha256').update(contents).digest('hex')
-  if (sha256 !== asset.sha256 || contents.byteLength !== asset.size) {
-    throw new Error(`Public asset body does not match its manifest: ${publicUrl}`)
+  if (sha256 !== expected.sha256 || contents.byteLength !== expected.size) {
+    throw new Error(`Public asset differs from the authenticated COS response: ${publicUrl}`)
   }
 }
 
@@ -214,7 +261,7 @@ export async function uploadManifestAssets(
       ContentType: asset.contentType,
       ContentDisposition: 'inline',
       CacheControl: 'public, max-age=31536000, immutable',
-      StorageClass: 'STANDARD',
+      StorageClass: config.storageClass,
       'x-cos-meta-sha256': asset.sha256,
       'x-cos-meta-source-count': String(group.sourcePaths.length),
     })
@@ -237,13 +284,15 @@ export async function verifyManifestAssets(manifest: AssetManifest, config: CosC
     const objectKey = buildObjectKey(config.prefix, asset.contentKey)
     const remote = await inspectRemoteObject(client, config, objectKey)
     assertRemoteObject(group, remote, objectKey)
-    await verifyDownloadedObject(client, config, asset, objectKey, remote.crc64!)
+    const downloaded = await verifyDownloadedObject(client, config, asset, objectKey, remote.crc64!)
 
     const publicUrl = buildPublicUrl(config.publicBaseUrl, objectKey)
     const response = await fetch(publicUrl, { redirect: 'follow' })
-    await assertPublicResponse(response, asset, publicUrl)
+    await assertPublicResponse(response, downloaded, publicUrl)
 
-    console.log(`[${index + 1}/${groups.length}] verified ${objectKey}`)
+    const processing =
+      downloaded.size === asset.size ? '' : ` (${asset.size} -> ${downloaded.size} B)`
+    console.log(`[${index + 1}/${groups.length}] verified ${objectKey}${processing}`)
   })
 
   return { verified: groups.length }

@@ -3,6 +3,7 @@ import { normalizePrefix } from './core'
 export type CosConfig = {
   bucket: string
   region: string
+  storageClass: 'STANDARD' | 'MAZ_STANDARD'
   prefix: string
   publicBaseUrl: string
   credentials: {
@@ -15,6 +16,7 @@ export type CosConfig = {
 const PUBLIC_VARIABLES = [
   'TENCENT_COS_BUCKET',
   'TENCENT_COS_REGION',
+  'TENCENT_COS_STORAGE_CLASS',
   'TENCENT_COS_PREFIX',
   'TENCENT_COS_PUBLIC_BASE_URL',
 ] as const
@@ -40,6 +42,7 @@ export function readCosConfig(
 
   const bucket = getValue(environment, 'TENCENT_COS_BUCKET')
   const region = getValue(environment, 'TENCENT_COS_REGION')
+  const storageClass = getValue(environment, 'TENCENT_COS_STORAGE_CLASS')
   const prefix = normalizePrefix(getValue(environment, 'TENCENT_COS_PREFIX'))
   const publicBaseUrl = getValue(environment, 'TENCENT_COS_PUBLIC_BASE_URL').replace(/\/+$/, '')
   const secretId = getValue(environment, 'TENCENT_COS_SECRET_ID')
@@ -52,6 +55,10 @@ export function readCosConfig(
 
   if (!/^[a-z]+-[a-z0-9-]+$/.test(region)) {
     throw new Error('TENCENT_COS_REGION must be a COS region such as ap-guangzhou')
+  }
+
+  if (storageClass !== 'STANDARD' && storageClass !== 'MAZ_STANDARD') {
+    throw new Error('TENCENT_COS_STORAGE_CLASS must be STANDARD or MAZ_STANDARD')
   }
 
   const parsedPublicUrl = new URL(publicBaseUrl)
@@ -68,6 +75,7 @@ export function readCosConfig(
   return {
     bucket,
     region,
+    storageClass,
     prefix,
     publicBaseUrl,
     credentials:

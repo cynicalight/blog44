@@ -5,7 +5,7 @@
     {
       "sourcePath": "icons/404.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 34351,
       "sha256": "2ac5ebd100e0a1e4c494d51ccea4aa5ecb19fda9a024ee138456f16551f931ba",
       "extension": ".svg",
@@ -17,7 +17,7 @@
     {
       "sourcePath": "icons/amap.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 1013,
       "sha256": "ad494ecece5d38dc4c284d0229eed319fb2df1dce058fcd3a430b4244fea2ca6",
       "extension": ".svg",
@@ -29,7 +29,7 @@
     {
       "sourcePath": "icons/angular.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 472,
       "sha256": "7a7eec1ea5e13f9ca6fa56cd722c64d5acda7e04a38a99009a8acd6736d2ef2b",
       "extension": ".svg",
@@ -41,7 +41,7 @@
     {
       "sourcePath": "icons/ant-design.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 1259,
       "sha256": "951d0d8fa75134abb868f621a6c31ca5a1d69b95d16ff24cf5f3cf0e446205a9",
       "extension": ".svg",
@@ -53,7 +53,7 @@
     {
       "sourcePath": "icons/antv.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 5040,
       "sha256": "45908fce7416869466e4e253655e5ee8d3a732f56f8a268713b204224f06a4ca",
       "extension": ".svg",
@@ -65,7 +65,7 @@
     {
       "sourcePath": "icons/apple.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 1068,
       "sha256": "2b87636c441a166e029427fa20738ca779301924cf839078f4750d24371c2fed",
       "extension": ".svg",
@@ -77,7 +77,7 @@
     {
       "sourcePath": "icons/baidu-map.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 2118,
       "sha256": "e0b670f958f9bfef7d6b26b74449877b4ec261d2904192e4d3738376c56ada4e",
       "extension": ".svg",
@@ -89,7 +89,7 @@
     {
       "sourcePath": "icons/bash.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 2031,
       "sha256": "a4598ce28540904a23948a3d84873a0ff75b2bb446b2b30ecc97f4602c49ef08",
       "extension": ".svg",
@@ -101,7 +101,7 @@
     {
       "sourcePath": "icons/css.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 351,
       "sha256": "3cf248d2eecc85b19dfcda61cb77db456aa9e733622be93c8640d92b4b5d45d2",
       "extension": ".svg",
@@ -113,7 +113,7 @@
     {
       "sourcePath": "icons/echarts.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 1083,
       "sha256": "40eebaa3f9f61b24385d21eee1fe1cf88e31c51ac1a4e4761f92bcc7bfbb6488",
       "extension": ".svg",
@@ -125,7 +125,7 @@
     {
       "sourcePath": "icons/exercism.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 1883,
       "sha256": "fd160e8172b063570fccf6eb5f9b7d95b0f2fa72464fd44e5808f0776754fcfa",
       "extension": ".svg",
@@ -137,7 +137,7 @@
     {
       "sourcePath": "icons/git.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 706,
       "sha256": "90589d4af80313395bd3e91e4254c0223c0ad732f32201d0f0e6f6826be3215c",
       "extension": ".svg",
@@ -149,7 +149,7 @@
     {
       "sourcePath": "icons/github.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 831,
       "sha256": "df4dcb6f2b5ff70df19ccf530fc5b22942492590c386ccbce063e2bc11d828cc",
       "extension": ".svg",
@@ -161,7 +161,7 @@
     {
       "sourcePath": "icons/goodreads.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 2850,
       "sha256": "de2411a52b31a109a3acedcf38718c8ecd6e434cf5ad1662244ab222d5f50dfe",
       "extension": ".svg",
@@ -173,7 +173,7 @@
     {
       "sourcePath": "icons/gulp.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 3851,
       "sha256": "af727216bb6766809b926f071119dfea1c8927efb42615a2bc1d30b330cb1e38",
       "extension": ".svg",
@@ -185,7 +185,7 @@
     {
       "sourcePath": "icons/headlessui.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 1503,
       "sha256": "83a3f60efd90d9a5d1d6ec99f3c747f652daae9cdad5641d3e5e02ecb38f7c93",
       "extension": ".svg",
@@ -197,7 +197,7 @@
     {
       "sourcePath": "icons/hydrogen.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 689,
       "sha256": "8e23072b3d28f89833d6740733c98eed4517df8cb7b5a47a96caabf5e86c9cc0",
       "extension": ".svg",
@@ -209,7 +209,7 @@
     {
       "sourcePath": "icons/i18n.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 1353,
       "sha256": "d43aa963845f0b3648621003d34b8d11fb62000ffe8d3927b2d35a2519a50971",
       "extension": ".svg",
@@ -221,7 +221,7 @@
     {
       "sourcePath": "icons/imdb.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 1977,
       "sha256": "5ee5199f41dc3cc28e2cbfe1e83a2deefcff49c7e5c45ee7d621ab5d0850617f",
       "extension": ".svg",
@@ -233,7 +233,7 @@
     {
       "sourcePath": "icons/java.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 1296,
       "sha256": "125b42cc8fd82b1f8a20ef8061d3302fa2df2130d391cd4ec307f1d03dc7429b",
       "extension": ".svg",
@@ -245,7 +245,7 @@
     {
       "sourcePath": "icons/javascript.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 1131,
       "sha256": "81badef2a989c439f8c5c3f951cdc1aa8a474c2505ebf3d74edc57d7114e8e2b",
       "extension": ".svg",
@@ -257,7 +257,7 @@
     {
       "sourcePath": "icons/jsonwebtokens.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 1590,
       "sha256": "79cad21da527295b63beec732a1b73b1a89d701c3124d9b680375556143d0960",
       "extension": ".svg",
@@ -269,7 +269,7 @@
     {
       "sourcePath": "icons/juejin.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 3755,
       "sha256": "175f1f2ed9cc3c897bb153e63ed4769f36022f03d1b50ecb887146fe718f48d9",
       "extension": ".svg",
@@ -281,7 +281,7 @@
     {
       "sourcePath": "icons/koa.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 1586,
       "sha256": "6fcbe5268e6aee7b254ef064cf47b59f4c6939fc78036819395c05191762eb55",
       "extension": ".svg",
@@ -293,7 +293,7 @@
     {
       "sourcePath": "icons/liquid.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 714,
       "sha256": "d74c29431e64c2c033401f28fe93e9a7885686aa81c2dc9dc351058566f98616",
       "extension": ".svg",
@@ -305,7 +305,7 @@
     {
       "sourcePath": "icons/markdown.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 420,
       "sha256": "c2775ca646675e9220dc3d8a04f7bab6135ad9d73ea99f75c858cfe6e632928b",
       "extension": ".svg",
@@ -317,7 +317,7 @@
     {
       "sourcePath": "icons/miv.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 18304,
       "sha256": "4646ac23adaf30b565e4297bf3a9ca03ba340eafd8f293ecb5ebac182488b1ef",
       "extension": ".svg",
@@ -329,7 +329,7 @@
     {
       "sourcePath": "icons/mongodb.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 550,
       "sha256": "9065c30bfed645ba3e5b9893073822f96d96813789ca1cef3455d55621505b07",
       "extension": ".svg",
@@ -341,7 +341,7 @@
     {
       "sourcePath": "icons/mysql.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 3648,
       "sha256": "4e96a2a2ef22e37059e4d0a0a3dc859b0eebf84a363fd549c5ac8d9b83d76080",
       "extension": ".svg",
@@ -353,7 +353,7 @@
     {
       "sourcePath": "icons/nextjs.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 1511,
       "sha256": "02e8df6f81dd5e56fa9333a0b80f9da9c25c17dd87f739b19d5dc56462c2da50",
       "extension": ".svg",
@@ -365,7 +365,7 @@
     {
       "sourcePath": "icons/nodejs.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 1631,
       "sha256": "135d3b9cc3923711d0f3ce1cc77402b9f9781c8c3a098f1c5984aa0fae1cf20d",
       "extension": ".svg",
@@ -377,7 +377,7 @@
     {
       "sourcePath": "icons/npm.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 320,
       "sha256": "826015b9702861feb8c0719381de3cf34ec33dbc456c22fe87ec72ccccd4cde6",
       "extension": ".svg",
@@ -389,7 +389,7 @@
     {
       "sourcePath": "icons/nuxtjs.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 1314,
       "sha256": "de0dd2bb065fd67f82033e3d65828d5d85fcc931b013adf8a51aca1f1285c7c6",
       "extension": ".svg",
@@ -401,7 +401,7 @@
     {
       "sourcePath": "icons/openai.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 1741,
       "sha256": "0e37ce9692d62831f541041d7c8c6619247a388383ad68532e294a1f9f5a3dbd",
       "extension": ".svg",
@@ -413,7 +413,7 @@
     {
       "sourcePath": "icons/picsum.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 1026,
       "sha256": "031eefccb11f5ffd91ce950030e97e64b2d4b92c638bb721fa4adb898fd1921f",
       "extension": ".svg",
@@ -425,7 +425,7 @@
     {
       "sourcePath": "icons/pnpm.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 1734,
       "sha256": "53ea90581269bdae4531eb7beb240d20c00eed0c397ffff5434607aca47a1469",
       "extension": ".svg",
@@ -437,7 +437,7 @@
     {
       "sourcePath": "icons/powered-by-vercel.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 5347,
       "sha256": "46a8035dac1c3b5ef30a2a80e0981fe254d8748cbf89df372144d3ae3bd3a317",
       "extension": ".svg",
@@ -449,7 +449,7 @@
     {
       "sourcePath": "icons/prisma.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 569,
       "sha256": "f0147e3d128b927b5d6dc996f3a91e2feb7da06565432bc7f09248fda748b033",
       "extension": ".svg",
@@ -461,7 +461,7 @@
     {
       "sourcePath": "icons/pygame.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 57118,
       "sha256": "006c2ff6b8c72179d1071519233a9e54f857fedf3cda3f00263dec85c7baf274",
       "extension": ".svg",
@@ -473,7 +473,7 @@
     {
       "sourcePath": "icons/python.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 1708,
       "sha256": "185f9f0cb5a72f9b1755d55ace038462eeb908ebdd90d7deee940f3c71ac7cf5",
       "extension": ".svg",
@@ -485,7 +485,7 @@
     {
       "sourcePath": "icons/qiankun.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 2287,
       "sha256": "88d6d011edfe58a622fdcaa820276ab8ebb6d9e50f432e36ba8b492d726b871a",
       "extension": ".svg",
@@ -497,7 +497,7 @@
     {
       "sourcePath": "icons/railway.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 773,
       "sha256": "1ce1c88deec9a54ae79b4b611b134f7db0862ae62413adde8b7542aed5ebb32d",
       "extension": ".svg",
@@ -509,7 +509,7 @@
     {
       "sourcePath": "icons/react.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 2928,
       "sha256": "4a9c8e9d3d698a7cf08c9f53edfdc1a570590e8f0766ed46278119026a849caf",
       "extension": ".svg",
@@ -521,7 +521,7 @@
     {
       "sourcePath": "icons/remix.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 479,
       "sha256": "0e61c2a5cd683cf746a28a4f79dfbccd1a61a360df3b58fd3a0b4923c39fa4a2",
       "extension": ".svg",
@@ -533,7 +533,7 @@
     {
       "sourcePath": "icons/rottentomatoes.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 951,
       "sha256": "8bede4695b4029988db8031c363fe236fc460157b03910e8ab4ad3b21f0bcb3f",
       "extension": ".svg",
@@ -545,7 +545,7 @@
     {
       "sourcePath": "icons/semanticui.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 689,
       "sha256": "e5d203705f15aa090bb2211c8e1b673fdb57c6d9365e140ec9b13b29bd946248",
       "extension": ".svg",
@@ -557,7 +557,7 @@
     {
       "sourcePath": "icons/shopify.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 1257,
       "sha256": "1fa0b5efd03c7dc2aab830adc8e2558583d7e4cca241259b7f1ad29101f4d713",
       "extension": ".svg",
@@ -569,7 +569,7 @@
     {
       "sourcePath": "icons/spotify.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 697,
       "sha256": "87f1c0f2ff0d635c9f5bc287d6fa9e2f8c38c9d74d345c883b794d8b3e877906",
       "extension": ".svg",
@@ -581,7 +581,7 @@
     {
       "sourcePath": "icons/tailwind.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 597,
       "sha256": "89aaa22e4be398d9dcfa7a309175a963e8cb414f2390f620a7c28a1c7e1cf239",
       "extension": ".svg",
@@ -593,7 +593,7 @@
     {
       "sourcePath": "icons/tilted-grid.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 451,
       "sha256": "5af71fec15430c2fc3276eb3a2db67960671a0b8715859ba217c68f6da546951",
       "extension": ".svg",
@@ -603,7 +603,7 @@
     {
       "sourcePath": "icons/turborepo.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 5565,
       "sha256": "f41c75d78e6c791b67bae975d5fa732f544f70a381277bfbc4bc9be79912b685",
       "extension": ".svg",
@@ -615,7 +615,7 @@
     {
       "sourcePath": "icons/typescript.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 845,
       "sha256": "6cb51eab8ec8bc4d6d21b59653938b5c98c9ec8fbb2decf379be2579cd0adc19",
       "extension": ".svg",
@@ -627,7 +627,7 @@
     {
       "sourcePath": "icons/umami.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 416,
       "sha256": "a3c4c91678620c7045729308fe32dcb4c9916be5fe57a6e89630272e4fabfe7e",
       "extension": ".svg",
@@ -639,7 +639,7 @@
     {
       "sourcePath": "icons/vercel.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 140,
       "sha256": "9d12ae722c473a8309685fe444371f5276693588d8a624aa6b45fd6e24f8148f",
       "extension": ".svg",
@@ -651,7 +651,7 @@
     {
       "sourcePath": "icons/vscode.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 4451,
       "sha256": "74ad401c6487a0dc5af1f6b2935556ab2d3553ae45effc7e1697b4d117d046b6",
       "extension": ".svg",
@@ -663,7 +663,7 @@
     {
       "sourcePath": "icons/vue.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 481,
       "sha256": "ff0be5f12f051cb9844c99deeee3aa8f35a8475ca75a96722409f43b2c4bf510",
       "extension": ".svg",
@@ -675,7 +675,7 @@
     {
       "sourcePath": "icons/vuex.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 568,
       "sha256": "1baa7fa684ee353117604f48eb9e0e3fd67a6adf2724b7040af8ee3db0767246",
       "extension": ".svg",
@@ -687,7 +687,7 @@
     {
       "sourcePath": "icons/webgl.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 2991,
       "sha256": "fa80729f2301c598ad7f102d7b706bd723ea167a43af19861be9fbba635df0e2",
       "extension": ".svg",
@@ -699,7 +699,7 @@
     {
       "sourcePath": "icons/webpack.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 636,
       "sha256": "4f9cf87f7288fc22bde647572e7e24cc0babbe6dfa5a53d522ea44fd9a242a22",
       "extension": ".svg",
@@ -711,7 +711,7 @@
     {
       "sourcePath": "icons/wechat-mini-program.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 899,
       "sha256": "294d7655c1fd249709a0d057c9b539397befdf1f4dcb27f02cef29e329e741ca",
       "extension": ".svg",
@@ -723,7 +723,7 @@
     {
       "sourcePath": "icons/weibo.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 3280,
       "sha256": "c375844429092d413dbe408234cc842095dc32bd48d63ec94c96867d3012a358",
       "extension": ".svg",
@@ -735,7 +735,7 @@
     {
       "sourcePath": "icons/x.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 418,
       "sha256": "5f9fd71fdb25fceaad953e5bf7ac2301d9aa15587ff595318e568691555692af",
       "extension": ".svg",
@@ -941,7 +941,7 @@
     {
       "sourcePath": "public/static/favicons/safari-pinned-tab.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 4330,
       "sha256": "f1ef4e28ee2aaf69a99d7ff5b37e705c243dfef1200177fe6b0779ac59731300",
       "extension": ".svg",
@@ -5609,7 +5609,7 @@
     {
       "sourcePath": "public/static/images/friends/banzhuanriji.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 675,
       "sha256": "ad7e93ea63ffb9d9dbf2878824d4dde423e8a6a93af2beabf7a17fe35e2d0437",
       "extension": ".svg",
@@ -5837,7 +5837,7 @@
     {
       "sourcePath": "public/static/images/projects/AVP.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 9064,
       "sha256": "410180468b2bc759543315c773cc1e72dcd946f6a6ad5f504ae3c9318c65328d",
       "extension": ".svg",
@@ -5849,7 +5849,7 @@
     {
       "sourcePath": "public/static/images/projects/AVP2.svg",
       "kind": "image",
-      "migration": "upload",
+      "migration": "retain",
       "size": 9486,
       "sha256": "d68b2d277c733e84ccf45d41ce6522a997ba13558c2b6509561cc6f349e413ee",
       "extension": ".svg",
@@ -6041,10 +6041,11 @@
   ],
   "summary": {
     "trackedPaths": 504,
-    "uploadPaths": 496,
-    "uploadObjects": 468,
-    "uploadBytes": 193339964,
-    "uniqueUploadBytes": 170646536,
+    "uploadPaths": 430,
+    "uploadObjects": 402,
+    "uploadBytes": 193113168,
+    "uniqueUploadBytes": 170419740,
+    "retainPaths": 66,
     "reviewPaths": 4,
     "discardPaths": 4
   }
