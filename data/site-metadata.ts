@@ -10,7 +10,7 @@ export const SITE_METADATA = {
   siteRepo: 'https://github.com/cynicalight/bu44er.ink',
   siteLogo: `https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/39/395993d7b60a20be9e1c5f2dfb93f8573d5cda5b848b9753c2d65ac2f5d8c215.webp`,
   socialBanner:
-    'https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/68/68ab6148d93fc412cfebeec56ed74512cd395461c88f25a3fc436c62367301b5.png',
+    'https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/4e/4eca87e6c32b6a0db30e27a9a4bee7377982fdf2d8dd21d1ab9ba714843377c8.webp',
 
   locale: 'en-US',
   stickyNav: true,
