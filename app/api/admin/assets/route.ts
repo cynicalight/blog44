@@ -6,7 +6,7 @@ import { ADMIN_SESSION_COOKIE } from '~/lib/admin-auth-constants'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
-export const maxDuration = 60
+export const maxDuration = 15
 
 function unauthorizedResponse() {
   return NextResponse.json({ message: '未登录' }, { status: 401 })

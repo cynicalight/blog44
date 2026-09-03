@@ -253,7 +253,10 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
     setUploadingTarget('body')
 
     try {
-      const urls = await Promise.all(images.map(uploadPastedImage))
+      const urls: string[] = []
+      for (const image of images) {
+        urls.push(await uploadPastedImage(image))
+      }
       const markdown = urls.map((url) => `![图片](${url})`).join('\n\n')
       const before = form.body.slice(0, selectionStart)
       const after = form.body.slice(selectionEnd)
