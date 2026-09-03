@@ -1,5 +1,3 @@
-> ⚠️ 本仓库包含由 Git 跟踪的 `.env.local` 密钥文件，禁止将仓库设为公开。
-
 <h1 align="center">bu44er.ink 🧑‍💻</h1>
 
 <div align="center">
@@ -9,6 +7,8 @@
 </div>
 
 <img style="border-radius: 6px" src="https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/68/68ab6148d93fc412cfebeec56ed74512cd395461c88f25a3fc436c62367301b5.png">
+
+Local configuration belongs in `.env.local`, which is ignored by Git. Copy `.env.example` and fill in the required values locally or in Vercel.
 
 ## Project Structure
 

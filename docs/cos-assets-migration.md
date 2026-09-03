@@ -1,6 +1,6 @@
 # COS 静态资源迁移
 
-当前分支中的位图已经上传到 COS，运行时引用已经切换为 COS URL，本地位图也已删除。SVG 保留在 Git 中，不上传 COS，也不在历史重写阶段删除。只存在于旧提交中的位图将在历史重写阶段删除，默认不会上传 COS。
+当前分支中的位图已经上传到 COS，运行时引用已经切换为 COS URL，本地位图也已删除。SVG 保留在 Git 中，不上传 COS，也未在历史重写阶段删除。只存在于旧提交中的位图已从清洗后的仓库历史中删除，也没有上传 COS。
 
 ## 本地配置
 
@@ -19,7 +19,7 @@ TENCENT_COS_PUBLIC_BASE_URL=
 
 `TENCENT_COS_BUCKET` 必须包含 APPID。单可用区 Bucket 将 `TENCENT_COS_STORAGE_CLASS` 设为 `STANDARD`，多可用区 Bucket 设为 `MAZ_STANDARD`。`TENCENT_COS_PUBLIC_BASE_URL` 是最终公开访问资源的 HTTPS 域名，不应包含对象前缀。只有使用临时密钥时才需要 `TENCENT_COS_SESSION_TOKEN`。
 
-工具不会输出密钥值。当前仓库按维护者要求跟踪 `.env.local`，因此不得将仓库改为公开可见。
+工具不会输出密钥值。`.env.local` 已被 Git 忽略，不得提交；请从 `.env.example` 复制模板，并把真实值保存在本地或 Vercel 环境变量中。
 
 ## 命令
 
@@ -56,5 +56,5 @@ Bucket 的工作流会在上传后自动压缩位图，也可能在保持尺寸�
 - 430 个当前位图路径已映射为 402 个去重 COS 对象，并全部通过远端验证。
 - 689 处真实资源引用已切换为 COS URL。
 - 430 个本地位图和 4 个 Playwright 截图已从当前分支删除。
-- 66 个 SVG 保留在 Git；4 个字体仍未纳入迁移。
-- Git 历史中的旧位图尚未清除。
+- 66 个 SVG 保留在 Git；3 个字体仍未纳入迁移。
+- 清洗后的公开仓库历史不再包含旧位图、`.env.local` 或 Playwright 截图。

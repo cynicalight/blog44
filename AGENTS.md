@@ -136,7 +136,7 @@
 
 - Next 侧配置主要分布在 `next.config.js`、`data/site-metadata.ts` 和 `contentlayer.config.ts`，覆盖 CSP、安全头、图片远程域和第三方内容功能。
 - 浏览量使用 Prisma 的 `DATABASE_URL`。管理后台在部署环境需要认证变量，以及具有内容读写权限的 GitHub token、仓库所有者、仓库名和目标分支配置。
-- COS 工具从根目录 `.env.local` 读取 Bucket、Region、存储类型、前缀、公开域名和访问凭据；`STANDARD` 与 `MAZ_STANDARD` 必须分别匹配单可用区和多可用区 Bucket。按维护者明确要求，该文件由 Git 跟踪，因此仓库不得改为公开，任何输出都不得显示变量值。
+- COS 工具从根目录 `.env.local` 读取 Bucket、Region、存储类型、前缀、公开域名和访问凭据；`STANDARD` 与 `MAZ_STANDARD` 必须分别匹配单可用区和多可用区 Bucket。`.env.local` 只保存在本地且由 Git 忽略，任何输出都不得显示变量值。
 
 **来源**
 
@@ -147,7 +147,7 @@
 - `prisma/schema.prisma`
 - `lib/admin-auth.ts`
 - `lib/admin-content.ts`
-- `.env.local`
+- `.env.example`
 - `scripts/cos-assets/config.ts`
 
 **何时更新**
@@ -199,7 +199,7 @@
 - Husky 的 `pre-commit` 通过 lint-staged 对常见文本与代码文件运行 Prettier；`commit-msg` 通过 commitlint 强制 Conventional Commits。
 - TypeScript 未开启完整 strict mode，但开启了 `strictNullChecks`；`~/*` 是默认导入别名。
 - 高风险点是画廊索引的人工同步、管理后台所需 GitHub token 的写入权限，以及管理后台提交后的构建发布延迟。
-- `.env.local` 被故意纳入 Git 历史；保持仓库私有是硬性边界。`assets:upload` 默认只执行 dry-run，`--apply` 是明确的外部写入边界；执行前必须人工核对目标 Bucket、Region 和前缀，且不得扩大凭据权限。
+- `.env.local` 不得加入 Git；公开模板只使用 `.env.example`，真实凭据保存在本地或部署平台，并在疑似泄露后立即轮换。`assets:upload` 默认只执行 dry-run，`--apply` 是明确的外部写入边界；执行前必须人工核对目标 Bucket、Region 和前缀，且不得扩大凭据权限。
 
 **来源**
 

@@ -823,16 +823,6 @@
       "contentKey": "94/949baaa682b9a7874d30892d9b5e30246000b6e9b85de9ba28457386cd75d2e0.otf"
     },
     {
-      "sourcePath": "public/fonts/SwiftLTPro-Regular.OTF",
-      "kind": "font",
-      "migration": "review",
-      "size": 50792,
-      "sha256": "949baaa682b9a7874d30892d9b5e30246000b6e9b85de9ba28457386cd75d2e0",
-      "extension": ".otf",
-      "contentType": "font/otf",
-      "contentKey": "94/949baaa682b9a7874d30892d9b5e30246000b6e9b85de9ba28457386cd75d2e0.otf"
-    },
-    {
       "sourcePath": "public/static/favicons/android-chrome-76x76.png",
       "kind": "image",
       "migration": "upload",
