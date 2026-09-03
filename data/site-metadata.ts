@@ -5,7 +5,7 @@ export const SITE_METADATA = {
   description:
     'A personal space on the cloud where I document my programming journey, sharing lessons, insights, and resources for fellow developers.',
   language: 'en-us',
-  theme: 'system', // system, dark or light
+  theme: 'dark', // dark or light
   siteUrl: 'https://www.bu44er.ink',
   siteRepo: 'https://github.com/cynicalight/bu44er.ink',
   siteLogo: `https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/39/395993d7b60a20be9e1c5f2dfb93f8573d5cda5b848b9753c2d65ac2f5d8c215.webp`,

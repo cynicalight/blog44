@@ -1,7 +1,7 @@
 'use client'
 
 import { Menu, MenuButton, MenuItem, MenuItems, Radio, RadioGroup } from '@headlessui/react'
-import { Monitor, MoonStar, Sun, SunMoon } from 'lucide-react'
+import { MoonStar, Sun, SunMoon } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
 
@@ -15,11 +15,6 @@ const THEMES = [
     label: 'Dark',
     value: 'dark',
     icon: MoonStar,
-  },
-  {
-    label: 'System',
-    value: 'system',
-    icon: Monitor,
   },
 ]
 
