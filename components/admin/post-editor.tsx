@@ -16,6 +16,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '~/components/ui/popover
 import { Skeleton } from '~/components/ui/skeleton'
 import { Textarea } from '~/components/ui/textarea'
 import { useNewPostDraft, type NewPostDraftStatus } from '~/hooks/use-new-post-draft'
+import { readAdminApiResponse } from '~/lib/admin-api-response'
 import { MAX_ADMIN_IMAGE_BYTES } from '~/lib/admin-asset-constants'
 import { cn } from '~/lib/utils'
 import {
@@ -199,10 +200,7 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
       method: 'POST',
       body: formData,
     })
-    const data = await response.json()
-    if (!response.ok) {
-      throw new Error(data.message || '图片上传失败')
-    }
+    const data = await readAdminApiResponse<{ asset?: { url?: string } }>(response, '图片上传失败')
     if (typeof data.asset?.url !== 'string') {
       throw new Error('图片上传响应缺少 URL')
     }
@@ -572,7 +570,6 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
                 可直接粘贴图片，上传完成后会自动填写 COS URL。单张图片最大 4 MB。
               </p>
             </div>
-
           </CardContent>
         </Card>
 

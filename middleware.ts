@@ -35,5 +35,7 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/api/admin/:path*'],
+  // Asset uploads validate the signed session in their Route Handler. Keeping
+  // them out of Routing Middleware avoids its smaller request-body limit.
+  matcher: ['/admin/:path*', '/api/admin/((?!assets(?:/|$)).*)'],
 }
