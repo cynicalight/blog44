@@ -31,7 +31,6 @@ const postInputSchema = z.object({
   tags: z.array(z.string()).default([]),
   draft: z.boolean().default(false),
   coverImage: z.string().optional().default(''),
-  canonicalUrl: z.string().optional().default(''),
   body: z.string().default(''),
 })
 
@@ -265,7 +264,6 @@ function parsePost(path: string, source: string): ParsedPost {
         : [],
       draft: Boolean(data.draft),
       coverImage,
-      canonicalUrl: typeof data.canonicalUrl === 'string' ? data.canonicalUrl : '',
       body: parsed.content,
     },
     frontmatter: data,
@@ -291,12 +289,6 @@ function serializePost(input: AdminPostInput, existingFrontmatter?: Record<strin
     next.images = [input.coverImage.trim()]
   } else {
     delete next.images
-  }
-
-  if (input.canonicalUrl.trim()) {
-    next.canonicalUrl = input.canonicalUrl.trim()
-  } else {
-    delete next.canonicalUrl
   }
 
   if (!Array.isArray(next.authors) || next.authors.length === 0) {

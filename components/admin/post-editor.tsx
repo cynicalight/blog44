@@ -31,8 +31,6 @@ type PostEditorProps = {
   sourcePath?: string
 }
 
-const CANONICAL_URL_PREFIX = 'https://bu44er.ink/'
-
 function createEmptyForm(): AdminPostInput {
   return {
     contentType: 'blog',
@@ -44,7 +42,6 @@ function createEmptyForm(): AdminPostInput {
     tags: [],
     draft: false,
     coverImage: '',
-    canonicalUrl: '',
     body: '',
   }
 }
@@ -62,15 +59,6 @@ function getDraftStatusText(status: NewPostDraftStatus) {
     default:
       return '开始填写后会自动保存在当前浏览器。'
   }
-}
-
-function getCanonicalUrlPath(canonicalUrl: string) {
-  return canonicalUrl.replace(/^https?:\/\/(?:www\.)?bu44er\.ink\/?/i, '').replace(/^\/+/, '')
-}
-
-function buildCanonicalUrl(path: string) {
-  const normalizedPath = getCanonicalUrlPath(path)
-  return normalizedPath ? `${CANONICAL_URL_PREFIX}${normalizedPath}` : ''
 }
 
 function getPastedImages(event: React.ClipboardEvent) {
@@ -158,7 +146,6 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
           tags: post.tags,
           draft: post.draft,
           coverImage: post.coverImage,
-          canonicalUrl: post.canonicalUrl,
           body: post.body,
         })
         setTagInput(post.tags.join(', '))
@@ -586,26 +573,6 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
               </p>
             </div>
 
-            <div className="space-y-2 lg:col-span-2">
-              <Label htmlFor="post-canonical">搜索引擎首选链接</Label>
-              <div className="flex h-9 w-full rounded-md border border-input bg-transparent shadow-sm transition-colors focus-within:ring-1 focus-within:ring-ring">
-                <span className="flex shrink-0 items-center border-r border-input bg-muted px-3 text-sm text-muted-foreground">
-                  {CANONICAL_URL_PREFIX}
-                </span>
-                <Input
-                  id="post-canonical"
-                  value={getCanonicalUrlPath(form.canonicalUrl)}
-                  onChange={(event) =>
-                    updateField('canonicalUrl', buildCanonicalUrl(event.target.value))
-                  }
-                  className="h-full min-w-0 rounded-l-none border-0 shadow-none focus-visible:ring-0"
-                  placeholder="blog/2026/my-post"
-                />
-              </div>
-              <p className="text-xs text-muted-foreground">
-                用于告诉搜索引擎这篇内容的首选地址。只需填写域名后面的路径。
-              </p>
-            </div>
           </CardContent>
         </Card>
 

@@ -111,7 +111,6 @@ export const Blog = defineDocumentType(() => ({
     authors: { type: 'list', of: { type: 'string' } },
     layout: { type: 'string' },
     bibliography: { type: 'string' },
-    canonicalUrl: { type: 'string' },
   },
   computedFields: {
     ...computedFields,
@@ -171,7 +170,6 @@ export const Snippet = defineDocumentType(() => ({
     authors: { type: 'list', of: { type: 'string' } },
     layout: { type: 'string' },
     bibliography: { type: 'string' },
-    canonicalUrl: { type: 'string' },
   },
   computedFields: {
     ...computedFields,
@@ -230,7 +228,6 @@ export const Gallery = defineDocumentType(() => ({
     authors: { type: 'list', of: { type: 'string' } },
     layout: { type: 'string' },
     bibliography: { type: 'string' },
-    canonicalUrl: { type: 'string' },
   },
   computedFields: {
     ...computedFields,

@@ -17,7 +17,6 @@ export type AdminPostSummary = {
   tags: string[]
   summary: string
   coverImage: string
-  canonicalUrl: string
 }
 
 export type AdminPostDetail = AdminPostSummary & {
@@ -34,6 +33,5 @@ export type AdminPostInput = {
   tags: string[]
   draft: boolean
   coverImage: string
-  canonicalUrl: string
   body: string
 }

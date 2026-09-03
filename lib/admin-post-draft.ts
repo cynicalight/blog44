@@ -19,7 +19,6 @@ const adminPostInputSchema = z
     tags: z.array(z.string()),
     draft: z.boolean(),
     coverImage: z.string(),
-    canonicalUrl: z.string(),
     body: z.string(),
   })
   .strict()
@@ -60,7 +59,6 @@ export function isMeaningfulNewPostDraft({ form, tagInput }: NewPostDraftValue) 
     form.title,
     form.summary,
     form.coverImage,
-    form.canonicalUrl,
     form.body,
     tagInput,
     ...form.tags,
