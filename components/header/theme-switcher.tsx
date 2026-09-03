@@ -1,69 +1,36 @@
 'use client'
 
-import { Menu, MenuButton, MenuItem, MenuItems, Radio, RadioGroup } from '@headlessui/react'
 import { MoonStar, Sun, SunMoon } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
 
-const THEMES = [
-  {
-    label: 'Light',
-    value: 'light',
-    icon: Sun,
-  },
-  {
-    label: 'Dark',
-    value: 'dark',
-    icon: MoonStar,
-  },
-]
-
 export function ThemeSwitcher() {
   const [mounted, setMounted] = useState(false)
-  const { theme, setTheme, resolvedTheme } = useTheme()
+  const { setTheme, resolvedTheme } = useTheme()
 
   // When mounted on client, now we can show the UI
   useEffect(() => setMounted(true), [])
 
+  const nextTheme = resolvedTheme === 'dark' ? 'light' : 'dark'
+
   return (
-    <div className="flex items-center">
-      <Menu as="div" className="relative inline-block text-left">
-        <div
-          className="flex items-center justify-center rounded p-1.5 hover:bg-gray-200 dark:hover:bg-gray-700"
-          data-umami-event="nav-theme-switcher"
-        >
-          <MenuButton aria-label="Theme switcher">
-            {mounted ? (
-              resolvedTheme === 'dark' ? (
-                <MoonStar strokeWidth={1.5} size={22} />
-              ) : (
-                <Sun strokeWidth={1.5} size={22} />
-              )
-            ) : (
-              <SunMoon strokeWidth={1.5} size={22} />
-            )}
-          </MenuButton>
-        </div>
-        <MenuItems className="absolute right-0 z-50 mt-2 w-32 origin-top-right translate-x-[calc(50%-17px)] rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black">
-          <RadioGroup value={theme} onChange={setTheme}>
-            <div className="space-y-1 p-1">
-              {THEMES.map(({ label, value, icon: Icon }) => (
-                <Radio
-                  key={value}
-                  value={value}
-                  as="div"
-                  className="cursor-pointer rounded-md hover:bg-gray-200 data-[checked]:bg-gray-200 dark:hover:bg-gray-800 dark:data-[checked]:bg-gray-800"
-                >
-                  <MenuItem as="div" className="flex w-full items-center gap-3 px-2 py-1.5 text-sm">
-                    <Icon size={20} strokeWidth={1.5} />
-                    <span>{label}</span>
-                  </MenuItem>
-                </Radio>
-              ))}
-            </div>
-          </RadioGroup>
-        </MenuItems>
-      </Menu>
-    </div>
+    <button
+      type="button"
+      aria-label={`Switch to ${nextTheme} theme`}
+      title={`切换到${nextTheme === 'dark' ? '深色' : '浅色'}模式`}
+      onClick={() => setTheme(nextTheme)}
+      className="flex h-9 w-9 items-center justify-center rounded transition-colors hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:hover:bg-gray-700 sm:h-[34px] sm:w-[34px]"
+      data-umami-event="nav-theme-switcher"
+    >
+      {mounted ? (
+        resolvedTheme === 'dark' ? (
+          <MoonStar strokeWidth={1.5} size={22} />
+        ) : (
+          <Sun strokeWidth={1.5} size={22} />
+        )
+      ) : (
+        <SunMoon strokeWidth={1.5} size={22} />
+      )}
+    </button>
   )
 }
