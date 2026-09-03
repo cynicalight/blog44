@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { format } from 'date-fns'
 import { zhCN } from 'date-fns/locale'
 import { CalendarIcon } from 'lucide-react'
@@ -15,6 +15,7 @@ import { Label } from '~/components/ui/label'
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/ui/popover'
 import { Skeleton } from '~/components/ui/skeleton'
 import { Textarea } from '~/components/ui/textarea'
+import { MAX_ADMIN_IMAGE_BYTES } from '~/lib/admin-asset-constants'
 import { cn } from '~/lib/utils'
 import {
   buildSourcePath,
@@ -29,6 +30,8 @@ type PostEditorProps = {
   sourcePath?: string
 }
 
+const CANONICAL_URL_PREFIX = 'https://bu44er.ink/'
+
 const EMPTY_FORM: AdminPostInput = {
   contentType: 'blog',
   slug: '',
@@ -41,6 +44,22 @@ const EMPTY_FORM: AdminPostInput = {
   coverImage: '',
   canonicalUrl: '',
   body: '',
+}
+
+function getCanonicalUrlPath(canonicalUrl: string) {
+  return canonicalUrl.replace(/^https?:\/\/(?:www\.)?bu44er\.ink\/?/i, '').replace(/^\/+/, '')
+}
+
+function buildCanonicalUrl(path: string) {
+  const normalizedPath = getCanonicalUrlPath(path)
+  return normalizedPath ? `${CANONICAL_URL_PREFIX}${normalizedPath}` : ''
+}
+
+function getPastedImages(event: React.ClipboardEvent) {
+  return Array.from(event.clipboardData.items)
+    .filter((item) => item.kind === 'file' && item.type.startsWith('image/'))
+    .map((item) => item.getAsFile())
+    .filter((file): file is File => Boolean(file))
 }
 
 function ToggleButton({
@@ -61,11 +80,13 @@ function ToggleButton({
 
 export function PostEditor({ mode, sourcePath }: PostEditorProps) {
   const router = useRouter()
+  const bodyInputRef = useRef<HTMLTextAreaElement>(null)
   const [form, setForm] = useState<AdminPostInput>(EMPTY_FORM)
   const [tagInput, setTagInput] = useState('')
   const [isLoading, setIsLoading] = useState(mode === 'edit')
   const [isSaving, setIsSaving] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [uploadingTarget, setUploadingTarget] = useState<'cover' | 'body' | null>(null)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
 
@@ -151,8 +172,102 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
     }))
   }
 
+  async function uploadPastedImage(file: File) {
+    if (file.size > MAX_ADMIN_IMAGE_BYTES) {
+      throw new Error('图片不能超过 4 MB。')
+    }
+
+    const formData = new FormData()
+    formData.set('file', file)
+    const response = await fetch('/api/admin/assets', {
+      method: 'POST',
+      body: formData,
+    })
+    const data = await response.json()
+    if (!response.ok) {
+      throw new Error(data.message || '图片上传失败')
+    }
+    if (typeof data.asset?.url !== 'string') {
+      throw new Error('图片上传响应缺少 URL')
+    }
+
+    return data.asset.url as string
+  }
+
+  async function handleCoverPaste(event: React.ClipboardEvent<HTMLInputElement>) {
+    const [image] = getPastedImages(event)
+    if (!image) {
+      return
+    }
+
+    event.preventDefault()
+    if (uploadingTarget) {
+      setError('另一张图片仍在上传，请稍后再试。')
+      return
+    }
+
+    setError('')
+    setSuccess('')
+    setUploadingTarget('cover')
+    try {
+      const url = await uploadPastedImage(image)
+      updateField('coverImage', url)
+      setSuccess('封面图已上传到 COS，并已回填 URL。')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '封面图上传失败')
+    } finally {
+      setUploadingTarget(null)
+    }
+  }
+
+  async function handleBodyPaste(event: React.ClipboardEvent<HTMLTextAreaElement>) {
+    const images = getPastedImages(event)
+    if (images.length === 0) {
+      return
+    }
+
+    event.preventDefault()
+    if (uploadingTarget) {
+      setError('另一张图片仍在上传，请稍后再试。')
+      return
+    }
+
+    const selectionStart = event.currentTarget.selectionStart
+    const selectionEnd = event.currentTarget.selectionEnd
+    setError('')
+    setSuccess('')
+    setUploadingTarget('body')
+
+    try {
+      const urls = await Promise.all(images.map(uploadPastedImage))
+      const markdown = urls.map((url) => `![图片](${url})`).join('\n\n')
+      const before = form.body.slice(0, selectionStart)
+      const after = form.body.slice(selectionEnd)
+      const leadingBreak = before && !before.endsWith('\n') ? '\n\n' : ''
+      const trailingBreak = after && !after.startsWith('\n') ? '\n\n' : ''
+      const insertedText = `${leadingBreak}${markdown}${trailingBreak}`
+
+      updateField('body', `${before}${insertedText}${after}`)
+      setSuccess(`${urls.length} 张正文图片已上传到 COS，并已插入 Markdown 链接。`)
+
+      requestAnimationFrame(() => {
+        const cursorPosition = selectionStart + insertedText.length
+        bodyInputRef.current?.focus()
+        bodyInputRef.current?.setSelectionRange(cursorPosition, cursorPosition)
+      })
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '正文图片上传失败')
+    } finally {
+      setUploadingTarget(null)
+    }
+  }
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    if (uploadingTarget) {
+      setError('请等待图片上传完成后再保存。')
+      return
+    }
     setError('')
     setSuccess('')
     setIsSaving(true)
@@ -242,8 +357,8 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
     <div className="space-y-6">
       <Alert>
         <AlertDescription>
-          保存后会直接提交到 GitHub `main`，并由 Vercel 自动重新部署。图片请填写已上传到 COS 的
-          URL。
+          保存后会直接提交到 GitHub `main`，并由 Vercel
+          自动重新部署。图片可粘贴后自动上传，也可填写已有的 COS URL。
         </AlertDescription>
       </Alert>
 
@@ -400,18 +515,34 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
                 id="post-cover"
                 value={form.coverImage}
                 onChange={(event) => updateField('coverImage', event.target.value)}
+                onPaste={handleCoverPaste}
                 placeholder="https://cos.example.com/blog/cover.webp"
+                disabled={uploadingTarget === 'cover'}
               />
+              <p className="text-xs text-muted-foreground">
+                可直接粘贴图片，上传完成后会自动填写 COS URL。单张图片最大 4 MB。
+              </p>
             </div>
 
             <div className="space-y-2 lg:col-span-2">
-              <Label htmlFor="post-canonical">canonicalUrl</Label>
-              <Input
-                id="post-canonical"
-                value={form.canonicalUrl}
-                onChange={(event) => updateField('canonicalUrl', event.target.value)}
-                placeholder="https://example.com/original-post"
-              />
+              <Label htmlFor="post-canonical">搜索引擎首选链接</Label>
+              <div className="flex h-9 w-full rounded-md border border-input bg-transparent shadow-sm transition-colors focus-within:ring-1 focus-within:ring-ring">
+                <span className="flex shrink-0 items-center border-r border-input bg-muted px-3 text-sm text-muted-foreground">
+                  {CANONICAL_URL_PREFIX}
+                </span>
+                <Input
+                  id="post-canonical"
+                  value={getCanonicalUrlPath(form.canonicalUrl)}
+                  onChange={(event) =>
+                    updateField('canonicalUrl', buildCanonicalUrl(event.target.value))
+                  }
+                  className="h-full min-w-0 rounded-l-none border-0 shadow-none focus-visible:ring-0"
+                  placeholder="blog/2026/my-post"
+                />
+              </div>
+              <p className="text-xs text-muted-foreground">
+                用于告诉搜索引擎这篇内容的首选地址。只需填写域名后面的路径。
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -446,18 +577,32 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
               正文
             </Label>
             <Textarea
+              ref={bodyInputRef}
               id="post-body"
               value={form.body}
               onChange={(event) => updateField('body', event.target.value)}
+              onPaste={handleBodyPaste}
               className="min-h-[520px] font-mono"
-              placeholder="# 标题"
+              placeholder={'# 标题\n\n可在这里直接粘贴图片'}
+              disabled={uploadingTarget === 'body'}
             />
+            <p className="mt-2 text-xs text-muted-foreground">
+              {uploadingTarget === 'body'
+                ? '正在上传图片到 COS…'
+                : '粘贴图片后会自动上传，并在光标位置插入 Markdown 图片链接。'}
+            </p>
           </CardContent>
         </Card>
 
         <div className="flex flex-wrap items-center gap-3">
-          <Button type="submit" disabled={isSaving}>
-            {isSaving ? '保存中...' : mode === 'edit' ? '保存修改' : '创建文章'}
+          <Button type="submit" disabled={isSaving || Boolean(uploadingTarget)}>
+            {uploadingTarget
+              ? '图片上传中...'
+              : isSaving
+                ? '保存中...'
+                : mode === 'edit'
+                  ? '保存修改'
+                  : '创建文章'}
           </Button>
           <Button type="button" variant="outline" onClick={() => router.push('/admin/posts')}>
             返回文章列表

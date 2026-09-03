@@ -80,6 +80,9 @@ importers:
       contentlayer2:
         specifier: 0.5.1
         version: 0.5.1(esbuild@0.23.1)(supports-color@10.2.2)
+      cos-nodejs-sdk-v5:
+        specifier: ^3.0.0
+        version: 3.0.0
       date-fns:
         specifier: ^4.4.0
         version: 4.4.0
@@ -228,9 +231,6 @@ importers:
       '@types/react':
         specifier: ^19.2.7
         version: 19.2.7
-      cos-nodejs-sdk-v5:
-        specifier: ^3.0.0
-        version: 3.0.0
       cross-env:
         specifier: ^7.0.3
         version: 7.0.3

@@ -4,6 +4,14 @@ import path from 'node:path'
 import sizeOf from 'image-size'
 import mime from 'mime'
 import { z } from 'zod'
+import {
+  buildCosContentKey as buildContentKey,
+  buildCosObjectKey as buildObjectKey,
+  buildCosPublicUrl as buildPublicUrl,
+  normalizeCosPrefix as normalizePrefix,
+} from '~/lib/tencent-cos'
+
+export { buildContentKey, buildObjectKey, buildPublicUrl, normalizePrefix }
 
 const IMAGE_EXTENSIONS = new Set([
   '.avif',
@@ -95,52 +103,6 @@ export function classifyAssetPath(filePath: string): {
   }
 
   return null
-}
-
-export function normalizePrefix(prefix: string) {
-  const normalized = prefix
-    .trim()
-    .replace(/^\/+|\/+$/g, '')
-    .replace(/\/{2,}/g, '/')
-  const segments = normalized.split('/').filter(Boolean)
-
-  if (segments.some((segment) => segment === '.' || segment === '..')) {
-    throw new Error('COS prefix cannot contain . or .. path segments')
-  }
-
-  return segments.join('/')
-}
-
-export function buildContentKey(sha256: string, extension: string) {
-  if (!/^[a-f0-9]{64}$/.test(sha256)) {
-    throw new Error('Asset SHA-256 must be a 64-character lowercase hexadecimal string')
-  }
-
-  const normalizedExtension = extension.toLowerCase()
-  if (!/^\.[a-z0-9]+$/.test(normalizedExtension)) {
-    throw new Error(`Unsupported asset extension: ${extension}`)
-  }
-
-  return `${sha256.slice(0, 2)}/${sha256}${normalizedExtension}`
-}
-
-export function buildObjectKey(prefix: string, contentKey: string) {
-  const normalizedPrefix = normalizePrefix(prefix)
-  return normalizedPrefix ? `${normalizedPrefix}/${contentKey}` : contentKey
-}
-
-export function buildPublicUrl(publicBaseUrl: string, objectKey: string) {
-  const baseUrl = new URL(`${publicBaseUrl.replace(/\/+$/, '')}/`)
-  if (baseUrl.protocol !== 'https:') {
-    throw new Error('COS public base URL must use HTTPS')
-  }
-
-  const encodedKey = objectKey
-    .split('/')
-    .map((segment) => encodeURIComponent(segment))
-    .join('/')
-
-  return new URL(encodedKey, baseUrl).toString()
 }
 
 export function groupUploadAssets(assets: AssetRecord[]): UploadAssetGroup[] {

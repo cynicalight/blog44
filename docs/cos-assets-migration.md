@@ -21,6 +21,14 @@ TENCENT_COS_PUBLIC_BASE_URL=
 
 工具不会输出密钥值。`.env.local` 已被 Git 忽略，不得提交；请从 `.env.example` 复制模板，并把真实值保存在本地或 Vercel 环境变量中。
 
+## 管理后台粘贴上传
+
+`/admin/posts/new` 和编辑页面支持在“封面图 URL”与正文输入框中直接粘贴图片。浏览器会把图片提交到同源的 `/api/admin/assets`；该 Route Handler 验证管理员会话和图片实际格式，再使用 COS Node.js SDK 上传。COS 密钥只由服务端读取，不会发送到浏览器。
+
+Vercel 的 Production 环境需要配置上面的必需 `TENCENT_COS_*` 变量；只有临时密钥需要 `TENCENT_COS_SESSION_TOKEN`。Preview 部署需要测试上传时，也要在 Preview 环境配置一套变量。变量名称不要添加 `NEXT_PUBLIC_` 前缀。新增或修改环境变量后，需要重新部署，新的 Function 才能读取它们。
+
+粘贴上传使用与迁移工具相同的 SHA-256 内容寻址和对象前缀。服务端接受 PNG、JPEG、WebP、GIF 与 AVIF，拒绝 SVG，并将单张图片限制为 4 MB，以留在 Vercel Function 的 4.5 MB 请求体上限以内。COS 凭据只需要目标前缀的上传权限及现有读取校验权限，不应授予整个账号或其他 Bucket 的管理权限。
+
 ## 命令
 
 ```bash
