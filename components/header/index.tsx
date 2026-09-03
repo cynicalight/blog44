@@ -45,13 +45,13 @@ export function Header({ className }: { className?: string }) {
       className={clsx(
         className,
         'rounded-full border border-white/35 bg-white/30 px-2 py-2 backdrop-blur-sm',
-        'ring-1 ring-inset ring-white/20 shadow-sm shadow-slate-950/10',
-        'dark:border-white/15 dark:bg-zinc-950/30 dark:ring-white/10 dark:shadow-black/20',
+        'ring-1 ring-inset ring-white/20 shadow-[0_0_18px_rgba(15,23,42,0.12)]',
+        'dark:border-white/15 dark:bg-zinc-950/30 dark:ring-white/10 dark:shadow-[0_0_18px_rgba(0,0,0,0.3)]',
         'transition-[background-color,border-color,box-shadow] duration-200 ease-out',
-        'hover:bg-white/40 hover:shadow-md hover:shadow-slate-950/10',
-        'dark:hover:bg-zinc-950/40 dark:hover:shadow-black/30',
+        'hover:bg-white/40 hover:shadow-[0_0_24px_rgba(15,23,42,0.16)]',
+        'dark:hover:bg-zinc-950/40 dark:hover:shadow-[0_0_24px_rgba(0,0,0,0.4)]',
         // 粘性定位
-        SITE_METADATA.stickyNav && 'sticky top-3 z-50 lg:top-4'
+        SITE_METADATA.stickyNav && 'sticky top-4 z-50 lg:top-6'
       )}
     >
       <div className="flex w-full items-center justify-between gap-3">
@@ -59,13 +59,13 @@ export function Header({ className }: { className?: string }) {
         <Link
           href="/"
           className={clsx(
-            'rounded-lg px-4 py-2 text-lg font-bold transition-all duration-200',
+            'inline-flex h-11 items-center rounded-lg px-4 text-lg font-bold leading-none transition-all duration-200',
             pathname === '/'
               ? 'text-gray-900 dark:text-white'
               : 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
           )}
         >
-          HOME
+          <span className="translate-y-px">HOME</span>
         </Link>
 
         <div className="flex items-center gap-4">
@@ -77,14 +77,19 @@ export function Header({ className }: { className?: string }) {
                   key={title}
                   href={href}
                   className={clsx(
-                    'rounded-lg px-4 py-2 font-semibold transition-all duration-200',
+                    'inline-flex h-11 items-center rounded-lg px-4 font-semibold leading-none transition-all duration-200',
                     'hover:bg-gray-100 dark:hover:bg-gray-800',
                     isActive
                       ? 'bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-white'
                       : 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
                   )}
                 >
-                  <span data-umami-event={`nav-${href.replace('/', '')}`}>{title}</span>
+                  <span
+                    className="translate-y-px"
+                    data-umami-event={`nav-${href.replace('/', '')}`}
+                  >
+                    {title}
+                  </span>
                 </Link>
               )
             })}
