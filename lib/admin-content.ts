@@ -396,6 +396,7 @@ export async function listAdminPosts(): Promise<AdminPostSummary[]> {
 
   return posts
     .filter((post): post is AdminPostDetail => Boolean(post))
+    .filter((post) => post.contentType !== 'blog' || post.scriptVariant === 'zh-Hans')
     .sort((left, right) => right.date.localeCompare(left.date))
     .map(({ body: _body, ...summary }) => summary)
 }

@@ -152,11 +152,6 @@ export default function AdminPostsPage() {
                         <Badge variant="secondary">
                           {post.contentType === 'gallery' ? 'Gallery' : 'Blog'}
                         </Badge>
-                        {post.contentType === 'blog' ? (
-                          <Badge variant="outline">
-                            {post.scriptVariant === 'zh-Hant' ? '繁體' : '简体'}
-                          </Badge>
-                        ) : null}
                       </div>
                     </TableCell>
                     <TableCell className="max-w-48 align-top text-muted-foreground">
