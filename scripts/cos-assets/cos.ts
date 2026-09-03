@@ -92,12 +92,13 @@ const IMAGE_CONTENT_TYPES: Record<string, string> = {
 function inspectImage(contents: Buffer, asset: AssetRecord, location: string) {
   if (asset.kind !== 'image') return null
 
-  let dimensions: ReturnType<typeof sizeOf>
-  try {
-    dimensions = sizeOf(contents)
-  } catch {
-    throw new Error(`Compressed image cannot be decoded: ${location}`)
-  }
+  const dimensions = (() => {
+    try {
+      return sizeOf(contents)
+    } catch {
+      throw new Error(`Compressed image cannot be decoded: ${location}`)
+    }
+  })()
 
   if (
     asset.width &&
