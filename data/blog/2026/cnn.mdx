@@ -7,7 +7,7 @@ draft: false
 summary: 什么是卷积，什么是 CNN
 images:
   - >-
-    https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260320174455494.png?imageMogr2/quality/80&imageSlim
+    https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260320174455494.png
 authors:
   - default
 ---
@@ -25,7 +25,7 @@ CNN 的设计有两个核心出发点：
 ## 卷积
 
 卷积 $f * g$ 本质上是描述两个函数之间关系的操作：把一个函数**翻转后滑动**，测量两个函数在每个位置的重叠程度。
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260320163720869.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260320163720869.png)
 
 翻转后滑动（平移）：
 ```js
@@ -39,11 +39,11 @@ g(i - a)      翻转后，再平移 i 个单位
 看懂卷积，再看公式就好理解了，输出 H 是两个函数的卷积结果，两个函数分别是：
 1. **卷积核** V，理解为权重，也叫**滤波器**
 2. 输入 X，一般是多维矩阵，如 $长\times 宽 \times 3(RGB)$
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260319230459960.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260319230459960.png)
 
 注意，严格来说，深度学习里用的是互相关（cross-correlation），不是真正的卷积：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260320165009192.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260320165009192.png)
 
 
 CNN 美图一张：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260320174455494.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260320174455494.png)

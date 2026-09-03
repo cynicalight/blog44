@@ -30,6 +30,9 @@ export interface ImageProps extends Omit<NextImageProps, 'src' | 'priority'> {
 export function Image(props: ImageProps) {
   const { alt, src, loading = 'lazy', style, className, ...rest } = props
   const [loaded, onLoad] = useImageLoadedState(src)
+  const isCosImage = src.startsWith(
+    'https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/'
+  )
 
   return (
     <div
@@ -50,7 +53,8 @@ export function Image(props: ImageProps) {
         style={{ objectFit: 'cover', ...style }}
         loading={loading}
         priority={loading === 'eager'}
-        quality={100}
+        quality={isCosImage ? undefined : 100}
+        unoptimized={isCosImage}
         onLoad={onLoad}
         {...rest}
       />

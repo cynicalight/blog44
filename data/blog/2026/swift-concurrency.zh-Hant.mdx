@@ -7,7 +7,7 @@ draft: false
 summary: Swiftful Thinking 的 swfit 併發課程筆記
 images:
   - >-
-    https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260216180334390.png?imageMogr2/quality/80&imageSlim
+    https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260216180334390.png
 authors:
   - default
 ---
@@ -16,7 +16,7 @@ authors:
 
 ## do catch try throws
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260211180258257.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260211180258257.png)
 
 Once you fail one of these `try` statements, you immediately go into the `catch` block.
 
@@ -37,7 +37,7 @@ And there are two ways to handle a throwing call:
 ## Callback closure
 
 A callback closure is **a closure you pass into a function** so the function can call the closure later.
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260212143313852.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260212143313852.png)
 
 Callback closure are common for **asynchronous** code, where the result isn't available immediately.
 
@@ -48,20 +48,20 @@ Now we are clear about the concept of callback closure. In the real async code, 
 As shown below, we pass the callback closure `completionHandler` to a function `downloadData3`. And the function decides to execute the closure by `asyncAfter`, which means the closure will be executed 2s later.
 
 - by the way, we usually refer the callback closure as handler
-  ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260212152906687.png?imageMogr2/quality/80&imageSlim)
+  ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260212152906687.png)
 
 The function will return immediately, but the closure would be executed **after** the function finished.
 
 In this case, `escaping` is required, indicating that the closure 'escapes' the life cycle of the function.
 
 For the asynchronous code, to prevent the memory leakage, we usually use `weak self`.
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260212152533541.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260212152533541.png)
 
 Here is an example of `escaping` and `async` about the same asynchronous function:
 
 - `escaping` with callback closure is complex 🤮
 - **without the complex callback things**, the `async` code appears more **sequential** and easier to understand - especially, we are clear about what to await
-  ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260213015735272.png?imageMogr2/quality/80&imageSlim)
+  ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260213015735272.png)
 
 ## async await
 
@@ -92,7 +92,7 @@ Task {
 As shown below, the code in task will be executed **sequentially**. The next `await` will wait for the previous `await`.
 
 - we will introduce how to implement parallelism rather than sequentail execution later
-  ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260214153634972.png?imageMogr2/quality/80&imageSlim)
+  ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260214153634972.png)
 
 #### Parallelism
 
@@ -114,21 +114,21 @@ func loadDataParallel() async throws {
 ```
 
 `async let` is the parallel version of `try await`.
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260217155954591.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260217155954591.png)
 
 ## Task
 
 The basic usage of `Task` is **cooperative concurrency** 協作式併發.
 
 Cooperative concurrency is a concurrency model where tasks shared the same context (often a single thread).
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260215233419701.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260215233419701.png)
 
 - note that two tasks can be in the same thread !
 
 ### Sleep Yield
 
 Task can sleep or yield in order to change their original priority.
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260216020648500.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260216020648500.png)
 
 ### child task
 
@@ -139,16 +139,16 @@ Child tasks will inherit basicly all the metadata from the parent tasks, includi
 ### task modifier
 
 `.task` is the task modifier, a new way to run a task when the view appears.
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260216180334390.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260216180334390.png)
 Note that, `.task` will also **automatically cancel** the task if the view disappears!
 
 Fundamentally, `.task` subsumes 包含 the lifecycle responsibilities traditionally handled by `onAppear` and `onDisappear`. That's awesome!
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260216180647970.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260216180647970.png)
 
 #### extra check
 
 In some cases, if you have a really **long** work in a task, the automatically cancellation will not be executed immediately to wait for the 'long long work'.
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260217022320682.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260217022320682.png)
 
 So, if you are in such situations, you should add a `checkCancellation()` in your 'long long work'.
 
@@ -165,7 +165,7 @@ nonisolated var xxx: Xxx {}
 ```
 
 You can see the setting about Default Actor Isolation:
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260205193230462.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260205193230462.png)
 
 ## Actor
 
@@ -175,6 +175,6 @@ Actor is essentially a modern evolution of the Monitor 管程. The core concept 
 
 ### log: the isolation conflict
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260205005251314.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260205005251314.png)
 
 The client in a Actor want to execute the code in MainActor, which caused a isolation conflict.

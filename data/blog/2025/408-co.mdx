@@ -1617,7 +1617,7 @@ A 既可以是寄存器编号，又可以是内存地址；(A) 表示地址为 A
 - 有效地址`EA = (A)`
 - 寻址过程：去该主存单元取操作数的地址，再去找操作数
 
-![image.png](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820010129489.png?imageMogr2/quality/80&imageSlim)
+![image.png](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820010129489.png)
 
 是否是多次间接寻址看操作数的内容第一位是否是1
 
@@ -1660,7 +1660,7 @@ A 既可以是寄存器编号，又可以是内存地址；(A) 表示地址为 A
   - 形式地址 A 取出对应的一个操作数
   - **另一个操作数通过隐含寻址方式的指令设置**，隐含在 ACC 中
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820012605428.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820012605428.png)
 
 - **优点**：有利于缩短指令字长
 - **缺点**：需增加存储操作数或隐含地址的硬件
@@ -1676,7 +1676,7 @@ A 既可以是寄存器编号，又可以是内存地址；(A) 表示地址为 A
   - 寻址特征为`#`，代表立即寻址的意思
   - 形式地址写的是操作数 3 的补码（011）
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820012831119.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820012831119.png)
 
 - **优点**：**不访存**，指令执行速度**最快**
 - **缺点**：A 的位数限制了立即数的范围
@@ -1692,7 +1692,7 @@ A 既可以是寄存器编号，又可以是内存地址；(A) 表示地址为 A
 - 有效地址 `EA = (BR) + A`
 - 寻址过程：程序运行前，CPU 将 BR 的值修改为程序的起始地址（存放在操作系统 PCB 中 ）
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820143904141.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820143904141.png)
 
 - **基址寄存器**：
   - OS中的重定位寄存器 = 基址寄存器
@@ -1739,12 +1739,12 @@ A 既可以是寄存器编号，又可以是内存地址；(A) 表示地址为 A
   - A 可正可负，**补码表示**
   - A 的位数决定操作数的寻址范围
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820154742396.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820154742396.png)
 
 - **优点**：
   - 操作数的地址不是固定的，随 PC 值的变化而变化，与指令地址之间总是相差一个固定的偏移量，因此**便于程序浮动**
     - e.g. 一段for循环代码移动位置
-      ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820152126211.png?imageMogr2/quality/80&imageSlim)
+      ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820152126211.png)
   - 广泛应用于**转移指令**
 
 #### 堆栈寻址
@@ -1754,14 +1754,14 @@ A 既可以是寄存器编号，又可以是内存地址；(A) 表示地址为 A
 - SP：Stack Pointer 是一个寄存器
 
 e.g. 一次加法操作的堆栈寻址
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820162432908.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820162432908.png)
 
 - 有效地址：99入栈 / 出栈时 EA 的确定方式不同
 - **堆栈**：
   - 后进先出的一块存储区
   - 该存储区中被读 / 写单元的地址是用堆栈指针 SP 给出
   - 硬件自动完成 SP 的加减操作
-    ![300](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820160944298.png?imageMogr2/quality/80&imageSlim)
+    ![300](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820160944298.png)
   - **硬堆栈**：寄存器堆栈，成本较高，**不需要访存**，不适合做大容量堆栈
   - **软堆栈**：从**主存**中划出一段区域，执行阶段访存 1 次，通常采用软堆栈
 
@@ -1769,20 +1769,20 @@ e.g. 一次加法操作的堆栈寻址
 
 - 速度方面：立即寻址 > 寄存器寻址 > 直接寻址 > 寄存器间接寻址 > 间接寻址
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820161213887.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820161213887.png)
 
 注意，以上的访存次数是指指令执行期间，不包括取指令。
 
 ### 4.2.3 补充：硬件的比较跳转
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820160033411.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820160033411.png)
 
 ## 4.3 机器代码
 
 - 汇编基础：[第二章 寄存器](汇编语言.md#第二章%20寄存器)
 
 寄存器：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820204215735.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820204215735.png)
 
 ### 4.3.1 数据传送类
 
@@ -1855,15 +1855,15 @@ e.g. 一次加法操作的堆栈寻址
 - `JB`：小于（无符号）
 
 e.g. 一个 if 判断
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820205937497.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820205937497.png)
 
 e.g. 循环
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820210631851.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820210631851.png)
 
 - `LOOP`：等价于 自减 + 比较 + 跳转
   - 指定 ECX 作为
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820210847811.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820210847811.png)
 
 ### 4.3.6 子程序调用与返回
 
@@ -1876,7 +1876,7 @@ e.g. 循环
 
 - **栈顶是低地址**，栈从高往低增长
 - x86 系统中，默认以**4字节**为栈的操作单位
-  ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820211611950.png?imageMogr2/quality/80&imageSlim)
+  ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820211611950.png)
 
 call ret 具体过程：
 
@@ -1888,13 +1888,13 @@ call ret 具体过程：
       2. 设置新函数栈底
 2. leave
    1. 效果是让 EBP 和 ESP 指向上一层函数的栈底和顶
-      ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820213324559.png?imageMogr2/quality/80&imageSlim)
+      ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820213324559.png)
 3. ret 1. 把 IP 旧值出栈
-   ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820211926699.png?imageMogr2/quality/80&imageSlim)
+   ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820211926699.png)
 
 ### 4.3.7 栈帧内部详解
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820215112867.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820215112867.png)
 
 区域内部实现从低往高增长：
 
@@ -1902,7 +1902,7 @@ call ret 具体过程：
 - 调用参数区：越靠前的参数，越靠近栈顶
 
 e.g. 汇编代码过程
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820221259841.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820221259841.png)
 
 ### 4.3.8 其他
 
@@ -1927,7 +1927,7 @@ e.g. 汇编代码过程
 
 - 一般不考
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820205152942.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250820205152942.png)
 
 ## 4.4 CISC 和 RISC
 
@@ -2002,7 +2002,7 @@ e.g. 汇编代码过程
    - 又可以细分为 `ALU + CU + 寄存器 + 中断系统`
 2. `CPU = 数据通路 + 控制部件`
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250821233153067.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250821233153067.png)
 
 - 结合后面几个小节理解
 
@@ -2038,7 +2038,7 @@ e.g. 汇编代码过程
   - SP 是堆栈指针，用于指示栈顶的地址
 - **暂存寄存器**
   - 暂存从数据总线或通用寄存器读来的操作数
-    ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250821230918991.png?imageMogr2/quality/80&imageSlim)
+    ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250821230918991.png)
   - 对应用程序员透明
 - **累加寄存器**（ACC）
   - 是一个通用寄存器
@@ -2122,7 +2122,7 @@ e.g. 汇编代码过程
 ### 5.2.1 指令周期
 
 指令周期 = 取指周期 + 执行周期
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250821234027775.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250821234027775.png)
 
 #### 周期概念辨析
 
@@ -2131,16 +2131,16 @@ e.g. 汇编代码过程
 1. 若干 **CPU 时钟周期 / 节拍 / CLK / T周期** 组成 一个机器周期
 2. 若干机器周期 组成 一个指令周期
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250821234408903.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250821234408903.png)
 
 常见指令的指令周期：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250822001631386.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250822001631386.png)
 
 - 可能额外含有间址和中断
 
 #### 指令周期流程
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250822002239800.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250822002239800.png)
 
 - 用触发器区分是哪个周期
   - FE Fetch、IND Indirect、EX Execute、INT Interrupt
@@ -2311,7 +2311,7 @@ e.g. 汇编代码过程
      - MDR -> Bus -> IR
        - MDRout 和 IRin 有效，现行指令 -> IR
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250822151600750.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250822151600750.png)
 
 3. 执行算术或逻辑运算
    - 比如一条**加法指令**，微指令序列及控制信号为：
@@ -2335,26 +2335,26 @@ e.g. 汇编代码过程
 2. 写各个周期的操作和信号
 
 取指周期：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250822153308233.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250822153308233.png)
 
 间址周期：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250822153803410.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250822153803410.png)
 
 执行周期：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250822153837757.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250822153837757.png)
 
 **考试需要根据题目图的实际情况来写信号，图上没给的信号不要写！**
 
 e.g. 2022真题
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250823005426082.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250823005426082.png)
 
 比如本题未给出**系统总线**的 MDRin，故READ时，答案没有写 MDRin 信号
 
 ### 5.3.3 专用数据通路
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250822154910924.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250822154910924.png)
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250822155341232.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250822155341232.png)
 
 ```
 存：
@@ -2362,7 +2362,7 @@ e.g. 2022真题
 (MDR) -> M(MAR)
 ```
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250822155901115.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250822155901115.png)
 
 ## 5.4 控制器
 
@@ -2373,7 +2373,7 @@ e.g.
 - 微命令 a：使 PCout、MARin 有效
 - 完成对应的微操作 a：（PC）to MAR
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250823152617701.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250823152617701.png)
 
 注意：
 
@@ -2390,7 +2390,7 @@ e.g.
 
 **根据 指令操作码、目前的机器周期、节拍信号、机器状态条件，即可确定现在这个节拍下应该发出哪些“微命令”。**
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250823153216542.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250823153216542.png)
 
 比如，对于所有指令的取指周期，在 T0 节拍下一定要完成 (PC) to MAR。则可知逻辑表达式为 $C_{1} = FE*T_{0}$，而 $C_{1}$ 就是一组微命令的代表。
 
@@ -2420,7 +2420,7 @@ e.g.
 - 微指令：对指令执行步骤的描述
   - 微指令就是类比指令构建的
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250823163216175.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250823163216175.png)
 
 补充**微程序段**：
 
@@ -2437,7 +2437,7 @@ e.g.
 
 #### 微程序控制器的结构
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250823163930201.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250823163930201.png)
 
 - 控制存储器由 ROM 组成
 
@@ -2446,7 +2446,7 @@ e.g.
 - 基本不考
 - 比硬布线设计方便
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250823174803798.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250823174803798.png)
 
 #### 微程序 对比 硬布线
 
@@ -2478,7 +2478,7 @@ e.g.
    2. 便于编写，执行速度**慢**
    3. 设置了**微操作码**
 3. 混合型
-   ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250823170606122.png?imageMogr2/quality/80&imageSlim)
+   ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250823170606122.png)
 
 #### 编码方式
 
@@ -2491,12 +2491,12 @@ e.g.
    2. 一字段（译码之后）对应一组互斥的微命令
    3. **每个字段需要保留一个空状态**
 3. 字段间接编码 1. 直接是一次译码，间接是二次译码 2. 削弱了并行控制能力
-   ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250823171541284.png?imageMogr2/quality/80&imageSlim)
+   ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250823171541284.png)
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250823172026037.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250823172026037.png)
 
 e.g. 例题
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250823171912784.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250823171912784.png)
 
 #### 地址形成方式
 
@@ -2638,7 +2638,7 @@ e.g. 例题
 
 #### 三种基本方式
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250824202640089.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250824202640089.png)
 
 ### 5.6.2 性能指标
 
@@ -2653,7 +2653,7 @@ $$TP=\frac{n}{T_k}=\frac{n}{(k+n-1)Δt}$$
 
 - 最大吞吐率：$TP_{max}=\frac{1}{Δt}$
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250824204806087.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250824204806087.png)
 
 - 前 $k \triangle t$ 为装入时间；前 $k \triangle t$ 为排空时间
 
@@ -2679,7 +2679,7 @@ $$S=\frac{T_0}{T_k}=\frac{kn}{k+n-1}$$
 
 $$E=\frac{kn\triangle t}{kT_k}$$
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250824205718249.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250824205718249.png)
 
 ### 5.6.3 五段式
 
@@ -2688,29 +2688,29 @@ $$E=\frac{kn\triangle t}{kT_k}$$
 流水线每一个功能段部件后面都要有一个**缓冲寄存器**，或称为**锁存器**， 其作用是保存本流水段的执行结果，提供给下一流水段使用。
 
 运算类指令的执行过程：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250824213434116.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250824213434116.png)
 
 LOAD 指令：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250824213745337.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250824213745337.png)
 
 STORE 指令：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250824213941495.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250824213941495.png)
 
 通常， RISC处理器只有“取数LOAD”和“存数STORE”指令才需要**访问主存**；其他指令都是用寄存器的数据或者立即数。
 
 条件转移指令：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250824214849542.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250824214849542.png)
 
 - 条件转移的写回 PC 发生在 **M 段**，不是 WB 段
 
 无条件转移指令：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250824215123050.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250824215123050.png)
 
 - 写回 PC 越早越好，所以**无条件转移的写回 PC 在 EX 段**
 
 #### 例题
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250824215619570.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250824215619570.png)
 
 重点关注红框：
 
@@ -2752,9 +2752,9 @@ STORE 指令：
 
 - 不考，动态流水线可以看一下
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250824212315925.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250824212315925.png)
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250824212425763.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250824212425763.png)
 
 ### 5.6.6 高级流水线
 
@@ -2784,8 +2784,6 @@ STORE 指令：
 - 时分复用思路
 
 在一个时钟周期内再分段，在一个时钟周期内一个功能部伴使用多次。
-
-![image.png](https://qingwu-oss.oss-cn-heyuan.aliyuncs.com/lian/img/20240502161507.png)
 
 - 流水线功能段越多，时钟周期越短，**指令吞吐率越高**
 - 通过**提高流水线主频**的方式来提升流水线性能的
@@ -2819,11 +2817,11 @@ STORE 指令：
 - 一个顺序应用程序被编译之后, 可能按照 SISD 组织并运行于串行硬件上，也可能按 SIMD 组织并运行于并行硬件上
 - **for 循环效率高**，但 switch 或 case 时效率低
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250826161032080.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250826161032080.png)
 
 **向量处理器**也是 SIMD 的变体，是一种实现了直接操作一维数组（向量）指令集的 CPU。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250826161509275.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250826161509275.png)
 
 ### 5.7.4 MISD
 
@@ -2846,7 +2844,7 @@ MIMD 分为多计算机系统和多处理器系统：
   - 每个计算机节点都具有各自的**私有存储器**，并且具有独立的主存地址空间
   - 不能通过存取指令来访问不同节点的私有存储器
   - 而要通过消息传递进行数据传送，也称为**消息传递 MIMD**
-    ![300](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250826160958268.png?imageMogr2/quality/80&imageSlim)
+    ![300](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250826160958268.png)
 - **多处理器系统**
   - **共享存储**多处理器（SMP）系统的简称
   - 它具有**共享的单一地址空间**，通过访存指令来访问系统中的所有存储器，也称**共享存储 MIMD**
@@ -2900,7 +2898,7 @@ MIMD 分为多计算机系统和多处理器系统：
 ## 6.1 概述
 
 总线的物理实现：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250827203800217.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250827203800217.png)
 
 总线是一组能够为多个部件**分时**和**共享**的公共信息传送线路。
 
@@ -3007,7 +3005,7 @@ CPU、主存、I/O 设备（通过 I/O 接口）都连接在一组**系统总线
   - 用于多个外部设备与通道之间进行数据传送
   - 主存总线和IO总线通过**通道**连接
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250828205548124.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250828205548124.png)
 
 - 通道
   - 具有特殊功能的处理器， 能对IO设备进行统一管理
@@ -3025,7 +3023,7 @@ CPU、主存、I/O 设备（通过 I/O 接口）都连接在一组**系统总线
 - I/O 总线
 - DMA 总线（直接内存访问）
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250828205823790.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250828205823790.png)
 
 - **优点**：提高了 I/O 设备的性能，使其更快地响应命令，提高系统吞吐量
   - DMA 使得高速外设不用走速度慢的IO总线
@@ -3035,7 +3033,7 @@ CPU、主存、I/O 设备（通过 I/O 接口）都连接在一组**系统总线
 
 桥接器：用于连接不同的总线，具有数据缓冲、转换和控制功能。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250828210059780.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250828210059780.png)
 
 ### 6.3.2 性能指标
 
@@ -3266,7 +3264,7 @@ CPU、主存、I/O 设备（通过 I/O 接口）都连接在一组**系统总线
 # 7 IO系统
 
 IO系统的基本组成：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830163638778.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830163638778.png)
 
 ## 7.1 IO接口
 
@@ -3282,19 +3280,19 @@ IO接口就是 IO控制器。
 
 - 大概率不考
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830155148407.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830155148407.png)
 
 程序查询、程序中断：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830161607153.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830161607153.png)
 
 但是对于高速IO设备，比如磁盘，假如每准备好一个字就向 CPU 发出中断请求，则 CPU 会浪费很多时间在处理中断程序，利用率下降。
 
 可以采用 DMA 的方式处理高速IO设备：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830162015464.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830162015464.png)
 
 另外，对于有大量IO设备的场景，只依靠 CPU 处理IO是不够的，需要引入通道控制方式，通道可以理解为是一个只有部分功能的弱 CPU。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830163458929.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830163458929.png)
 
 ### 7.1.2 功能
 
@@ -3313,14 +3311,14 @@ IO接口的功能：
   - 接收从控制总线发来的控制信号、时钟信号
   - 通过状态寄存器反馈设备的各种错误、状态信息，供 CPU 查用
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830164326317.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830164326317.png)
 
 - **外部接口**：通过接口电缆与外设连接，数据传输可能是串行方式，因此 I/O 接口需具有串/并转换功能
 - **内部接口**与系统总线相连，实质上是与内存、CPU 相连
 
 ### 7.1.3 基本结构
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830165034350.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830165034350.png)
 
 主机与外设之间的连接通路：
 
@@ -3368,7 +3366,7 @@ IO端口：IO控制器中的各种寄存器
 - 控制端口：对控制端口中的各种控制命令只能执行**写**操作
 
 两种编址方式：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830165558333.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830165558333.png)
 
 #### 统一编址
 
@@ -3408,7 +3406,7 @@ IO端口：IO控制器中的各种寄存器
 
 ### 7.2.1 程序查询方式
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830180515392.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830180515392.png)
 
 - 主要特点
   - CPU **有“踏步”等待现象**
@@ -3477,7 +3475,7 @@ CPU响应中断必须满足以下3个条件：
 - 1 表示有请求
 
 这些触发器组成**中断请求标记寄存器**：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830183542662.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830183542662.png)
 
 - 该寄存器可集中在 CPU 中，也可分散在各个中断源中
 
@@ -3493,9 +3491,9 @@ CPU响应中断必须满足以下3个条件：
 
 - 软件：通过查询程序实现
   - 比硬件慢，不常用
-  - ![300](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830183820752.png?imageMogr2/quality/80&imageSlim)
+  - ![300](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830183820752.png)
 - 硬件：通过**硬件排队器**实现
-  - ![300](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830183656811.png?imageMogr2/quality/80&imageSlim)
+  - ![300](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830183656811.png)
 
 优先级设置：
 
@@ -3539,7 +3537,7 @@ CPU响应中断必须满足以下3个条件：
 硬件向量法：
 CPU 响应中断后，通过识别**中断源**获得**中断类型号**（也叫向量地址），然后据此计算出对应**中断向量的地址**；再根据该地址从**中断向量表**中取出**中断服务程序**的**入口地址**，并送入 PC，以转而执行中断服务程序。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830194844737.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830194844737.png)
 
 - 每个中断源有一个唯一的类型号
   - 每个中断类型号对应一个中断服务程序
@@ -3576,7 +3574,7 @@ CPU 响应中断后，通过识别**中断源**获得**中断类型号**（也�
 1. 执行中断隐指令（中断响应）
 2. 中断服务程序
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830200252944.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830200252944.png)
 
 #### 多重中断
 
@@ -3598,17 +3596,17 @@ CPU 支持多重中断的条件：
   - 至少能屏蔽自身的中断
 
 需要改造之前的硬件排队器，加上 MASK：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830223157829.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830223157829.png)
 
 e.g. 求屏蔽字
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830223405928.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830223405928.png)
 
 e.g. 求执行轨迹
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830223531377.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830223531377.png)
 
 #### 程序中断总结
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830224132155.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830224132155.png)
 
 ### 7.2.3 DMA 方式
 
@@ -3627,7 +3625,7 @@ DMA 方式中，**中断**的作用仅限于故障和正常传送结束
 
 - **DMAC**，又叫 DMA 控制器（DMA 接口），是**对数据传送过程进行控制的硬件**
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830235427466.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250830235427466.png)
 
 - 单总线结构
 
@@ -3654,7 +3652,7 @@ DMA 过程：
 
 **前文讲 DMAC 时，使用的是单总线的图，但是 DMA 方式一般是指三总线的结构。**
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250831000317623.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250831000317623.png)
 
 在外设与主存之间开辟一条**直接数据通路**，DMA总线。
 
@@ -3690,7 +3688,7 @@ DMA 方式的特点：
 
 #### DMA 与 中断 对比
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250831001512564.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250831001512564.png)
 
 # 8 考纲
 

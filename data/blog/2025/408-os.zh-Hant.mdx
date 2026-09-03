@@ -7,7 +7,7 @@ tags:
 draft: false
 images:
   - >-
-    https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250831160834886.png?imageMogr2/quality/80&imageSlim
+    https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250831160834886.png
 authors:
   - default
 ---
@@ -67,7 +67,7 @@ authors:
 
 ## 1.2 發展歷程
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250901201922310.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250901201922310.png)
 
 - 最早是手工操作，屬於無 OS
 
@@ -237,7 +237,7 @@ OS 的**運行環境**可以理解：
    2. 也可能是程序運行出現異常情況，被動地需要管理程序的服務，此時則通過異常處理進入內核態
 3. 管理程序運行結束時，退出中斷或異常處理程序，返回到用戶程序的斷點處繼續執行。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250902170103033.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250902170103033.png)
 
 一些由**用戶態 to 內核態**的例子：
 
@@ -254,11 +254,11 @@ OS 的**運行環境**可以理解：
 
 ### 1.4.1 分層法
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250902170513131.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250902170513131.png)
 
 ### 1.4.2 模塊化
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250902171131544.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250902171131544.png)
 
 衡量模塊的獨立性主要有兩個標準：
 
@@ -291,7 +291,7 @@ OS 的**運行環境**可以理解：
 - **服務器**（進程）：OS 的大部分功能在服務器中，作為進程來實現，運行在用戶態
 
 客戶與服務器之間藉助**微內核提供的消息傳遞機制**實現交互。
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250902172545928.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250902172545928.png)
 
 微內核的基本功能：
 
@@ -350,7 +350,7 @@ OS 是一種存放在硬盤中的程序，而 **OS 引導**是指 CPU 運行特�
 ## 1.6 虛擬機
 
 主要分兩類：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250904173802541.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250904173802541.png)
 
 第一類虛擬機管理程序類似一個 OS，是**唯一**一個運行在特權級的程序。
 
@@ -420,7 +420,7 @@ OS 是一種存放在硬盤中的程序，而 **OS 引導**是指 CPU 運行特�
    1. 正在結束
 
 狀態轉換圖：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250905162655197.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250905162655197.png)
 
 - 運行態 to 阻塞態：進程請求資源時發生等待，轉入阻塞態
   - **主動行為**
@@ -621,7 +621,7 @@ OS 是一種存放在硬盤中的程序，而 **OS 引導**是指 CPU 運行特�
    3. 缺點
       1. **系統開銷大**
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250905181127483.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250905181127483.png)
 
 #### 多線程模型
 
@@ -658,7 +658,7 @@ OS 是一種存放在硬盤中的程序，而 **OS 引導**是指 CPU 運行特�
    1. 就緒隊列 to 運行態
    2. **頻率最高**、最低級
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250906163852971.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250906163852971.png)
 
 ### 2.2.2 調度的實現
 
@@ -669,7 +669,7 @@ OS 是一種存放在硬盤中的程序，而 **OS 引導**是指 CPU 運行特�
 
 由排隊器、分派器、上下文切換器組成。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250906174349018.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250906174349018.png)
 
 #### 調度過程
 
@@ -841,7 +841,7 @@ $$
 
 綜合 RR 和 優先級調度，**動態調整時間片大小和優先級**。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250906211427981.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250906211427981.png)
 
 - 每個隊列採用 FCFS
 - 優先級越高的隊列，時間片越短
@@ -850,7 +850,7 @@ $$
   - 按隊列優先級調度：第1級空了才能調度第2級
 
 總結：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250906212723101.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250906212723101.png)
 
 #### 基於公平原則的調度
 
@@ -983,16 +983,16 @@ e.g. 輸入進程 A 通過單緩衝向進程 B 提供數據：
       1. 不能表示臨界區空
    2. 不滿足空閒讓進
       1. 本質問題是臨界區空閒時，只能讓**指定**的進程進入
-      2. ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250908171324356.png?imageMogr2/quality/80&imageSlim)
+      2. ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250908171324356.png)
 2. 雙標誌先檢查法
    1. 設置一個 bool 數組，表示各個進程進入臨界區的意願
-   2. ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250908172343124.png?imageMogr2/quality/80&imageSlim)
+   2. ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250908172343124.png)
 3. 雙標誌後檢查法
    1. 先設置後檢查
    2. 還是有問題，標誌全是 true，大家都會飢餓
 4. Peterson 算法
    1. 比前三個好，**通過 turn 謙讓的機制，解決了飢餓問題**，但仍未遵循讓權等待
-   2. ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250908172955502.png?imageMogr2/quality/80&imageSlim)
+   2. ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250908172955502.png)
 
 #### 硬件實現
 
@@ -1002,7 +1002,7 @@ e.g. 輸入進程 A 通過單緩衝向進程 B 提供數據：
    1. TSL指令
       1. TestAndSetLock指令是原子操作，功能是讀出指定**標誌**並置為 true
       2. **自旋**
-      3. ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250908195636846.png?imageMogr2/quality/80&imageSlim)
+      3. ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250908195636846.png)
    2. Swap指令
       1. 類似 TS
 
@@ -1074,15 +1074,15 @@ void signal(semaphore S) { // 相当于释放资源
 #### 信號量機制的使用
 
 **互斥**操作中，PV操作必須成對出現：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250908210528282.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250908210528282.png)
 
 **同步**操作中，目的是**有序執行**，因此**設置初始** $S = 0$，假如要求 P1 P2 的順序來執行，則代碼規定 P1 生產資源（V操作），P2消耗資源（P操作），這樣 $S$ 的設置恰能保證有序執行。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250908211014081.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250908211014081.png)
 
 e.g. 信號量實現前驅關係
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250908212703076.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250908212703076.png)
 
 ### 2.3.5 經典同步問題
 
@@ -1226,7 +1226,7 @@ reader() {            //读者进程
 
 問題描述：一張圓桌邊上坐著5名哲學家，每兩名哲學家之間的桌上擺一根筷子，兩根筷子中間是一碗米飯，哲學家們傾注畢生精力用於思考和進餐，哲學家在思考時，並不影響他人。只有當哲學家飢餓時，才試圖拿起左、右兩根筷子（一根一根地拿起）。若筷子已在他人手上，則需要等待。飢餓的哲學家只有同時拿到了兩根筷子才可以開始進餐，進餐完畢後，放下筷子繼續思考。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250908215306179.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250908215306179.png)
 
 避免死鎖的算法：
 
@@ -1274,7 +1274,7 @@ Pi() {                               //i号哲学家的进程
 4. 對局部於管程內部的共享數據設置初始值的語句
 
 管程就像一個類（class），封裝了一個數據結構和相關的一些操作，定義如下：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250911131742629.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250911131742629.png)
 
 #### 條件變量
 
@@ -1354,7 +1354,7 @@ e.g. 進程 A 等待進程 B 發的消息，進程 B 又在等待進程 A 發的
 4. **循環等待條件**
    1. 存在進程資源的循環等待鏈
    2. 只是必要條件，不是充分條件
-      1. ![300](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250911165914271.png?imageMogr2/quality/80&imageSlim)
+      1. ![300](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250911165914271.png)
 
 ### 2.4.3 處理策略
 
@@ -1389,7 +1389,7 @@ e.g. 進程 A 等待進程 B 發的消息，進程 B 又在等待進程 A 發的
 1. 確定**安全狀態**
    1. 在資源分配前，先確定系統是否安全。
    2. 安全狀態：系統能按照某種進程順序分配資源，滿足每個進程的最大需求
-   3. ![300](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250911182730324.png?imageMogr2/quality/80&imageSlim)
+   3. ![300](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250911182730324.png)
 2. **銀行家算法**
    1. 進程運行前先聲明對各種資源的最大需求量，數量不超過系統的資源總量。
    2. OS 在分配資源之前，先確定是否有足夠資源分配給進程，在確定分配之後是否會處於**不安全狀態**。
@@ -1442,13 +1442,13 @@ Need[i,j] = Need[i,j] - Request[j];
 4. 若此時安全序列中己有所有進程，則系統處於安全狀態，否則系統處於不安全狀態。
 
 e.g. 例題輔助理解
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250913003103035.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250913003103035.png)
 
 #### 死鎖檢測
 
 可以用**資源分配圖**來檢測系統是否處於死鎖狀態。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250913005935801.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250913005935801.png)
 
 - 對於資源結點，**出邊是已分配資源，入邊是進程的請求**
 - 簡化的過程就是嘗試滿足進程請求，消除入邊，進而消除進程結點及其佔用
@@ -1507,7 +1507,7 @@ OS 通過**內存管理部件**（MMU），將邏輯地址轉換為物理地址�
    1. 裝入程序將裝入模塊裝入內存
    2. **形成物理地址**
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250913144936725.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250913144936725.png)
 
 ##### 三種裝入方式
 
@@ -1524,7 +1524,7 @@ OS 通過**內存管理部件**（MMU），將邏輯地址轉換為物理地址�
    3. 裝入程序將裝入模塊裝入內存後，並不會立即將裝入模塊中的相對地址轉換為絕對地址，而是推遲到程序真正執行的時候才轉換，因此，裝入內存後所有地址均為相對地址
       1. **動態重定位是在作業的執行過程中運行的**
    4. 需要**重定位寄存器**，存放裝入模塊的起始位置
-      1. ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250913150413454.png?imageMogr2/quality/80&imageSlim)
+      1. ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250913150413454.png)
 
 ##### 三種鏈接方式
 
@@ -1565,7 +1565,7 @@ OS 通過**內存管理部件**（MMU），將邏輯地址轉換為物理地址�
 
 代碼段和數據段在調入內存時就指定了大小，但是**堆棧都是動態的**。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250913151732333.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250913151732333.png)
 
 #### 內存保護
 
@@ -1585,7 +1585,7 @@ OS 通過**內存管理部件**（MMU），將邏輯地址轉換為物理地址�
    4. 界地址：存放進程的**最大邏輯地址**
    5. 使用特權指令，**只有內核可以加載這兩個存儲器**
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250913152410964.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250913152410964.png)
 
 #### 內存共享
 
@@ -1622,7 +1622,7 @@ OS 通過**內存管理部件**（MMU），將邏輯地址轉換為物理地址�
    2. 在進程裝入內存時，根據進程的實際需要，動態分配內存
    3. 分區數量、大小可變
    4. 隨著時間推移，會出現越來越多的小內存塊，稱為**外部碎片**
-      1. 外部碎片形成過程：![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250913154401461.png?imageMogr2/quality/80&imageSlim)
+      1. 外部碎片形成過程：![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250913154401461.png)
       2. 外部碎片可以通過**緊湊技術**克服，即 OS 移動進程，進行整理，但是相對費時
 
 > [!tip] 內部 / 外部碎片
@@ -1712,12 +1712,12 @@ OS 通過**內存管理部件**（MMU），將邏輯地址轉換為物理地址�
   - **物理空間**中每個頁框 / 塊的編號
     - 為了方便地址轉換，頁面大小應該是 $2^n$
 - 邏輯地址結構
-  - 頁號 + 頁內偏移量 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915154825941.png?imageMogr2/quality/80&imageSlim)
+  - 頁號 + 頁內偏移量 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915154825941.png)
     - 偏移量對應頁大小（e.g. $2^{12}$）
     - 頁號對應頁數（e.g. $2^{20}$）
 - 頁表
   - 頁面映射表
-  - 實現頁號到物理塊號的映射 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915155203078.png?imageMogr2/quality/80&imageSlim)
+  - 實現頁號到物理塊號的映射 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915155203078.png)
   - 進程的每個頁面對應一個**頁表項**，每個頁表項由頁號和塊號組成
     - 在頁表中，**頁表項連續存放**，因此頁號可以是隱含的，索引就可以表示頁號，不用單獨佔用存儲空間，所以上圖中頁號寫在了外面。
 
@@ -1725,7 +1725,7 @@ OS 通過**內存管理部件**（MMU），將邏輯地址轉換為物理地址�
 
 - 藉助頁表實現
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915155404864.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915155404864.png)
 
 為了提高變換速度，設置了**頁表寄存器 PTR**，存放頁表始址和頁表長度。
 
@@ -1772,13 +1772,13 @@ OS 通過**內存管理部件**（MMU），將邏輯地址轉換為物理地址�
 - **查快表不算訪存**
   - 查快表成功，則只需一次訪存（訪問快表查到的物理地址）
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915161622155.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915161622155.png)
 
 一般快表的命中率可達 90% 以上，這樣分頁帶來的速度損失就可降低⾄ 10% 以下。快表的有效性基於著名的局部性原理，後文虛擬內存介紹。
 
 #### 多級頁表
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915161931028.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915161931028.png)
 
 訪存次數計算：每級頁表一次 + 最後訪問數據一次
 
@@ -1804,13 +1804,13 @@ e.g. 用戶進程由主程序段、兩個子程序段、棧段和數據段組成
 
 段表項包含 **段號、段長、基址**，段號同樣是隱式的。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915163011712.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915163011712.png)
 
 #### 地址變換機構
 
 變換過程和分頁類似，也是**兩次訪存**，不贅述。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915163144823.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915163144823.png)
 
 #### 段的共享和保護
 
@@ -1844,10 +1844,10 @@ e.g. 用戶進程由主程序段、兩個子程序段、棧段和數據段組成
 
 對內存空間的管理仍然和分頁存儲管理一樣，將其分成若⼲和頁⾯大⼩相同的物理塊，**對內存的分配以物理塊單位**。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915163920452.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915163920452.png)
 
 三次訪存：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915164145730.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915164145730.png)
 
 ## 3.2 虛擬內存管理
 
@@ -1905,7 +1905,7 @@ e.g. 用戶進程由主程序段、兩個子程序段、棧段和數據段組成
 
 #### 頁表項
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250916164957732.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250916164957732.png)
 
 - 狀態位：是否調入內存
 - 訪問字段：本頁被訪問的次數 / 多長時間未被訪問
@@ -1933,7 +1933,7 @@ e.g. 用戶進程由主程序段、兩個子程序段、棧段和數據段組成
 #### 地址變換機構
 
 地址變換過程：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250916170433617.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250916170433617.png)
 
 ### 3.2.3 頁框分配
 
@@ -2012,7 +2012,7 @@ e.g. 用戶進程由主程序段、兩個子程序段、棧段和數據段組成
 > [!NOTE] 內存與虛擬內存
 > 注意，頁面的換入換出的概念都是針對**內存（主存儲器）與磁盤**而言的，而虛擬內存（虛擬存儲器）是指內存+對換區，所以頁面並不是從虛擬內存換出，是從內存換出。
 >
-> ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250918172649083.png?imageMogr2/quality/80&imageSlim)
+> ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250918172649083.png)
 
 #### 如何調入頁面
 
@@ -2059,7 +2059,7 @@ e.g. 用戶進程由主程序段、兩個子程序段、棧段和數據段組成
       1. 若為 0，就選擇該頁換出
       2. 若為 1，則將它置 0，暫不換出，給予該頁第二次駐留內存的機會，再依次順序檢查下一個頁⾯。
    5. 當檢查到隊列中的最後一個頁⾯時，若其訪問位仍 1，則返回到隊首去循環檢查。因為該算法是循環地檢查各個頁⾯的使用情況，所以稱為 CLOCK 算法。
-   6. 該算法只有一位訪問位，而置換時將**未使用過**的頁⾯換出，所以也稱最近未用（NRU）算法。![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250917171835741.png?imageMogr2/quality/80&imageSlim)
+   6. 該算法只有一位訪問位，而置換時將**未使用過**的頁⾯換出，所以也稱最近未用（NRU）算法。![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250917171835741.png)
 2. 改進型 CLOCK
    1. 增加一個修改位 M，在選擇頁面換出時，優先考慮**未使用且未修改**的頁面
       1. 優先級從高到低依次是：
@@ -2081,7 +2081,7 @@ e.g. 用戶進程由主程序段、兩個子程序段、棧段和數據段組成
 
 工作集：進程最近訪問的頁面集合，一般可以用時間 + 工作集窗口尺寸來確定。
 
-![444](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250918140807642.png?imageMogr2/quality/80&imageSlim)
+![444](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250918140807642.png)
 
 ### 3.2.6 頁框回收
 
@@ -2107,7 +2107,7 @@ e.g. 用戶進程由主程序段、兩個子程序段、棧段和數據段組成
 > [!NOTE] 頁緩衝隊列的位置
 >
 > 頁緩衝隊列在內存外存之間，不影響缺頁率
-> ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250918175624728.png?imageMogr2/quality/80&imageSlim)
+> ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250918175624728.png)
 
 #### 頁框回收
 
@@ -2171,16 +2171,16 @@ Linux 系統採用 3.1.2 節介紹的“夥伴算法”對內存中具有不同�
    2. 物理地址的往上 4 位作為組索引
 
 最終得到地址結構：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250918152121826.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250918152121826.png)
 
 補充：
 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/24/24065156f652e64ef406ae395e4fc1c585266e23b68a83babc863bfe241b8930.webp)
 
 圖表：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250918152152855.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250918152152855.png)
 
 找地址過程：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250918153229357.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250918153229357.png)
 
 ---
 
@@ -2205,7 +2205,7 @@ Linux 系統採用 3.1.2 節介紹的“夥伴算法”對內存中具有不同�
 - FCB 的有序集合稱為**文件目錄**
 - 一個 FCB 就是一個**文件目錄項**
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919152733959.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919152733959.png)
 
 > [!NOTE] 目錄、文件目錄、目錄文件
 >
@@ -2261,7 +2261,7 @@ Unix 採用了**文件名與文件描述分離**的⽅法，使**文件描述信
 
 通常，系統級打開文件表為每個文件關聯一個打開計數器（Open Count），以記錄多少進程打開了該文件。當文件不再使用時，利用系統調用 close 關閉它，會刪除單個進程的打開文件表中的相應條目，系統表中的相應打開計數器也會遞減。當打開計數器為 0 時，表⽰該文件不再被使用，並且可從系統表中刪除相應條目。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919162446965.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919162446965.png)
 
 - 要明確，系統級/進程級的打開文件表都在**內存**中，和外存沒關係
 
@@ -2343,7 +2343,7 @@ $$
 
 這樣就將對變長記錄順序文件的順序檢索，**轉變成了對定長記錄索引文件的隨機檢索**，從而加快了記錄的檢索速度。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919165032043.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919165032043.png)
 
 同時，配置索引表增加了存儲開銷。
 
@@ -2354,7 +2354,7 @@ $$
 e.g. 主文件包含姓名和其他數據項，**姓名為關鍵字**， 記錄按姓名的首字母分組，同一個組內的關鍵字可以⽆序，但是組與組之間的關鍵字必須有序。**將每組的第一個記錄的姓名及其邏輯地址放入索引表，索引表按姓名遞增排列**。
 
 檢索時，首先查找**索引表**，找該記錄所在的組，然後在該組內使用**順序查找**，就能很快地找到記錄，**提高了查找效率**。
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919165426226.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919165426226.png)
 
 ##### 直接文件 / 散列文件
 
@@ -2377,7 +2377,7 @@ e.g. 主文件包含姓名和其他數據項，**姓名為關鍵字**， 記錄�
 
 連續分配⽅法要求每個文件在磁盤上佔有一組連續的塊。磁盤地址定義了磁盤上的一個**線性排序**，這種排序使進程訪問磁盤時需要的尋道數和**尋道時間最⼩**。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919170516067.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919170516067.png)
 
 優點：
 
@@ -2404,7 +2404,7 @@ e.g. 主文件包含姓名和其他數據項，**姓名為關鍵字**， 記錄�
 
 目錄項中**僅**含有文件第一塊的指針（盤塊號）和最後一塊的指針。每個文件對應一個磁盤塊的鏈表，磁盤塊分佈在磁盤的任何地⽅。除文件的最後一個盤塊外，**每個盤塊都存有指向文件下一個盤塊的指針，這些指針對用戶是透明的**。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919171929426.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919171929426.png)
 缺點：
 
 1. 只支持順序訪問，效率低
@@ -2418,7 +2418,7 @@ e.g. 主文件包含姓名和其他數據項，**姓名為關鍵字**， 記錄�
 
 每個表項中存放指向下一個盤塊的指針。文件目錄中**只**需記錄該文件的起始塊號，後續塊號可通過查 FAT 找到。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919172308107.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919172308107.png)
 
 - **注意，圖中的 FAT 只寫了盤塊號和下一塊，但是表項包含了指向對應物理塊的指針**，所以直接訪問是可行的。
 
@@ -2440,7 +2440,7 @@ FAT 的表項與全部磁盤塊一一對應，並且可以用特殊數字 -1 表
 事實上，在打開某個文件時，只需將該文件對應的**盤塊的編號**調入內存即可，完全沒有必要將整個 FAT 調入內存。為此，應該將**每個文件所有的盤塊號集中地放在一起**，當訪問到某個文件 時，將該文件對應的盤塊號一起調入內存即可，這就是**索引分配**的思想。
 
 它每個文件分配一個索引塊，將分配給該文件的所有盤塊號都記錄在該索引塊中。
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919185408545.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919185408545.png)
 
 優點：
 
@@ -2451,7 +2451,7 @@ FAT 的表項與全部磁盤塊一一對應，並且可以用特殊數字 -1 表
 缺點：增加了額外的存儲空間開銷
 
 當索引塊太多時，可以採用**多級索引分配**⽅式：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919190649279.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919190649279.png)
 
 > [!NOTE] e.g. 二級索引計算
 > 假設盤塊大⼩為 4 KB，每個盤塊號佔 4 B，一個索引塊中可存放 1024 個盤塊號，則⽀持的最大文件為 1024 × 1024 × 4 KB= 4 GB。
@@ -2463,7 +2463,7 @@ FAT 的表項與全部磁盤塊一一對應，並且可以用特殊數字 -1 表
 3. 對於大型文件，可以採用兩級和三級索引分配。
 
 Unix 的 inode 就採用了混合索引的方式：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919191516378.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919191516378.png)
 
 ### 4.1.6 文件保護
 
@@ -2534,7 +2534,7 @@ Unix 的 inode 就採用了混合索引的方式：
 
 在整個文件系統中只建立一張目錄表，每個文件佔一個目錄項。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920155217475.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920155217475.png)
 
 - 建立新文件時，需要確保沒有**重名**的情況
 
@@ -2545,7 +2545,7 @@ Unix 的 inode 就採用了混合索引的方式：
 - 主文件目錄記錄用戶對應的**用戶文件目錄**所在的位置
 - 用戶文件目錄記錄該用戶所有文件的 FCB
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920160805481.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920160805481.png)
 
 二級結構的多用戶之間文件可以重名，也提高了檢索速度，但是不能分類。
 
@@ -2558,7 +2558,7 @@ Unix 的 inode 就採用了混合索引的方式：
 
 - `.` 表示當前目錄
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920162822554.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920162822554.png)
 
 樹形實現了文件分類，但是仍不便於文件共享。
 
@@ -2566,7 +2566,7 @@ Unix 的 inode 就採用了混合索引的方式：
 
 無環圖允許目錄共享子目錄/文件。為防止刪除錯誤，需要為共享節點設置**共享計數器**，計數器為 0 才能刪除節點，否則只刪除共享鏈。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920162902366.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920162902366.png)
 
 ### 4.2.4 文件共享
 
@@ -2585,14 +2585,14 @@ Unix 的 inode 就採用了混合索引的方式：
 - 一個用戶創建新文件時，`count = 1`
 - 一個用戶刪除文件時，如果`count = 0`，刪除文件及其**索引節點**，否則僅刪除當前用戶的目錄項
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920172346257.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920172346257.png)
 
 #### 軟鏈接
 
 - 符號鏈接，類似 Windows 的快捷方式
 
 創建一個 LINK 類型文件記錄共享文件的路徑：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920173739395.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920173739395.png)
 
 當用戶 B 訪問文件 L 時，操作系統看到要讀的文件屬於 LINK 類型，則**根據其中記錄的路徑名去查詢文件 F**，然後對 F 進行讀/寫操作，實現共享。- 只有**文件主**才擁有指向索引節點的指針，文件主刪除文件後，其他共享用戶會訪問失敗，**隨後刪除符號鏈接**。
 
@@ -2618,7 +2618,7 @@ Unix 的 inode 就採用了混合索引的方式：
 
 #### 層次結構
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920185542754.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920185542754.png)
 
 #### 磁盤結構
 
@@ -2661,7 +2661,7 @@ Unix 的 inode 就採用了混合索引的方式：
 - 每個進程的打開文件表
 
 補充：邏輯卷和物理盤可以互相包含
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920200548900.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920200548900.png)
 
 ### 4.3.2 外存空閒空間管理
 
@@ -2673,7 +2673,7 @@ Unix 的 inode 就採用了混合索引的方式：
 - 與內存的動態分區分配類似
 
 在外存上為所有空閒區建立**一張空閒表**，每個空閒區對應一個**空閒表項**，按照盤塊號遞增。
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920203506430.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920203506430.png)
 
 - 表項序號
 - 該空閒區的第一個空閒盤塊號
@@ -2727,7 +2727,7 @@ Unix 的 inode 就採用了混合索引的方式：
 
 - 0 代表盤塊空閒，1 代表盤塊已分配
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920204306130.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920204306130.png)
 
 盤塊的分配：
 
@@ -2761,10 +2761,10 @@ Unix 的 inode 就採用了混合索引的方式：
 
 由各組的第一個盤塊（超級塊）可以鏈接成一條鏈，超級塊保存在**內存**的專用棧中，稱為**空閒盤塊號棧**。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250921154249518.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250921154249518.png)
 
 總體視圖：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250921154824470.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250921154824470.png)
 
 盤塊的分配：
 
@@ -2833,7 +2833,7 @@ Unix 的 inode 就採用了混合索引的方式：
 
 IO 接口，也稱**設備控制器**，是 CPU 和 IO設備之間的橋樑。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250921191926752.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250921191926752.png)
 
 > [!NOTE] IO 邏輯
 > **用於實現對設備的控制**。
@@ -2853,7 +2853,7 @@ IO 接口，也稱**設備控制器**，是 CPU 和 IO設備之間的橋樑。
 
 - 12 真題
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250921200201671.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250921200201671.png)
 
 #### 用戶層軟件
 
@@ -2953,7 +2953,7 @@ IO 接口，也稱**設備控制器**，是 CPU 和 IO設備之間的橋樑。
 假定在塊設備輸入時，從設備將一塊數據輸入緩衝區的時間為 T，OS 將該緩衝區中的數據傳送到工作區的時間為 M，而 CPU 對這一塊數據進行處理的時間為C。
 
 工作流程：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922141141290.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922141141290.png)
 
 - 在單緩衝區中，T、M 是串行的，T、C 是**並行**的。
 - 當`T > C`時，CPU 處理完一塊數據後，暫時不能將下一塊數據傳送到工作區，必須等待緩衝區裝滿數據，平均處理一塊數據的時間為 `T + M`。
@@ -2965,7 +2965,7 @@ IO 接口，也稱**設備控制器**，是 CPU 和 IO設備之間的橋樑。
 
 為了提高設備利用率（並行程度），引入了雙緩衝，也稱緩衝對換。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922142128321.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922142128321.png)
 
 - 裝滿緩衝區 1 之後，繼續裝滿緩衝區 2
 - C、M 可以與 T 並行
@@ -2974,11 +2974,11 @@ IO 接口，也稱**設備控制器**，是 CPU 和 IO設備之間的橋樑。
 雙機**雙向通信**時的緩衝區設置：
 
 - 同一時刻的雙向數據傳輸, 必須在兩臺機器中都設置兩個緩衝區
-  ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922144340212.png?imageMogr2/quality/80&imageSlim)
+  ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922144340212.png)
 
 #### 循環緩衝
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922144731910.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922144731910.png)
 
 - IN OUT 指針沿著循環方向不斷移動
 
@@ -3001,7 +3001,7 @@ IO 接口，也稱**設備控制器**，是 CPU 和 IO設備之間的橋樑。
 3. 用於收容輸出數據的工作緩衝區（hout）
 4. 用於提取輸出數據的工作緩衝區（sout）
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922145012345.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922145012345.png)
 
 ### 5.2.3 設備的分配與回收
 
@@ -3010,7 +3010,7 @@ IO 接口，也稱**設備控制器**，是 CPU 和 IO設備之間的橋樑。
 #### 相關數據結構
 
 1. 設備控制表 DCT
-   1. 設備的各個屬性 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922151433110.png?imageMogr2/quality/80&imageSlim)
+   1. 設備的各個屬性 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922151433110.png)
 2. 控制器控制表 COCT
    1. 每個控制器由一個通道控制
 3. 通道控制表 CHCT
@@ -3058,7 +3058,7 @@ IO 接口，也稱**設備控制器**，是 CPU 和 IO設備之間的橋樑。
 2. 為每個用戶設置一張 LUT。
    1. 系統為每個用戶設置一張 LUT，同時在多用戶系統中都配置系統設備表。因此，不同用戶可以使用相同的邏輯設備名。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922155148972.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922155148972.png)
 
 ### 5.2.4 假脫機技術 SPOOLing
 
@@ -3072,7 +3072,7 @@ IO 接口，也稱**設備控制器**，是 CPU 和 IO設備之間的橋樑。
 引入多道程序技術後，系統便可利用程序來**模擬**脫機輸入/輸出時的外圍控制機，在主機的直接控制下實現脫機輸入/輸出功能。
 
 SPOOLing 系統的組成：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922155440742.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922155440742.png)
 
 1. 輸入井和輸出井
    1. 在**磁盤**上開闢出的兩個存儲區域。
@@ -3156,7 +3156,7 @@ SPOOLing 系統的組成：
 第二階段的工作是系統調用，read 調用會展開成一段包含**陷阱指令**的代碼，從**用戶態 to 內核態**以執行相關的操作。
 
 系統調用的大致過程：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922163858151.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922163858151.png)
 
 進入內核態後，系統調用服務例程申請一個**內核緩衝區**，並且最終轉到真正執行 IO 操作的設備驅動層。
 
@@ -3171,10 +3171,10 @@ SPOOLing 系統的組成：
 7. 進程P從系統調用返回，之後 scanf 函數進行字符解析，最終將該字符存儲到變量 d 中。
 
 整個 IO 操作過程的工作流程：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922164130462.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922164130462.png)
 
 數據流向：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922164255629.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922164255629.png)
 
 ## 5.3 外存管理
 
@@ -3216,7 +3216,7 @@ Windows 允許將磁盤分為多個分區，有一個分區為引導分區，它
 1. 引導首先運行 ROM 中的代碼，這個代碼指示系統從 MBR 中讀取**引導代碼**。除了引導代碼，MBR 還包含一個**磁盤分區表**和一個標誌（以指示從哪個分區引導系統）。
 2. 當系統找到**引導分區**時，讀取分區的第一個扇區，稱為**引導扇區**，並繼續餘下的引導過程，包括加載各種系統服務。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922170459972.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922170459972.png)
 
 ##### 壞塊
 
@@ -3259,7 +3259,7 @@ Windows 允許將磁盤分為多個分區，有一個分區為引導分區，它
    1. 在 SSTF 的基礎上規定了磁頭移動的方向：**只有磁頭移動到最外側磁道時才能向內移動**，反之同理
    2. 也稱電梯調度算法
 4. Circular-SCAN
-   1. 在 SCAN 的基礎上規定磁頭只能單向移動，到結束端後立即返回起始端![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922181852775.png?imageMogr2/quality/80&imageSlim)
+   1. 在 SCAN 的基礎上規定磁頭只能單向移動，到結束端後立即返回起始端![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922181852775.png)
 
    2. 實際使用時還可以改進：即磁頭只需移動到**最遠端的一個請求**即可返回，不需要到達磁盤端點。這種改進後的 SCAN 算法和 C-SCAN 算法稱LOOK 調度和 C-LOOK 調度。
 
@@ -3291,7 +3291,7 @@ Windows 允許將磁盤分為多個分區，有一個分區為引導分區，它
 - **閃存芯片**替代傳統磁盤中的**機械驅動器**
 - **閃存翻譯層**將來自 CPU 的邏輯塊讀/寫請求翻譯成對底層物理設備的讀/寫控制信號，因此閃存翻譯層替代了**磁盤控制器**
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922190222464.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922190222464.png)
 
 數據以**⻚**為單位讀/寫，以**塊**為單位擦除。
 
@@ -3446,4 +3446,4 @@ SSD 磨損均衡技術大致分為兩種：
 - 王道網課：[1.1.1+1.1.2 操作系統的概念、功能\_嗶哩嗶哩\_bilibili](https://www.bilibili.com/video/BV1YE411D7nH?spm_id_from=333.788.videopod.sections&vd_source=7f5cf2ae748c813cc5d4d6f55495312c&p=2)
 - 王道408課本：這篇筆記基本是參考408課本做的，有少部分的補充知識
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250831160834886.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250831160834886.png)

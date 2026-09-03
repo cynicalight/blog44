@@ -22,7 +22,12 @@ export const MDX_COMPONENTS: MDXComponents = {
   img: ({ alt = '', src, ...rest }: React.ImgHTMLAttributes<HTMLImageElement>) => {
     if (!src) return null
     return (
-      <Zoom zoomImg={{ src, alt }} canSwipeToUnzoom={true} zoomMargin={100}>
+      <Zoom
+        zoomImg={{ src, alt }}
+        canSwipeToUnzoom={true}
+        zoomMargin={100}
+        wrapElement="span"
+      >
         <img alt={alt} src={src} className="my-4 max-w-full rounded-lg" {...rest} />
       </Zoom>
     )

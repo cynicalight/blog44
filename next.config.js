@@ -72,6 +72,8 @@ module.exports = () => {
     pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
     images: {
       minimumCacheTTL: 60 * 60 * 24 * 30,
+      // Proxy enhanced modes may resolve public image hosts to 198.18.0.0/15 Fake IPs locally.
+      dangerouslyAllowLocalIP: process.env.NODE_ENV === 'development',
       remotePatterns: [
         {
           protocol: 'https',

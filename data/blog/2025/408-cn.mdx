@@ -7,7 +7,7 @@ tags:
 draft: false
 images:
   - >-
-    https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250831161428804.png?imageMogr2/quality/80&imageSlim
+    https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250831161428804.png
 authors:
   - default
 ---
@@ -76,7 +76,7 @@ authors:
 ### 1.1.5 性能指标
 
 1. 时延
-   1. 发送、传播、处理、排队 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250923155814820.png?imageMogr2/quality/80&imageSlim)
+   1. 发送、传播、处理、排队 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250923155814820.png)
 2. 带宽
    1. 单位时间内网络中点对点的**最高数据传输速率**
    2. 短板效应：`min(主机接口速率, 线路带宽, 交换机或路由器的接口速率)`
@@ -92,7 +92,7 @@ authors:
 6. 利用率
    1. **信道利用率**
       1. 用来表示某链路有百分之几的时间是被利用的 (有数据通过)
-      2. **信道利用率不是越高越好**：根据排队论，当某链路的利用率增大时，该信道引起的时延也会激增 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250923160230056.png?imageMogr2/quality/80&imageSlim)
+      2. **信道利用率不是越高越好**：根据排队论，当某链路的利用率增大时，该信道引起的时延也会激增 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250923160230056.png)
    2. **网络利用率**：全网络所有链路的链路利用率的加权平均
 7. 丢包率
    1. 即分组丢失率，是指在一定的时间范围内，传输过程中丢失的分组数量与总分组数量的比率
@@ -151,7 +151,7 @@ $$20/520 * 50kbps = 1.92kbps$$
 ### 1.2.3 OSI 参考模型
 
 三种常见的模型：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250923160902746.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250923160902746.png)
 
 OSI 共 7 层：
 
@@ -236,7 +236,7 @@ OSI 共 7 层：
 
 ### 1.2.4 TCP/IP 模型
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250923164835141.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250923164835141.png)
 
 熟练掌握 OSI 即可，TCP/IP 可以基本对应上 OSI 的各层。
 
@@ -268,7 +268,7 @@ OSI 共 7 层：
 
 #### 信源与信宿
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250923171528208.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250923171528208.png)
 
 #### 同步/异步传输
 
@@ -377,14 +377,14 @@ $$C = W*log_2 (1+\frac{S}{N}), \text{(bit/s)}$$
 
 ### 2.1.4 编码与调制
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250923174343038.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250923174343038.png)
 
 - 编码转为数字信号
 - 调制转为模拟信号
 
 #### 常用编码
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250923174519922.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250923174519922.png)
 
 说明一下反向非归零（NRZI）：
 
@@ -420,7 +420,7 @@ $$C = W*log_2 (1+\frac{S}{N}), \text{(bit/s)}$$
    2. 24 真题
 3. 调相 PM / 相移键控 PSK
 4. 正交幅度调制 QAM 1. 09 23 真题 1. 在**频率相同**的前提下，将 AM 与 PM 结合起来，形成叠加信号。设波特率为 B，采用 m 个相位，每个相位有 n 种振幅，则该 **QAM 的数据传输速率 R** 为 $R = B\log_{2}{mn}$（单位为 b/s）1. $log_{2}{mn}$ 表示每个信号传输的**比特数**，可以代入奈氏算最大传输速率2. **QAM-xx，表示一个码元有 xx 种符号表示**
-   ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250923191716461.png?imageMogr2/quality/80&imageSlim)
+   ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250923191716461.png)
 
 | 调制方式 | 典型形式          | 决定码元进制   | 状态数 $N$ | 码元比特数 |
 | :------- | :---------------- | :------------- | :--------- | :--------- |
@@ -437,7 +437,7 @@ $$C = W*log_2 (1+\frac{S}{N}), \text{(bit/s)}$$
 - 用户始终占用着**端到端**的固定传输带宽
 
 e.g. 电话网：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250923151707026.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250923151707026.png)
 
 #### 优点
 
@@ -487,7 +487,7 @@ e.g. 电话网：
 - 分组交换还可以进一步分为**面向连接的虚电路方式**和**无连接的数据报方式**，这两种服务方式都由网络层提供。
 
 报文划分：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250923153308247.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250923153308247.png)
 
 分组转发过程：
 
@@ -496,7 +496,7 @@ e.g. 电话网：
 3. 据此查找自己的**转发表**，再后将**分组转发**给下一个分组交换机
 4. 经过多个分组交换机的存储转发后，分组最终到达目的主机
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250923153808069.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250923153808069.png)
 
 分组交换除继承报文交换的诸多优点外，还有如下优点：
 
@@ -549,7 +549,7 @@ e.g. 电话网：
 - 长距离的模拟传输需要放大器放大衰减信号
 - 长距离的数字传输需要用中继器将失真的信号整形
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250923193921025.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250923193921025.png)
 
 ### 2.2.2 同轴电缆
 
@@ -563,7 +563,7 @@ e.g. 电话网：
 - 被广泛用于传输较高速率的数据
 - 传输距离比双绞线更远，价格也更高
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250923193955063.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250923193955063.png)
 
 ### 2.2.3 光纤
 
@@ -573,7 +573,7 @@ e.g. 电话网：
 - 有光脉冲表示 1，无光脉冲表示 0
 - 可见光的频率约为 $10^8$ MHz 量级，因此光纤通信系统的带宽极大
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250923194123384.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250923194123384.png)
 
 **原理**：基于全反射，当光纤碰到包层时就会折射到纤芯，这个过程不断重复，光就沿着光纤传输下去
 
@@ -640,7 +640,7 @@ e.g. 电话网：
     - 中继器放大的是**数字信号**，原理是将衰减的信号整形再生
 - **5-4-3 规则**：
   - 5 个网段，4 个中继器，3 个网段为主机段
-  - 在 5 个网段中的任意发送方和接收方**最多**只能经过 4 个中继器 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250923195306406.png?imageMogr2/quality/80&imageSlim)
+  - 在 5 个网段中的任意发送方和接收方**最多**只能经过 4 个中继器 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250923195306406.png)
 
 ### 2.3.2 集线器 Hub
 
@@ -661,7 +661,7 @@ e.g. 电话网：
 - 集线器一般都有少量的容错能力和网络管理功能
 - 集线器是**半双工模式**，收发不能同时进行
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250923195738991.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250923195738991.png)
 
 - 集线器在**一个时钟周期中只能传输一组信息**，如果一台集线器连接的机器数目较多，且多台机器经常需要同时通信，那么将导致信息碰撞，使得集线器的工作效率很差
 - 一个带宽为 10 Mb/s 的集线器上连接了 8 台计算机，当这 8 台计算机同时工作时，每台计算机真正所拥有的带宽为 10/8 Mb/s=1.25 Mb/s
@@ -707,7 +707,7 @@ e.g. 电话网：
 
 - e.g. 在 HDLC 协议中，用**标识位** F（01111110）来标识帧的开始和结束。
   - 在通信过程中，检测到帧标识位 F 即认为其是帧的**开始**，然后一旦检测到帧标识位 F 即表示帧的**结束**。
-  - HDLC 标准帧格式如图3.4所示。 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250924151717785.png?imageMogr2/quality/80&imageSlim)
+  - HDLC 标准帧格式如图3.4所示。 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250924151717785.png)
   - 为了提高帧的**传输效率**，应当使帧的数据部分的长度尽可能地大于首部和尾部的长度，但随着帧长的增加，传输差错发生的概率也随之提高，发生差错时重传的代价也越大
   - 因此每种链路层协议都规定了**帧的数据部分的长度上限**，即**最大传送单元**（Maximum Transmission Unit, MTU）。
 
@@ -746,7 +746,7 @@ e.g. 电话网：
 每个帧的首位字符用于记录当前帧的长度（字符数）。
 
 - 不安全，首位出错就乱套了
-  ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250924153223478.png?imageMogr2/quality/80&imageSlim)
+  ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250924153223478.png)
 
 ### 3.2.2 字节填充法
 
@@ -754,7 +754,7 @@ e.g. 电话网：
 
 - 若转义字符 ESC 也出现在数据中，则解决方法是在转义字符前再插入一个转义字符。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250924153450064.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250924153450064.png)
 
 - SOH、EOT 是网络层表示帧的开始和结束的**控制字符**
 
@@ -768,7 +768,7 @@ e.g. 电话网：
 - 接收方执行该过程的逆操作，即每收到5个连续的“1”，就自动删除后面紧跟的“0”，以恢复原始数据。
 - 在数据链路层早期使用的 **HDLC 协议**中，便是采用这种比特填充的首尾标志法来实现**透明传输**的。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250924154129167.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250924154129167.png)
 
 ### 3.2.4 违规编码法
 
@@ -879,10 +879,10 @@ Receiver：
    3. 设信息位为 $D_{4}D_{3}D_{2}D_{1}$（1010），共4位，检验位为 $P_{3}P_{2}P_{1}$，共3位，对应的7位海明码为 $H_{7}H_{6}H_{5}H_{4}H_{3}H_{2}H_{2}H_{1}$。
 2. **确定检验位的分布**
    1. **规定：检验位 $P_{i}$ 在海明位号为 $2^{i-1}$ 的位置上，其余各位为信息位**
-   2. 分布如下：![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250924164502872.png?imageMogr2/quality/80&imageSlim)
+   2. 分布如下：![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250924164502872.png)
 3. **确定检验分组**
    1. 每个数据位用**多个检验位**进行检验，被检验**数据位**的海明位号等于检验该数据位的各**检验位**海明位号之和。
-   2. 分组形成的检验关系如下：![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250924164605966.png?imageMogr2/quality/80&imageSlim)
+   2. 分组形成的检验关系如下：![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250924164605966.png)
 4. **检验位取值**
    1. 检验位 $P_i$ 的值为第 $i$ 组（由该检验位检验的数据位）所有位求异或。
    2. 根据步骤（3）中的分组有：
@@ -1016,7 +1016,7 @@ $$
 2. 往返时延 $RTT$
 3. 接收方的 ACK 的发送时延 $T_{A}$
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250924190126532.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250924190126532.png)
 
 #### GBN
 
@@ -1035,7 +1035,7 @@ $$
 U = 1
 $$
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250924190717130.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250924190717130.png)
 
 ## 3.5 介质访问控制
 
@@ -1046,7 +1046,7 @@ $$
 常用于单个**共享信道的广播型**链路：当2个或更多站点同时传送时会产生冲突（collision），所以需要一个协议来控制如何使用共享信道。
 
 e.g. 节点 A、B、C、D、E共享广播信道，假设A要与C通信，B 要与D通信，因它们共用一条信道，若不加控制，则两对节点之间的通信可能会因互相干扰而失败。
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250925163255586.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250925163255586.png)
 
 - 用来决定广播信道中信道分配的协议属于数据链路层的一个**子层**，称为介质访问控制子层。
 
@@ -1101,7 +1101,7 @@ TDMA FDMA
 
 所有用户在同一时间占用不同的频带资源。每个子信道分配的频带可不相同，但它们的总和不能超过信道的总频带。在实际应用中，为了防止子信道之间互相干扰，相邻信道间还要加入**隔离频带**。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250925164930768.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250925164930768.png)
 
 #### 波分多路复用
 
@@ -1220,7 +1220,7 @@ ALOHA 协议分为：
 
 1. 纯 ALOHA 协议
    1. 当总线形网络中的任何站点需要发送数据时，可以**不进行任何检测**就发送数据。
-   2. 若在一段时间内未收到确认，则该站点就认为传输过程中发生了冲突。发送站点需要等待一段随机的时间后再发送数据，直至发送成功。![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250925171543159.png?imageMogr2/quality/80&imageSlim)
+   2. 若在一段时间内未收到确认，则该站点就认为传输过程中发生了冲突。发送站点需要等待一段随机的时间后再发送数据，直至发送成功。![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250925171543159.png)
    3. 图中的重叠表示发生冲突。
    4. 每个站均可自由地发送数据帧，假定所有帧都是**定长**的。
       1. **帧长不用比特而用发送这个帧所需的时间来表示**，图中用 T 表示。
@@ -1228,7 +1228,7 @@ ALOHA 协议分为：
    1. 同步各站点的时间，将时间划分为一段段等长的时隙（Slot），规定：
       1. 站点**只能在每个时隙开始时发送帧**
       2. 发送一帧的时间必须小于或等于时隙的长度
-   2. 这样就避免了用户发送数据的随意性，降低了产生冲突的可能性，提高了信道的利用率。![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250925172152800.png?imageMogr2/quality/80&imageSlim)
+   2. 这样就避免了用户发送数据的随意性，降低了产生冲突的可能性，提高了信道的利用率。![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250925172152800.png)
    3. 如上图，每个帧到达后，一般都要在缓存中等待一段小于时隙的时间，才能发送出去。
    4. **当在一个时隙内有多个的帧到达时**，在下一个时隙将产生冲突。
       1. 冲突后重传的策略与纯 ALOHA 协议的情况相似。
@@ -1288,7 +1288,7 @@ CSMA 协议是在 ALOHA 协议基础上提出的一种改进协议：
 - 没有传完一个帧就可以在短时间内检测到冲突，并放弃传输终止，减少对信道的浪费
 
 另外，检测到信道空闲时，信道不一定空闲：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250925192128408.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250925192128408.png)
 
 ##### 争用期
 
@@ -1396,7 +1396,7 @@ e.g. 以太网规定 51.2us 为争用期的长度。对于 10Mb/s 的以太网�
 - **发现信道忙后，等待了 DIFS 时间后，还要退避一段随机时间**
   - 可能有多个站点在信道忙时都想发送帧，在 `DIFS` 时间后他们会**同时**发送，而实际上多个站点同时发送数据会碰撞，因此需要一个随机时间将他们进行错峰发送
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250925200742565.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250925200742565.png)
 
 ##### 退避算法
 
@@ -1410,7 +1410,7 @@ e.g. 以太网规定 51.2us 为争用期的长度。对于 10Mb/s 的以太网�
 2. 在每一次重传一个帧时
 3. 在每一次成功发送帧后要**连续**发送下一个帧时
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250926150936493.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250926150936493.png)
 
 在执行退避算法时，站点为退避计时器设置一个随机的退避时间：
 
@@ -1424,10 +1424,10 @@ e.g. 以太网规定 51.2us 为争用期的长度。对于 10Mb/s 的以太网�
 - Request-to-Send / Clear-to-Send
 
 隐蔽站：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250926151629797.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250926151629797.png)
 
 **解决方案：下图是重点，需要完全记住**
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250926151756381.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250926151756381.png)
 
 1. 源站在发送数据帧之前先广播一个**请求发送 RTS 控制帧**：
    - `RTS` 能被范围内所有的站点都听到
@@ -1551,7 +1551,7 @@ IEEE 802 标准定义的局域网将数据链路层拆分为：
 
 为了使网卡正常工作，还必须要在计算机的操作系统中为网卡安装相应的设备**驱动程序**，负责驱动网卡发送和接收帧。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250926155511060.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250926155511060.png)
 
 #### 以太网的 MAC 地址
 
@@ -1561,7 +1561,7 @@ IEEE 802 标准定义的局域网将数据链路层拆分为：
 
 - 在每个主机发送的**帧的首部**中，都携带有发送主机（源主机）和接收主机（目的主机）的 **MAC 地址**
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250926155831058.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250926155831058.png)
 
 MAC 地址一般被**固化**在网卡的 **EEPROM** （电可擦除可编程只读存储器）中，因此 MAC 地址也被称为**硬件地址**。
 
@@ -1577,7 +1577,7 @@ MAC 地址有时也被称为**物理地址**。
 
 MAC 地址**长 6 字节**（48 位），一般由连字符（或冒号）分割的 12 个十六进制数表示。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250926160701222.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250926160701222.png)
 
 注意：
 
@@ -1599,7 +1599,7 @@ MAC 地址**长 6 字节**（48 位），一般由连字符（或冒号）分割
 
 以太网 MAC 帧格式有两种标准：
 
-1. V2 标准 2. 最流行 3. 源地址和目的地址都是 MAC 地址 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250926161141690.png?imageMogr2/quality/80&imageSlim) 4. **类型**：数据段应交给哪个上层协议处理，e.g. 网络层的 IP 协议。5. **数据**：**46~1500字节**，承载上层的协议数据单元，e.g. IP 数据报。1. 以太网的最大传输单元是 **1500 字节** 2. 结合首尾段长度和是 18 字节，由此可算出，以太网的 MAC 帧的长度为 **64~1518 字节**（最小帧长到最大帧长）6. 检验码（FCS）：4字节，检验范围从目的地址段到数据字段，算法采用32位 CRC 码，不但要检验 MAC 帧的数据部分，而且要检验目的地址、源地址和类型字段，但**不检验前导码**。
+1. V2 标准 2. 最流行 3. 源地址和目的地址都是 MAC 地址 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250926161141690.png) 4. **类型**：数据段应交给哪个上层协议处理，e.g. 网络层的 IP 协议。5. **数据**：**46~1500字节**，承载上层的协议数据单元，e.g. IP 数据报。1. 以太网的最大传输单元是 **1500 字节** 2. 结合首尾段长度和是 18 字节，由此可算出，以太网的 MAC 帧的长度为 **64~1518 字节**（最小帧长到最大帧长）6. 检验码（FCS）：4字节，检验范围从目的地址段到数据字段，算法采用32位 CRC 码，不但要检验 MAC 帧的数据部分，而且要检验目的地址、源地址和类型字段，但**不检验前导码**。
 2. IEEE 802.3 标准
    - 用**长度域**替代了 V2 帧中的类型域，指出了数据域的长度
    - **长度、类型并存**：由于长度域最大值是 1500，所以 1501~65535 的值可用于**类型**段标识符
@@ -1660,7 +1660,7 @@ IEEE 制定了无线局域网的 802.11 系列协议标准，802.11 无线局域
     - 一个 BSS 所覆盖的地理范围
     - 无线局域网的 BSA 的直径一般 < 100 m
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250926171651141.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250926171651141.png)
 
 - **扩展的服务集 ESS**：
   - 通过 AP 连接到一个**分配系统 DS**，然后再连接到另一个服务集
@@ -1675,7 +1675,7 @@ IEEE 制定了无线局域网的 802.11 系列协议标准，802.11 无线局域
 - 各结点地位平等
 - **中间节点都为转发结点，因此都具有路由器的功能**
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250926172028850.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250926172028850.png)
 
 自组网络和移动 IP 并不相同：
 
@@ -1696,7 +1696,7 @@ IEEE 制定了无线局域网的 802.11 系列协议标准，802.11 无线局域
    - 信标帧，关联请求帧以及身份认证帧等都属于管理帧
 
 **802.11 无线局域网的 MAC 帧格式**：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250926172156423.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250926172156423.png)
 
 - 帧主体：数据部分，不超过 2312 字节，比以太网的最大长度**长**很多
 - 帧检验码 FCS：帧尾部，4 字节
@@ -1704,7 +1704,7 @@ IEEE 制定了无线局域网的 802.11 系列协议标准，802.11 无线局域
 **MAC 首部**：30 字节，主要包含：
 
 - **地址1、2、3、4**：
-  - **重点**，取决于帧控制字段中的“去往 AP”和“来自 AP”这两个字段的值 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250926172716152.png?imageMogr2/quality/80&imageSlim)
+  - **重点**，取决于帧控制字段中的“去往 AP”和“来自 AP”这两个字段的值 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250926172716152.png)
   - 地址 1 是直接接收数据帧的节点地址，地址 2 是实际发送数据帧的节点地址。
   - e.g.1. 假定从一个 BSS 中的 A 站向 B 站发送数据帧。在 A 站发往 AP 的数据帧的**帧控制**字段中：`去往 AP == 1 and 来自 AP == 0`，则此时：
     - 地址 1 是 AP 的 MAC 地址
@@ -1716,7 +1716,7 @@ IEEE 制定了无线局域网的 802.11 系列协议标准，802.11 无线局域
     - 地址 2 是 AP 的 MAC 地址
     - 地址 3 是 **A 站**的 MAC 地址（源地址）
     - 注意，**“发送地址”与“源地址”也不等同**。
-  - e.g.3. 两个 AP 的情况，如下图，原理类似，R1 替代了 B 站 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250926194930199.png?imageMogr2/quality/80&imageSlim)
+  - e.g.3. 两个 AP 的情况，如下图，原理类似，R1 替代了 B 站 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250926194930199.png)
 - 持续期：用于实现 CSMA/CA 的虚拟载波监听和信道预约机制，在数据帧、RTS 帧和 CTS 帧中用该字段指出将要持续占用信道的时长
 - 序号控制：用来实现 802.11 的可靠传输，对数据帧进行编号
 - 帧控制字段：只介绍比较重要的类型字段和子类型字段，这两个字段用来区分帧的午功能。802,/1帧共有三种类型：控制帧、数据帧和管理帧，每种帧又分为若于子类型。例如，控制帧有 RTS、CTS 和 ACK 等不同的子类型。
@@ -1742,7 +1742,7 @@ IEEE 制定了无线局域网的 802.11 系列协议标准，802.11 无线局域
    1. 按 MAC 地址将一些主机划分为一个逻辑子网，当主机的物理位置从一个交换机移动到另一个交换机时，它仍属于原来的子网。
 3. 基于 **IP 地址**
    1. 根据**网络层地址**或协议划分 VLAN，这样的 VLAN 可以跨越路由器进行扩展，**将多个局域网的主机组成一个 VLAN**。
-   2. 802.3ac 标准定义了支持 VLAN 的以太网帧格式的扩展。它在以太网帧中插入一个4字节的标识符（插在源地址字段和类型字段之间），称为 VLAN 标签，用来指明发送该帧的计算机属于哪个虚拟局域网。插入 VLAN 标签的帧称为 802.1Q 帧，如下图。 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250927150802803.png?imageMogr2/quality/80&imageSlim)
+   2. 802.3ac 标准定义了支持 VLAN 的以太网帧格式的扩展。它在以太网帧中插入一个4字节的标识符（插在源地址字段和类型字段之间），称为 VLAN 标签，用来指明发送该帧的计算机属于哪个虚拟局域网。插入 VLAN 标签的帧称为 802.1Q 帧，如下图。 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250927150802803.png)
       1. 由于 VLAN 首部加了这个标签（4字节），所以以太网帧的数据字段的最小长度从原来的46字节变为**42字节**，最大长度保持不变，因此以太网帧的最大帧长从原来的1518字节变为1522字节。
       2. VLAN 标签的前两个字节总是置为**0x8100**，表示这是一个 802.1Q 帧。
       3. 在 VLAN 标签的后两个字节中，前4位实际上并没什么作用，这里不讨论，后12位是该 VLAN 的标识符 VID，它唯一地标识该 802.1Q 帧属于哪个 VLAN。
@@ -1758,7 +1758,7 @@ IEEE 制定了无线局域网的 802.11 系列协议标准，802.11 无线局域
 
 - 连接两个交换机接口之间的链路称为**干线链路/汇聚链路**。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250927151237558.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250927151237558.png)
 
 基于上图，讨论一些具体的发送帧的场景：
 
@@ -1787,7 +1787,7 @@ IEEE 制定了无线局域网的 802.11 系列协议标准，802.11 无线局域
 2. 由相距较远的**局域网**通过**路由器**与**广域网**相连而成的一个覆盖范围很广的**互联网**。
 3. 局域网可以通过**广域网**与另一个相隔很远的局域网通信。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250927152338099.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250927152338099.png)
 
 广域网由一些**节点交换机**及连接这些节点交换机的链路组成。
 
@@ -1827,7 +1827,7 @@ PPP 用于规定**帧格式**，使之成为各种主机、网桥和路由器之
 
 PPP 是面向字节的，因此所有 PPP 帧的长度都是**整数个字节**。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250927154340919.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250927154340919.png)
 
 1. 首部和尾部各有一个**标志字段 F** ，规定为 0x7E（01111110），它表示一个帧的开始和结束，即 PPP 帧的定界符。
    1. **实现透明传输**，必须采取一些定界措施：
@@ -1852,7 +1852,7 @@ PPP 是面向字节的，因此所有 PPP 帧的长度都是**整数个字节**�
 3. 接着进行网络层配置，NCP 给新接入的用户分配一个**临时 IP 地址**。
 4. 通信结束后，依次释放网络层、链路层、物理层的链接。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250927155336302.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250927155336302.png)
 
 #### 特点
 
@@ -1935,7 +1935,7 @@ PPP 是面向字节的，因此所有 PPP 帧的长度都是**整数个字节**�
 
 如下图，以太网交换机有4个接口，各连接一台计算机，MAC 地址分别为 A、B、C和D，交换机的交换表初始为空。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250927162326574.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250927162326574.png)
 
 1. 假定 A 先向 B 发送一帧，从接口1进入交换机。
 2. 交换机收到帧后，先查找交换表，找不到 MAC 地址为B 的表项。
@@ -1959,7 +1959,7 @@ PPP 是面向字节的，因此所有 PPP 帧的长度都是**整数个字节**�
 - **共享式以太网**：集线器将帧转发到其他所有接口，其他各主机中的网卡根据帧的目的 MAC 地址决定接收或丢弃该帧
 - **交换式以太网**：交换机收到帧后，根据帧的目的 MAC 地址，查自身的**交换表**，将帧**明确地转发**给目的主机
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250927163908787.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250927163908787.png)
 
 **广播帧**：
 
@@ -1972,14 +1972,14 @@ PPP 是面向字节的，因此所有 PPP 帧的长度都是**整数个字节**�
   - 可以识别帧的结构，**从帧首部中提取出目的 MAC 地址**，知道这是一个广播帧，从其他所有接口转发该帧（**不查转发表**）
   - 其他主机收到该广播帧后，就接收
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250927163849832.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250927163849832.png)
 
 **多主机同时通信**：
 
 - **共享式以太网**：**必然**产生冲突
 - **交换式以太网**：交换机能实现多对接口的高速并行交换，不会冲突
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250927164300902.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250927164300902.png)
 
 **使用集线器和交换机扩展共享式以太网的区别**：
 
@@ -1995,7 +1995,7 @@ PPP 是面向字节的，因此所有 PPP 帧的长度都是**整数个字节**�
   - 经过每个路由器也要进行小的解封装，以判断下一跳路径
 - 到达目标之后，把 IP 报文解封装成 TCP/UDP 报文交给上层
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250924151243174.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250924151243174.png)
 
 > [!NOTE] 网络层和传输层连接服务的区别
 >
@@ -2010,7 +2010,7 @@ PPP 是面向字节的，因此所有 PPP 帧的长度都是**整数个字节**�
 
 TCP/IP 在网络互连方面的做法是在**网络层**采用**标准化协议**，但相互连接的网络可以是**异构**的，最终形成一个大的、整体的虚拟 IP 网络，
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250927170948072.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250927170948072.png)
 
 ### 4.1.2 路由与转发
 
@@ -2041,7 +2041,7 @@ TCP/IP 在网络互连方面的做法是在**网络层**采用**标准化协议*
 - 虚电路就是对电路交换的**模拟**
   - 由于是模拟，所以**不需要像真的电路那样预分配带宽**
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250927171651972.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250927171651972.png)
 
 每次建立虚电路时，将一个未用过的**虚电路号 VCID**分配给该虚电路。分组的首部**仅在连接建立时使用完整的目的地址**，之后每个**分组的首部只需携带一条虚电路号 VCID**。
 
@@ -2066,7 +2066,7 @@ TCP/IP 在网络互连方面的做法是在**网络层**采用**标准化协议*
 
 网络本身**不**提供端到端的可靠传输服务，这就使网络中的路由器可以做得比较简单，而且价格低廉（与电话网络相比）。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250927172640985.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250927172640985.png)
 
 特点：
 
@@ -2255,7 +2255,7 @@ IP地址分为三个部分：Class、Network、Host
 三类地址的范围：
 
 - 注意 A 类是1~126，**0和127都不能用**
-  ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250928151700594.png?imageMogr2/quality/80&imageSlim)
+  ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250928151700594.png)
 
 #### 内网专用 IP 地址
 
@@ -2266,7 +2266,7 @@ IP地址分为三个部分：Class、Network、Host
 - 只在**局部网络**中有意义，区分不同的设备
 - 路由器**不**对目标地址是专用地址的分组进行转发
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250928152936708.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250928152936708.png)
 
 ### 4.2.3 NAT：网络地址转换
 
@@ -2290,7 +2290,7 @@ NAT（Network Address Translation）实现内外网地址的转换，既节省IP
 4. Web 服务器并不知道刚抵达的 IP 分组已被 NAT 路由器改装，更不知道用户的专用地址，它响应的 IP 分组的目的地址是 NAT 路由器的全球 IP 地址 138.76.29.7，目的端口号是5001。
 5. 响应分组到达 NAT 路由器后，**通过 NAT 转换表将 IP 分组的目的 IP 地址改为 10.0.0.1，将目的端口号改成 3345**。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250928153510976.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250928153510976.png)
 
 ### 4.2.4 子网划分
 
@@ -2353,7 +2353,7 @@ CIDR 地址块中的地址数一定是2的整数次幂，**实际可指派的地
 它使得路由表中的一个项目可以表示原来传统分类地址的多条路由项目，压缩了路由表所占的空间，从而提高了网络性能。
 
 e.g. 在如图所示的网络中：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250928162219392.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250928162219392.png)
 
 - 若不使用路由聚合，则R1 的路由表中需要分别有到网络1和网络2的路由表项。不难发现，网络1和网络2 的网络前缀在二进制表示的情况下，**前16位都是相同的**，第17位分别是0和1，并且从R1 到网络1和网络2的路由的下一跳皆为R2。
 - 若使用路由聚合，则在 R1 看来，网络1 和网络2可以构成一个更大的地址块 206.1.0.0/16，到网络1和网络2的两条路由就可聚合成一条到 **206.1.0.0/16** 的路由。
@@ -2373,10 +2373,10 @@ e.g. 在如图所示的网络中：
 假设某单位拥有一个 CIDR 地址块为 `208.115.21.0/24`，该单位有三个部门，各部门的主机台数分别为50、20、5，现在用两种方式划分：
 
 1. 定长子网掩码：浪费多
-   ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250928170036864.png?imageMogr2/quality/80&imageSlim)
+   ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250928170036864.png)
 
 2. 变长子网掩码： 重点
-   ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250928170221569.png?imageMogr2/quality/80&imageSlim)
+   ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250928170221569.png)
 
 ### 4.2.5 分组转发的过程
 
@@ -2394,12 +2394,12 @@ IP 数据报的发送和转发过程包括以下两个过程。
 - 若两个网络号不相等，处于不同网络，则通过路由器**间接交付**
 
 间接交付过程：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250928171100887.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250928171100887.png)
 
 > [!NOTE] 主机 C 如何知道路由器 R 的存在？
 >
 > 用户为了让本网络中的主机能和其他网络中的主机进行通信，就必须给其指定本网络的一个路由器的接口，由该路由器帮忙进行转发， 所指定的路由器，也被称为**默认网关**。
-> ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250928171503571.png?imageMogr2/quality/80&imageSlim)
+> ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250928171503571.png)
 >
 > **注意，默认网关是可能配置错误的：主机将无法找到对应的路由器接口，无法通过路由器转发分组！**
 
@@ -2424,7 +2424,7 @@ IP 数据报的发送和转发过程包括以下两个过程。
    - 若找到匹配的路由条目，则按该路由条目的指示进行转发
    - 否则丢弃该 IP 数据报，并向发送该 IP 数据报的源主机发送差错报告
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250928174305456.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250928174305456.png)
 
 注意：
 
@@ -2433,7 +2433,7 @@ IP 数据报的发送和转发过程包括以下两个过程。
 - **在不同网络中传送时，MAC 帧的源地址和目的地址要发生变化**
 
 路由器是**隔离广播域**的：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250928175000213.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250928175000213.png)
 
 另外，路由器**不会从分组入口进行转发（入口来的分组，不可能从入口再转发出去）**。也就是说，假如两个**不同网络**的主机接入同一个路由器的**同一接口**，即使默认网关配置正确，也无法通过这个路由器实现不同网络之间的通信（分组转发）。
 
@@ -2488,7 +2488,7 @@ ARP 工作在网络层，其工作原理如下：
 - 本节讨论**跨局域网的 MAC 帧**中的**目的 MAC 地址**的变化；其实源 MAC 地址也会变化
 - 每次更换 MAC 帧的首尾的操作是对 IP 层透明的
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250928182805467.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250928182805467.png)
 
 假设 网1 的 H1 需要发送 IP 分组到 网2 的 H4：2. H1 通过 ARP 找到路由器 R1 的硬件地址，交由 R1 处理。1. 源 MAC 地址：H1 2. 目的 MAC 地址：L1 3. R1 通过 ARP 找到 网2 中路由器 R2 的硬件地址，交由 R2 处理。1. 源 MAC 地址：**L2** 2. 目的 MAC 地址：L3 4. R2 通过 ARP 找到 网2 中 H4 的硬件地址。1. 源 MAC 地址：**L4** 2. 目的 MAC 地址：H4
 
@@ -2580,7 +2580,7 @@ ICMP 报文:
 
 **相比IPv4的变化：**
 
-- **固定**的 40B 头部，但是可以有灵活的扩展首部 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250930003536240.png?imageMogr2/quality/80&imageSlim)
+- **固定**的 40B 头部，但是可以有灵活的扩展首部 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250930003536240.png)
   - IPv4 的头部是**可变的**
 - Checksum
   - 被移除掉，降低在每一段中的处理速度
@@ -2597,7 +2597,7 @@ ICMP 报文:
 
 ### 4.3.2 IPv6 地址
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250930011836261.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250930011836261.png)
 
 与IPv4不同，iPv6地址的接口标识符有64位之多，足以对各种接口的硬件地址直接进行编码。这样，IPv6 就可**直接从 128 位地址的最后 64 位中直接提取出相应的硬件地址**，而**不**需要使用地址解析协议（ARP）进行地址解析。
 
@@ -2667,7 +2667,7 @@ $$
 
 #### 实例
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250930145553003.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250930145553003.png)
 
 #### 好坏消息的问题
 
@@ -2748,7 +2748,7 @@ $$
    1. External Gateway Protocol，EGP
    2. AS 之间的路由选择，e.g. BGP-4
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250930151544991.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250930151544991.png)
 
 > [!tip] 为什么要把互联网分成一个个 AS 的形式？
 >
@@ -2896,7 +2896,7 @@ BGP-4 共使用四种报文：
 - e.g. 视频服务器向 90 台主机传送同样的视频节目，单播与组播的比较。
 - **组播时仅发送一份数据，并且只需发送一次**，只有在传送路径出现分岔时才将分组复制后继续转发。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250930161202227.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250930161202227.png)
 
 注意，组播的 IP 数据报首部中的协议字段值是 2，表明使用 **IGMP**。
 
@@ -2963,11 +2963,11 @@ IGMP 的工作可分为两个阶段：
 - 为因特网中的非移动主机提供了相应机制，使得它们能够将 IP 数据报正确发送到**移动主机**
 
 关注场景三：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250930164435655.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250930164435655.png)
 
 ### 4.6.2 通信过程
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250930164704155.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250930164704155.png)
 
 几个概念：
 
@@ -2992,7 +2992,7 @@ IGMP 的工作可分为两个阶段：
 2. 移动站 A 漫游到被访网络时，向外地代理进行登记，以**获得一个临时的转交地址**。
    1. **外地代理**要向 A 的**归属代理**登记 A 的**转交地址**。
 3. 归属代理知道移动站 A 的转交地址后，会构建一条**通向转交地址的隧道**，将截获的发送给 A 的 IP 分组进行再封装，并通过隧道发送给被访网络的外地代理。
-   1. ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250930165623440.png?imageMogr2/quality/80&imageSlim)
+   1. ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250930165623440.png)
 4. 外地代理把收到的封装的 IP 分组进行拆封，恢复成原始的 IP 分组，然后发送给移动站 A，这样 A 在被访网络就能收到这些发送给它的 IP 分组。
 
 移动站 A 在被访网络对外发送 IP 分组时：
@@ -3098,11 +3098,11 @@ IGMP 的工作可分为两个阶段：
 
 标准的路由表有 4 个项目：目的网络 IP 地址、子网掩码、下一跳 IP 地址、接口。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250930171631903.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250930171631903.png)
 
 **转发表**是从路由表得出的，其表项和路由表项有**直接**的对应关系。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250930171712330.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250930171712330.png)
 
 - 转发表的格式和路由表的格式不同，其结构应使查找过程最优化
   - 而路由表则需对网络拓扑变化的计算最优化
@@ -3130,7 +3130,7 @@ IGMP 的工作可分为两个阶段：
 ## 5.1 传输层提供的服务
 
 传输层提供**进程**间的逻辑通信：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250930172810614.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250930172810614.png)
 
 ### 5.1.1 传输层功能
 
@@ -3162,7 +3162,7 @@ IGMP 的工作可分为两个阶段：
 2. 当传输层采用无连接的 UDP 时，这种逻辑通信信道**仍然**是一条不可靠信道。
 
 常见应用的应用层协议、传输层协议：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251001172550352.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251001172550352.png)
 
 ### 5.1.2 传输层寻址与端口
 
@@ -3185,7 +3185,7 @@ IGMP 的工作可分为两个阶段：
 
 1. **服务端使用端口号**：
    - **熟知端口号**：`0~1023`，`IANA` 把这些端口号指派给了 `TCP/IP` 体系中最重要的一些应用协议，让所有用户都知道
-   - **登记端口号**：`1024~49151`，为没有熟知端口号的应用程序使用，必须在 `IANA` 按照规定的手续登记，以防止重复 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251001172238324.png?imageMogr2/quality/80&imageSlim)
+   - **登记端口号**：`1024~49151`，为没有熟知端口号的应用程序使用，必须在 `IANA` 按照规定的手续登记，以防止重复 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251001172238324.png)
 2. **客户端使用端口号**：`49152~65535`
    - 仅在客户进程运行时才动态地选择，又称**短暂（临时）端口号**
    - 当服务器进程收到客户进程的报文时，就知道了客户进程所使用的的动态端口号
@@ -3289,7 +3289,7 @@ UDP 首部占 8B，每个占：
 
 ### 5.3.1 TCP 报文段
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251002154233048.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251002154233048.png)
 
 - 前 20B 是固定的，之后的 `N*4B` 是可选的。
   - 必须是 4B 整数倍
@@ -3373,7 +3373,7 @@ TCP 是端到端的连接，端点不是主机、IP 地址、进程、端口，�
 #### 三次握手
 
 TCP 通过三次握手建立连接：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251002162922065.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251002162922065.png)
 
 1. `SYN=1`，不携带数据，但是**消耗一个序号**
 2. `SYN=1 and ACK=1`，不携带数据，但是**消耗一个序号**
@@ -3384,7 +3384,7 @@ TCP 通过三次握手建立连接：
 - **每个阶段（英文）也考过**
 
 TCP 通过四次挥手释放连接：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251002163338054.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251002163338054.png)
 
 1. `FIN=1, seq=u`
    1. 序号等于之前已传送的数据最后一字节 +1
@@ -3469,7 +3469,7 @@ Piggybacking 是指在一个方向传输数据时，附带返回另一个方向�
 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/3e/3eee6aa73585e204f1a9cc542dbcddf02a4a57254d226254eca439312cf4a5ef.webp)
 
 e.g. rwnd **动态变化**：300 to 100 to 0（不允许发送数据）
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251002174720667.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251002174720667.png)
 
 另外，TCP 连接设有一个**持续计时器**，目的是确认定期确认窗口值。
 
@@ -3536,7 +3536,7 @@ AIMD 机制：
 - 加性增：**逐步增加发送速率**
   - 当到达阈值时，一个 RTT 没有发生丢失事件，将CongWin加1MSS：探测
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251002190605112.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251002190605112.png)
 
 #### 快重传、快恢复
 
@@ -3550,7 +3550,7 @@ AIMD 机制：
    1. 与 AIMD 的设为 1 不同，显然更快
 3. 之后执行加法增大
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251002191548774.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251002191548774.png)
 
 实际上，这四种算法**同时**应用在 TCP 拥塞控制机制中：
 
@@ -3606,7 +3606,7 @@ TCP 和上面的 UDP 图有明显的不同，同样从**目标视角**来分析�
      - 客户机之间可以直接共享文档
    - 可扩展性好、鲁棒性强
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251002235734609.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251002235734609.png)
 
 ## 6.2 DNS 系统
 
@@ -3631,7 +3631,7 @@ DNS 可以分为三部分：层次域名空间、域名服务器、解析器。
 因特网采用层次树状结构的命名方法，所以每个主机 / 路由器都有一个唯一的层级结构名称，即**域名 Domian Name**。
 
 **域 Domain** 还可以进一步划分为子域，形成了顶级域、二级域等，每个域名由标号序列组成，它们之间用 `.` 划分。
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251003141328798.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251003141328798.png)
 域名注意事项：
 
 - 标号中的英文不区分大小写
@@ -3681,7 +3681,7 @@ DNS 可以分为三部分：层次域名空间、域名服务器、解析器。
 
 本地域名服务器在用户网络的边缘，由 ISP 或组织提供。用于接收用户主机发出的 DNS 查询请求。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251003152909968.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251003152909968.png)
 
 ### 6.2.3 域名解析过程
 
@@ -3706,7 +3706,7 @@ DNS 可以分为三部分：层次域名空间、域名服务器、解析器。
    1. 收到 IP 地址后，浏览器就可以和 `www.example.com` 建立 TCP/HTTP 连接了。
 
 上述流程是**迭代查询**，是最常用的 DNS 方式；下图中左边是**递归查询**，本地域名服务器只查询一次根域名服务器，由于对根域名服务器造成的负载过大，实际几乎不使用。
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251003153851333.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251003153851333.png)
 
 ## 6.3 FTP
 
@@ -3765,7 +3765,7 @@ FTP 使用**两个并行的 TCP 连接**，一个是控制连接，一个是数�
 ### 6.4.2 电子邮件格式与 MIME
 
 电子邮件格式：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251003162948629.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251003162948629.png)
 
 - 收件人邮箱名在邮件服务器上是唯一的
 
@@ -3779,7 +3779,7 @@ FTP 使用**两个并行的 TCP 连接**，一个是控制连接，一个是数�
 
 常见有 base64 编码，相当于把 ASCII 码不能表示的东西用 base64 编码成可以用 ASCII 传输的东西。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251003163115016.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251003163115016.png)
 
 ### 6.4.3 SMTP 协议
 
@@ -3889,7 +3889,7 @@ WWW 流程：采用 C/S 模式
 - 每次建立新的 TCP 连接都要分配缓存和变量，使万维网服务器的负担很重
 - 为了减小时延，浏览器通常会建立**多个并行的 TCP 连接**以同时请求多个对象
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251003170848978.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251003170848978.png)
 
 对于**持续连接**，万维网服务器在发送响应后仍然保持这条连接，使同一个客户和该服务器可以继续在这条 TCP 连接上传送后续的 HTTP 请求报文和响应报文。
 
@@ -3921,15 +3921,15 @@ WWW 流程：采用 C/S 模式
 HTTP 是面向文本的，报文的每次字段都是 ASCII，且长度不确定。
 
 报文分为请求和响应：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251003171429063.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251003171429063.png)
 
 常见的请求方法：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251003171703456.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251003171703456.png)
 
 ## 6.6 应用层小结
 
 常见应用层程序使用的协议和端口：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251003171913619.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20251003171913619.png)
 
 # 7 考纲
 

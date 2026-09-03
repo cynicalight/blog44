@@ -7,7 +7,7 @@ draft: false
 summary: 什麼是卷積，什麼是 CNN
 images:
   - >-
-    https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260320174455494.png?imageMogr2/quality/80&imageSlim
+    https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260320174455494.png
 authors:
   - default
 ---
@@ -26,7 +26,7 @@ CNN 的設計有兩個核心出發點：
 ## 卷積
 
 卷積 $f * g$ 本質上是描述兩個函數之間關係的操作：把一個函數**翻轉後滑動**，測量兩個函數在每個位置的重疊程度。
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260320163720869.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260320163720869.png)
 
 翻轉後滑動（平移）：
 
@@ -42,10 +42,10 @@ g(i - a)      翻转后，再平移 i 个单位
 
 1. **卷積核** V，理解為權重，也叫**濾波器**
 2. 輸入 X，一般是多維矩陣，如 $长\times 宽 \times 3(RGB)$
-   ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260319230459960.png?imageMogr2/quality/80&imageSlim)
+   ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260319230459960.png)
 
 注意，嚴格來說，深度學習裡用的是互相關（cross-correlation），不是真正的卷積：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260320165009192.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260320165009192.png)
 
 CNN 美圖一張：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260320174455494.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20260320174455494.png)

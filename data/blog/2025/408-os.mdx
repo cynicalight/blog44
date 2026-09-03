@@ -7,7 +7,7 @@ tags:
 draft: false
 images:
   [
-    'https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250831160834886.png?imageMogr2/quality/80&imageSlim',
+    'https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250831160834886.png',
   ]
 authors: ['default']
 ---
@@ -67,7 +67,7 @@ authors: ['default']
 
 ## 1.2 发展历程
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250901201922310.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250901201922310.png)
 
 - 最早是手工操作，属于无 OS
 
@@ -237,7 +237,7 @@ OS 的**运行环境**可以理解：
    2. 也可能是程序运行出现异常情况，被动地需要管理程序的服务，此时则通过异常处理进入内核态
 3. 管理程序运行结束时，退出中断或异常处理程序，返回到用户程序的断点处继续执行。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250902170103033.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250902170103033.png)
 
 一些由**用户态 to 内核态**的例子：
 
@@ -254,11 +254,11 @@ OS 的**运行环境**可以理解：
 
 ### 1.4.1 分层法
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250902170513131.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250902170513131.png)
 
 ### 1.4.2 模块化
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250902171131544.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250902171131544.png)
 
 衡量模块的独立性主要有两个标准：
 
@@ -291,7 +291,7 @@ OS 的**运行环境**可以理解：
 - **服务器**（进程）：OS 的大部分功能在服务器中，作为进程来实现，运行在用户态
 
 客户与服务器之间借助**微内核提供的消息传递机制**实现交互。
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250902172545928.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250902172545928.png)
 
 微内核的基本功能：
 
@@ -350,7 +350,7 @@ OS 是一种存放在硬盘中的程序，而 **OS 引导**是指 CPU 运行特�
 ## 1.6 虚拟机
 
 主要分两类：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250904173802541.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250904173802541.png)
 
 第一类虚拟机管理程序类似一个 OS，是**唯一**一个运行在特权级的程序。
 
@@ -420,7 +420,7 @@ OS 是一种存放在硬盘中的程序，而 **OS 引导**是指 CPU 运行特�
    1. 正在结束
 
 状态转换图：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250905162655197.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250905162655197.png)
 
 - 运行态 to 阻塞态：进程请求资源时发生等待，转入阻塞态
   - **主动行为**
@@ -621,7 +621,7 @@ OS 是一种存放在硬盘中的程序，而 **OS 引导**是指 CPU 运行特�
    3. 缺点
       1. **系统开销大**
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250905181127483.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250905181127483.png)
 
 #### 多线程模型
 
@@ -658,7 +658,7 @@ OS 是一种存放在硬盘中的程序，而 **OS 引导**是指 CPU 运行特�
    1. 就绪队列 to 运行态
    2. **频率最高**、最低级
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250906163852971.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250906163852971.png)
 
 ### 2.2.2 调度的实现
 
@@ -669,7 +669,7 @@ OS 是一种存放在硬盘中的程序，而 **OS 引导**是指 CPU 运行特�
 
 由排队器、分派器、上下文切换器组成。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250906174349018.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250906174349018.png)
 
 #### 调度过程
 
@@ -841,7 +841,7 @@ $$
 
 综合 RR 和 优先级调度，**动态调整时间片大小和优先级**。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250906211427981.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250906211427981.png)
 
 - 每个队列采用 FCFS
 - 优先级越高的队列，时间片越短
@@ -850,7 +850,7 @@ $$
   - 按队列优先级调度：第1级空了才能调度第2级
 
 总结：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250906212723101.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250906212723101.png)
 
 #### 基于公平原则的调度
 
@@ -983,16 +983,16 @@ e.g. 输入进程 A 通过单缓冲向进程 B 提供数据：
       1. 不能表示临界区空
    2. 不满足空闲让进
       1. 本质问题是临界区空闲时，只能让**指定**的进程进入
-      2. ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250908171324356.png?imageMogr2/quality/80&imageSlim)
+      2. ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250908171324356.png)
 2. 双标志先检查法
    1. 设置一个 bool 数组，表示各个进程进入临界区的意愿
-   2. ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250908172343124.png?imageMogr2/quality/80&imageSlim)
+   2. ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250908172343124.png)
 3. 双标志后检查法
    1. 先设置后检查
    2. 还是有问题，标志全是 true，大家都会饥饿
 4. Peterson 算法
    1. 比前三个好，**通过 turn 谦让的机制，解决了饥饿问题**，但仍未遵循让权等待
-   2. ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250908172955502.png?imageMogr2/quality/80&imageSlim)
+   2. ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250908172955502.png)
 
 #### 硬件实现
 
@@ -1002,7 +1002,7 @@ e.g. 输入进程 A 通过单缓冲向进程 B 提供数据：
    1. TSL指令
       1. TestAndSetLock指令是原子操作，功能是读出指定**标志**并置为 true
       2. **自旋**
-      3. ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250908195636846.png?imageMogr2/quality/80&imageSlim)
+      3. ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250908195636846.png)
    2. Swap指令
       1. 类似 TS
 
@@ -1074,15 +1074,15 @@ void signal(semaphore S) { // 相当于释放资源
 #### 信号量机制的使用
 
 **互斥**操作中，PV操作必须成对出现：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250908210528282.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250908210528282.png)
 
 **同步**操作中，目的是**有序执行**，因此**设置初始** $S = 0$，假如要求 P1 P2 的顺序来执行，则代码规定 P1 生产资源（V操作），P2消耗资源（P操作），这样 $S$ 的设置恰能保证有序执行。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250908211014081.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250908211014081.png)
 
 e.g. 信号量实现前驱关系
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250908212703076.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250908212703076.png)
 
 ### 2.3.5 经典同步问题
 
@@ -1226,7 +1226,7 @@ reader() {            //读者进程
 
 问题描述：一张圆桌边上坐着5名哲学家，每两名哲学家之间的桌上摆一根筷子，两根筷子中间是一碗米饭，哲学家们倾注毕生精力用于思考和进餐，哲学家在思考时，并不影响他人。只有当哲学家饥饿时，才试图拿起左、右两根筷子（一根一根地拿起）。若筷子已在他人手上，则需要等待。饥饿的哲学家只有同时拿到了两根筷子才可以开始进餐，进餐完毕后，放下筷子继续思考。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250908215306179.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250908215306179.png)
 
 避免死锁的算法：
 
@@ -1274,7 +1274,7 @@ Pi() {                               //i号哲学家的进程
 4. 对局部于管程内部的共享数据设置初始值的语句
 
 管程就像一个类（class），封装了一个数据结构和相关的一些操作，定义如下：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250911131742629.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250911131742629.png)
 
 #### 条件变量
 
@@ -1354,7 +1354,7 @@ e.g. 进程 A 等待进程 B 发的消息，进程 B 又在等待进程 A 发的
 4. **循环等待条件**
    1. 存在进程资源的循环等待链
    2. 只是必要条件，不是充分条件
-      1. ![300](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250911165914271.png?imageMogr2/quality/80&imageSlim)
+      1. ![300](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250911165914271.png)
 
 ### 2.4.3 处理策略
 
@@ -1389,7 +1389,7 @@ e.g. 进程 A 等待进程 B 发的消息，进程 B 又在等待进程 A 发的
 1. 确定**安全状态**
    1. 在资源分配前，先确定系统是否安全。
    2. 安全状态：系统能按照某种进程顺序分配资源，满足每个进程的最大需求
-   3. ![300](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250911182730324.png?imageMogr2/quality/80&imageSlim)
+   3. ![300](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250911182730324.png)
 2. **银行家算法**
    1. 进程运行前先声明对各种资源的最大需求量，数量不超过系统的资源总量。
    2. OS 在分配资源之前，先确定是否有足够资源分配给进程，在确定分配之后是否会处于**不安全状态**。
@@ -1442,13 +1442,13 @@ Need[i,j] = Need[i,j] - Request[j];
 4. 若此时安全序列中己有所有进程，则系统处于安全状态，否则系统处于不安全状态。
 
 e.g. 例题辅助理解
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250913003103035.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250913003103035.png)
 
 #### 死锁检测
 
 可以用**资源分配图**来检测系统是否处于死锁状态。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250913005935801.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250913005935801.png)
 
 - 对于资源结点，**出边是已分配资源，入边是进程的请求**
 - 简化的过程就是尝试满足进程请求，消除入边，进而消除进程结点及其占用
@@ -1507,7 +1507,7 @@ OS 通过**内存管理部件**（MMU），将逻辑地址转换为物理地址�
    1. 装入程序将装入模块装入内存
    2. **形成物理地址**
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250913144936725.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250913144936725.png)
 
 ##### 三种装入方式
 
@@ -1524,7 +1524,7 @@ OS 通过**内存管理部件**（MMU），将逻辑地址转换为物理地址�
    3. 装入程序将装入模块装入内存后，并不会立即将装入模块中的相对地址转换为绝对地址，而是推迟到程序真正执行的时候才转换，因此，装入内存后所有地址均为相对地址
       1. **动态重定位是在作业的执行过程中运行的**
    4. 需要**重定位寄存器**，存放装入模块的起始位置
-      1. ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250913150413454.png?imageMogr2/quality/80&imageSlim)
+      1. ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250913150413454.png)
 
 ##### 三种链接方式
 
@@ -1565,7 +1565,7 @@ OS 通过**内存管理部件**（MMU），将逻辑地址转换为物理地址�
 
 代码段和数据段在调入内存时就指定了大小，但是**堆栈都是动态的**。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250913151732333.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250913151732333.png)
 
 #### 内存保护
 
@@ -1585,7 +1585,7 @@ OS 通过**内存管理部件**（MMU），将逻辑地址转换为物理地址�
    4. 界地址：存放进程的**最大逻辑地址**
    5. 使用特权指令，**只有内核可以加载这两个存储器**
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250913152410964.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250913152410964.png)
 
 #### 内存共享
 
@@ -1622,7 +1622,7 @@ OS 通过**内存管理部件**（MMU），将逻辑地址转换为物理地址�
    2. 在进程装入内存时，根据进程的实际需要，动态分配内存
    3. 分区数量、大小可变
    4. 随着时间推移，会出现越来越多的小内存块，称为**外部碎片**
-      1. 外部碎片形成过程：![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250913154401461.png?imageMogr2/quality/80&imageSlim)
+      1. 外部碎片形成过程：![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250913154401461.png)
       2. 外部碎片可以通过**紧凑技术**克服，即 OS 移动进程，进行整理，但是相对费时
 
 > [!tip] 内部 / 外部碎片
@@ -1712,12 +1712,12 @@ OS 通过**内存管理部件**（MMU），将逻辑地址转换为物理地址�
   - **物理空间**中每个页框 / 块的编号
     - 为了方便地址转换，页面大小应该是 $2^n$
 - 逻辑地址结构
-  - 页号 + 页内偏移量 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915154825941.png?imageMogr2/quality/80&imageSlim)
+  - 页号 + 页内偏移量 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915154825941.png)
     - 偏移量对应页大小（e.g. $2^{12}$）
     - 页号对应页数（e.g. $2^{20}$）
 - 页表
   - 页面映射表
-  - 实现页号到物理块号的映射 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915155203078.png?imageMogr2/quality/80&imageSlim)
+  - 实现页号到物理块号的映射 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915155203078.png)
   - 进程的每个页面对应一个**页表项**，每个页表项由页号和块号组成
     - 在页表中，**页表项连续存放**，因此页号可以是隐含的，索引就可以表示页号，不用单独占用存储空间，所以上图中页号写在了外面。
 
@@ -1725,7 +1725,7 @@ OS 通过**内存管理部件**（MMU），将逻辑地址转换为物理地址�
 
 - 借助页表实现
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915155404864.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915155404864.png)
 
 为了提高变换速度，设置了**页表寄存器 PTR**，存放页表始址和页表长度。
 
@@ -1772,13 +1772,13 @@ OS 通过**内存管理部件**（MMU），将逻辑地址转换为物理地址�
 - **查快表不算访存**
   - 查快表成功，则只需一次访存（访问快表查到的物理地址）
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915161622155.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915161622155.png)
 
 一般快表的命中率可达 90% 以上，这样分页带来的速度损失就可降低⾄ 10% 以下。快表的有效性基于著名的局部性原理，后文虚拟内存介绍。
 
 #### 多级页表
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915161931028.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915161931028.png)
 
 访存次数计算：每级页表一次 + 最后访问数据一次
 
@@ -1804,13 +1804,13 @@ e.g. 用户进程由主程序段、两个子程序段、栈段和数据段组成
 
 段表项包含 **段号、段长、基址**，段号同样是隐式的。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915163011712.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915163011712.png)
 
 #### 地址变换机构
 
 变换过程和分页类似，也是**两次访存**，不赘述。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915163144823.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915163144823.png)
 
 #### 段的共享和保护
 
@@ -1844,10 +1844,10 @@ e.g. 用户进程由主程序段、两个子程序段、栈段和数据段组成
 
 对内存空间的管理仍然和分页存储管理一样，将其分成若⼲和页⾯大⼩相同的物理块，**对内存的分配以物理块单位**。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915163920452.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915163920452.png)
 
 三次访存：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915164145730.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250915164145730.png)
 
 ## 3.2 虚拟内存管理
 
@@ -1905,7 +1905,7 @@ e.g. 用户进程由主程序段、两个子程序段、栈段和数据段组成
 
 #### 页表项
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250916164957732.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250916164957732.png)
 
 - 状态位：是否调入内存
 - 访问字段：本页被访问的次数 / 多长时间未被访问
@@ -1933,7 +1933,7 @@ e.g. 用户进程由主程序段、两个子程序段、栈段和数据段组成
 #### 地址变换机构
 
 地址变换过程：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250916170433617.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250916170433617.png)
 
 ### 3.2.3 页框分配
 
@@ -2012,7 +2012,7 @@ e.g. 用户进程由主程序段、两个子程序段、栈段和数据段组成
 > [!NOTE] 内存与虚拟内存
 > 注意，页面的换入换出的概念都是针对**内存（主存储器）与磁盘**而言的，而虚拟内存（虚拟存储器）是指内存+对换区，所以页面并不是从虚拟内存换出，是从内存换出。
 >
-> ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250918172649083.png?imageMogr2/quality/80&imageSlim)
+> ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250918172649083.png)
 
 #### 如何调入页面
 
@@ -2059,7 +2059,7 @@ e.g. 用户进程由主程序段、两个子程序段、栈段和数据段组成
       1. 若为 0，就选择该页换出
       2. 若为 1，则将它置 0，暂不换出，给予该页第二次驻留内存的机会，再依次顺序检查下一个页⾯。
    5. 当检查到队列中的最后一个页⾯时，若其访问位仍 1，则返回到队首去循环检查。因为该算法是循环地检查各个页⾯的使用情况，所以称为 CLOCK 算法。
-   6. 该算法只有一位访问位，而置换时将**未使用过**的页⾯换出，所以也称最近未用（NRU）算法。![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250917171835741.png?imageMogr2/quality/80&imageSlim)
+   6. 该算法只有一位访问位，而置换时将**未使用过**的页⾯换出，所以也称最近未用（NRU）算法。![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250917171835741.png)
 2. 改进型 CLOCK
    1. 增加一个修改位 M，在选择页面换出时，优先考虑**未使用且未修改**的页面
       1. 优先级从高到低依次是：
@@ -2081,7 +2081,7 @@ e.g. 用户进程由主程序段、两个子程序段、栈段和数据段组成
 
 工作集：进程最近访问的页面集合，一般可以用时间 + 工作集窗口尺寸来确定。
 
-![444](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250918140807642.png?imageMogr2/quality/80&imageSlim)
+![444](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250918140807642.png)
 
 ### 3.2.6 页框回收
 
@@ -2107,7 +2107,7 @@ e.g. 用户进程由主程序段、两个子程序段、栈段和数据段组成
 > [!NOTE] 页缓冲队列的位置
 >
 > 页缓冲队列在内存外存之间，不影响缺页率
-> ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250918175624728.png?imageMogr2/quality/80&imageSlim)
+> ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250918175624728.png)
 
 #### 页框回收
 
@@ -2171,16 +2171,16 @@ Linux 系统采用 3.1.2 节介绍的“伙伴算法”对内存中具有不同�
    2. 物理地址的往上 4 位作为组索引
 
 最终得到地址结构：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250918152121826.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250918152121826.png)
 
 补充：
 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/24/24065156f652e64ef406ae395e4fc1c585266e23b68a83babc863bfe241b8930.webp)
 
 图表：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250918152152855.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250918152152855.png)
 
 找地址过程：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250918153229357.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250918153229357.png)
 
 ---
 
@@ -2205,7 +2205,7 @@ Linux 系统采用 3.1.2 节介绍的“伙伴算法”对内存中具有不同�
 - FCB 的有序集合称为**文件目录**
 - 一个 FCB 就是一个**文件目录项**
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919152733959.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919152733959.png)
 
 > [!NOTE] 目录、文件目录、目录文件
 >
@@ -2261,7 +2261,7 @@ Unix 采用了**文件名与文件描述分离**的⽅法，使**文件描述信
 
 通常，系统级打开文件表为每个文件关联一个打开计数器（Open Count），以记录多少进程打开了该文件。当文件不再使用时，利用系统调用 close 关闭它，会删除单个进程的打开文件表中的相应条目，系统表中的相应打开计数器也会递减。当打开计数器为 0 时，表⽰该文件不再被使用，并且可从系统表中删除相应条目。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919162446965.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919162446965.png)
 
 - 要明确，系统级/进程级的打开文件表都在**内存**中，和外存没关系
 
@@ -2343,7 +2343,7 @@ $$
 
 这样就将对变长记录顺序文件的顺序检索，**转变成了对定长记录索引文件的随机检索**，从而加快了记录的检索速度。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919165032043.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919165032043.png)
 
 同时，配置索引表增加了存储开销。
 
@@ -2354,7 +2354,7 @@ $$
 e.g. 主文件包含姓名和其他数据项，**姓名为关键字**， 记录按姓名的首字母分组，同一个组内的关键字可以⽆序，但是组与组之间的关键字必须有序。**将每组的第一个记录的姓名及其逻辑地址放入索引表，索引表按姓名递增排列**。
 
 检索时，首先查找**索引表**，找该记录所在的组，然后在该组内使用**顺序查找**，就能很快地找到记录，**提高了查找效率**。
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919165426226.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919165426226.png)
 
 ##### 直接文件 / 散列文件
 
@@ -2377,7 +2377,7 @@ e.g. 主文件包含姓名和其他数据项，**姓名为关键字**， 记录�
 
 连续分配⽅法要求每个文件在磁盘上占有一组连续的块。磁盘地址定义了磁盘上的一个**线性排序**，这种排序使进程访问磁盘时需要的寻道数和**寻道时间最⼩**。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919170516067.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919170516067.png)
 
 优点：
 
@@ -2404,7 +2404,7 @@ e.g. 主文件包含姓名和其他数据项，**姓名为关键字**， 记录�
 
 目录项中**仅**含有文件第一块的指针（盘块号）和最后一块的指针。每个文件对应一个磁盘块的链表，磁盘块分布在磁盘的任何地⽅。除文件的最后一个盘块外，**每个盘块都存有指向文件下一个盘块的指针，这些指针对用户是透明的**。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919171929426.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919171929426.png)
 缺点：
 
 1. 只支持顺序访问，效率低
@@ -2418,7 +2418,7 @@ e.g. 主文件包含姓名和其他数据项，**姓名为关键字**， 记录�
 
 每个表项中存放指向下一个盘块的指针。文件目录中**只**需记录该文件的起始块号，后续块号可通过查 FAT 找到。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919172308107.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919172308107.png)
 
 - **注意，图中的 FAT 只写了盘块号和下一块，但是表项包含了指向对应物理块的指针**，所以直接访问是可行的。
 
@@ -2440,7 +2440,7 @@ FAT 的表项与全部磁盘块一一对应，并且可以用特殊数字 -1 表
 事实上，在打开某个文件时，只需将该文件对应的**盘块的编号**调入内存即可，完全没有必要将整个 FAT 调入内存。为此，应该将**每个文件所有的盘块号集中地放在一起**，当访问到某个文件 时，将该文件对应的盘块号一起调入内存即可，这就是**索引分配**的思想。
 
 它每个文件分配一个索引块，将分配给该文件的所有盘块号都记录在该索引块中。
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919185408545.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919185408545.png)
 
 优点：
 
@@ -2451,7 +2451,7 @@ FAT 的表项与全部磁盘块一一对应，并且可以用特殊数字 -1 表
 缺点：增加了额外的存储空间开销
 
 当索引块太多时，可以采用**多级索引分配**⽅式：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919190649279.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919190649279.png)
 
 > [!NOTE] e.g. 二级索引计算
 > 假设盘块大⼩为 4 KB，每个盘块号占 4 B，一个索引块中可存放 1024 个盘块号，则⽀持的最大文件为 1024 × 1024 × 4 KB= 4 GB。
@@ -2463,7 +2463,7 @@ FAT 的表项与全部磁盘块一一对应，并且可以用特殊数字 -1 表
 3. 对于大型文件，可以采用两级和三级索引分配。
 
 Unix 的 inode 就采用了混合索引的方式：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919191516378.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250919191516378.png)
 
 ### 4.1.6 文件保护
 
@@ -2534,7 +2534,7 @@ Unix 的 inode 就采用了混合索引的方式：
 
 在整个文件系统中只建立一张目录表，每个文件占一个目录项。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920155217475.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920155217475.png)
 
 - 建立新文件时，需要确保没有**重名**的情况
 
@@ -2545,7 +2545,7 @@ Unix 的 inode 就采用了混合索引的方式：
 - 主文件目录记录用户对应的**用户文件目录**所在的位置
 - 用户文件目录记录该用户所有文件的 FCB
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920160805481.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920160805481.png)
 
 二级结构的多用户之间文件可以重名，也提高了检索速度，但是不能分类。
 
@@ -2558,7 +2558,7 @@ Unix 的 inode 就采用了混合索引的方式：
 
 - `.` 表示当前目录
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920162822554.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920162822554.png)
 
 树形实现了文件分类，但是仍不便于文件共享。
 
@@ -2566,7 +2566,7 @@ Unix 的 inode 就采用了混合索引的方式：
 
 无环图允许目录共享子目录/文件。为防止删除错误，需要为共享节点设置**共享计数器**，计数器为 0 才能删除节点，否则只删除共享链。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920162902366.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920162902366.png)
 
 ### 4.2.4 文件共享
 
@@ -2585,14 +2585,14 @@ Unix 的 inode 就采用了混合索引的方式：
 - 一个用户创建新文件时，`count = 1`
 - 一个用户删除文件时，如果`count = 0`，删除文件及其**索引节点**，否则仅删除当前用户的目录项
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920172346257.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920172346257.png)
 
 #### 软链接
 
 - 符号链接，类似 Windows 的快捷方式
 
 创建一个 LINK 类型文件记录共享文件的路径：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920173739395.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920173739395.png)
 
 当用户 B 访问文件 L 时，操作系统看到要读的文件属于 LINK 类型，则**根据其中记录的路径名去查询文件 F**，然后对 F 进行读/写操作，实现共享。- 只有**文件主**才拥有指向索引节点的指针，文件主删除文件后，其他共享用户会访问失败，**随后删除符号链接**。
 
@@ -2618,7 +2618,7 @@ Unix 的 inode 就采用了混合索引的方式：
 
 #### 层次结构
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920185542754.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920185542754.png)
 
 #### 磁盘结构
 
@@ -2661,7 +2661,7 @@ Unix 的 inode 就采用了混合索引的方式：
 - 每个进程的打开文件表
 
 补充：逻辑卷和物理盘可以互相包含
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920200548900.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920200548900.png)
 
 ### 4.3.2 外存空闲空间管理
 
@@ -2673,7 +2673,7 @@ Unix 的 inode 就采用了混合索引的方式：
 - 与内存的动态分区分配类似
 
 在外存上为所有空闲区建立**一张空闲表**，每个空闲区对应一个**空闲表项**，按照盘块号递增。
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920203506430.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920203506430.png)
 
 - 表项序号
 - 该空闲区的第一个空闲盘块号
@@ -2727,7 +2727,7 @@ Unix 的 inode 就采用了混合索引的方式：
 
 - 0 代表盘块空闲，1 代表盘块已分配
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920204306130.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250920204306130.png)
 
 盘块的分配：
 
@@ -2761,10 +2761,10 @@ Unix 的 inode 就采用了混合索引的方式：
 
 由各组的第一个盘块（超级块）可以链接成一条链，超级块保存在**内存**的专用栈中，称为**空闲盘块号栈**。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250921154249518.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250921154249518.png)
 
 总体视图：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250921154824470.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250921154824470.png)
 
 盘块的分配：
 
@@ -2833,7 +2833,7 @@ Unix 的 inode 就采用了混合索引的方式：
 
 IO 接口，也称**设备控制器**，是 CPU 和 IO设备之间的桥梁。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250921191926752.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250921191926752.png)
 
 > [!NOTE] IO 逻辑
 > **用于实现对设备的控制**。
@@ -2853,7 +2853,7 @@ IO 接口，也称**设备控制器**，是 CPU 和 IO设备之间的桥梁。
 
 - 12 真题
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250921200201671.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250921200201671.png)
 
 #### 用户层软件
 
@@ -2953,7 +2953,7 @@ IO 接口，也称**设备控制器**，是 CPU 和 IO设备之间的桥梁。
 假定在块设备输入时，从设备将一块数据输入缓冲区的时间为 T，OS 将该缓冲区中的数据传送到工作区的时间为 M，而 CPU 对这一块数据进行处理的时间为C。
 
 工作流程：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922141141290.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922141141290.png)
 
 - 在单缓冲区中，T、M 是串行的，T、C 是**并行**的。
 - 当`T > C`时，CPU 处理完一块数据后，暂时不能将下一块数据传送到工作区，必须等待缓冲区装满数据，平均处理一块数据的时间为 `T + M`。
@@ -2965,7 +2965,7 @@ IO 接口，也称**设备控制器**，是 CPU 和 IO设备之间的桥梁。
 
 为了提高设备利用率（并行程度），引入了双缓冲，也称缓冲对换。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922142128321.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922142128321.png)
 
 - 装满缓冲区 1 之后，继续装满缓冲区 2
 - C、M 可以与 T 并行
@@ -2974,11 +2974,11 @@ IO 接口，也称**设备控制器**，是 CPU 和 IO设备之间的桥梁。
 双机**双向通信**时的缓冲区设置：
 
 - 同一时刻的双向数据传输, 必须在两台机器中都设置两个缓冲区
-  ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922144340212.png?imageMogr2/quality/80&imageSlim)
+  ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922144340212.png)
 
 #### 循环缓冲
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922144731910.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922144731910.png)
 
 - IN OUT 指针沿着循环方向不断移动
 
@@ -3001,7 +3001,7 @@ IO 接口，也称**设备控制器**，是 CPU 和 IO设备之间的桥梁。
 3. 用于收容输出数据的工作缓冲区（hout）
 4. 用于提取输出数据的工作缓冲区（sout）
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922145012345.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922145012345.png)
 
 ### 5.2.3 设备的分配与回收
 
@@ -3010,7 +3010,7 @@ IO 接口，也称**设备控制器**，是 CPU 和 IO设备之间的桥梁。
 #### 相关数据结构
 
 1. 设备控制表 DCT
-   1. 设备的各个属性 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922151433110.png?imageMogr2/quality/80&imageSlim)
+   1. 设备的各个属性 ![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922151433110.png)
 2. 控制器控制表 COCT
    1. 每个控制器由一个通道控制
 3. 通道控制表 CHCT
@@ -3058,7 +3058,7 @@ IO 接口，也称**设备控制器**，是 CPU 和 IO设备之间的桥梁。
 2. 为每个用户设置一张 LUT。
    1. 系统为每个用户设置一张 LUT，同时在多用户系统中都配置系统设备表。因此，不同用户可以使用相同的逻辑设备名。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922155148972.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922155148972.png)
 
 ### 5.2.4 假脱机技术 SPOOLing
 
@@ -3072,7 +3072,7 @@ IO 接口，也称**设备控制器**，是 CPU 和 IO设备之间的桥梁。
 引入多道程序技术后，系统便可利用程序来**模拟**脱机输入/输出时的外围控制机，在主机的直接控制下实现脱机输入/输出功能。
 
 SPOOLing 系统的组成：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922155440742.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922155440742.png)
 
 1. 输入井和输出井
    1. 在**磁盘**上开辟出的两个存储区域。
@@ -3156,7 +3156,7 @@ SPOOLing 系统的组成：
 第二阶段的工作是系统调用，read 调用会展开成一段包含**陷阱指令**的代码，从**用户态 to 内核态**以执行相关的操作。
 
 系统调用的大致过程：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922163858151.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922163858151.png)
 
 进入内核态后，系统调用服务例程申请一个**内核缓冲区**，并且最终转到真正执行 IO 操作的设备驱动层。
 
@@ -3171,10 +3171,10 @@ SPOOLing 系统的组成：
 7. 进程P从系统调用返回，之后 scanf 函数进行字符解析，最终将该字符存储到变量 d 中。
 
 整个 IO 操作过程的工作流程：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922164130462.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922164130462.png)
 
 数据流向：
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922164255629.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922164255629.png)
 
 ## 5.3 外存管理
 
@@ -3216,7 +3216,7 @@ Windows 允许将磁盘分为多个分区，有一个分区为引导分区，它
 1. 引导首先运行 ROM 中的代码，这个代码指示系统从 MBR 中读取**引导代码**。除了引导代码，MBR 还包含一个**磁盘分区表**和一个标志（以指示从哪个分区引导系统）。
 2. 当系统找到**引导分区**时，读取分区的第一个扇区，称为**引导扇区**，并继续余下的引导过程，包括加载各种系统服务。
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922170459972.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922170459972.png)
 
 ##### 坏块
 
@@ -3259,7 +3259,7 @@ Windows 允许将磁盘分为多个分区，有一个分区为引导分区，它
    1. 在 SSTF 的基础上规定了磁头移动的方向：**只有磁头移动到最外侧磁道时才能向内移动**，反之同理
    2. 也称电梯调度算法
 4. Circular-SCAN
-   1. 在 SCAN 的基础上规定磁头只能单向移动，到结束端后立即返回起始端![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922181852775.png?imageMogr2/quality/80&imageSlim)
+   1. 在 SCAN 的基础上规定磁头只能单向移动，到结束端后立即返回起始端![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922181852775.png)
 
    2. 实际使用时还可以改进：即磁头只需移动到**最远端的一个请求**即可返回，不需要到达磁盘端点。这种改进后的 SCAN 算法和 C-SCAN 算法称LOOK 调度和 C-LOOK 调度。
 
@@ -3291,7 +3291,7 @@ Windows 允许将磁盘分为多个分区，有一个分区为引导分区，它
 - **闪存芯片**替代传统磁盘中的**机械驱动器**
 - **闪存翻译层**将来自 CPU 的逻辑块读/写请求翻译成对底层物理设备的读/写控制信号，因此闪存翻译层替代了**磁盘控制器**
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922190222464.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250922190222464.png)
 
 数据以**⻚**为单位读/写，以**块**为单位擦除。
 
@@ -3446,4 +3446,4 @@ SSD 磨损均衡技术大致分为两种：
 - 王道网课：[1.1.1+1.1.2 操作系统的概念、功能\_哔哩哔哩\_bilibili](https://www.bilibili.com/video/BV1YE411D7nH?spm_id_from=333.788.videopod.sections&vd_source=7f5cf2ae748c813cc5d4d6f55495312c&p=2)
 - 王道408课本：这篇笔记基本是参考408课本做的，有少部分的补充知识
 
-![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250831160834886.png?imageMogr2/quality/80&imageSlim)
+![](https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/obsidian/20250831160834886.png)
