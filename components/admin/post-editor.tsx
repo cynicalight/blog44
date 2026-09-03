@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { format } from 'date-fns'
 import { zhCN } from 'date-fns/locale'
 import { CalendarIcon } from 'lucide-react'
@@ -15,6 +15,7 @@ import { Label } from '~/components/ui/label'
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/ui/popover'
 import { Skeleton } from '~/components/ui/skeleton'
 import { Textarea } from '~/components/ui/textarea'
+import { useNewPostDraft, type NewPostDraftStatus } from '~/hooks/use-new-post-draft'
 import { MAX_ADMIN_IMAGE_BYTES } from '~/lib/admin-asset-constants'
 import { cn } from '~/lib/utils'
 import {
@@ -32,18 +33,35 @@ type PostEditorProps = {
 
 const CANONICAL_URL_PREFIX = 'https://bu44er.ink/'
 
-const EMPTY_FORM: AdminPostInput = {
-  contentType: 'blog',
-  slug: '',
-  scriptVariant: 'zh-Hans',
-  title: '',
-  date: new Date().toISOString().slice(0, 10),
-  summary: '',
-  tags: [],
-  draft: false,
-  coverImage: '',
-  canonicalUrl: '',
-  body: '',
+function createEmptyForm(): AdminPostInput {
+  return {
+    contentType: 'blog',
+    slug: '',
+    scriptVariant: 'zh-Hans',
+    title: '',
+    date: new Date().toISOString().slice(0, 10),
+    summary: '',
+    tags: [],
+    draft: false,
+    coverImage: '',
+    canonicalUrl: '',
+    body: '',
+  }
+}
+
+function getDraftStatusText(status: NewPostDraftStatus) {
+  switch (status.state) {
+    case 'saving':
+      return '正在自动保存本地草稿…'
+    case 'saved':
+      return `本地草稿已自动保存于 ${format(new Date(status.updatedAt), 'HH:mm:ss')}。`
+    case 'restored':
+      return `已恢复 ${format(new Date(status.updatedAt), 'HH:mm:ss')} 保存的本地草稿。`
+    case 'error':
+      return `本地草稿保存失败：${status.message}`
+    default:
+      return '开始填写后会自动保存在当前浏览器。'
+  }
 }
 
 function getCanonicalUrlPath(canonicalUrl: string) {
@@ -81,7 +99,7 @@ function ToggleButton({
 export function PostEditor({ mode, sourcePath }: PostEditorProps) {
   const router = useRouter()
   const bodyInputRef = useRef<HTMLTextAreaElement>(null)
-  const [form, setForm] = useState<AdminPostInput>(EMPTY_FORM)
+  const [form, setForm] = useState<AdminPostInput>(createEmptyForm)
   const [tagInput, setTagInput] = useState('')
   const [isLoading, setIsLoading] = useState(mode === 'edit')
   const [isSaving, setIsSaving] = useState(false)
@@ -89,6 +107,17 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
   const [uploadingTarget, setUploadingTarget] = useState<'cover' | 'body' | null>(null)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+
+  const restoreNewPostDraft = useCallback((draft: { form: AdminPostInput; tagInput: string }) => {
+    setForm(draft.form)
+    setTagInput(draft.tagInput)
+  }, [])
+  const newPostDraftValue = useMemo(() => ({ form, tagInput }), [form, tagInput])
+  const newPostDraft = useNewPostDraft({
+    enabled: mode === 'create',
+    value: newPostDraftValue,
+    onRestore: restoreNewPostDraft,
+  })
 
   useEffect(() => {
     if (mode !== 'edit') {
@@ -300,6 +329,9 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
       }
 
       const nextPath = data.post.path as string
+      if (mode === 'create') {
+        newPostDraft.clearDraft()
+      }
       setSuccess('保存成功，已提交到 GitHub main 分支，等待 Vercel 重新部署。')
       router.replace(`/admin/posts/edit?path=${encodeURIComponent(nextPath)}`)
       router.refresh()
@@ -341,6 +373,18 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
     }
   }
 
+  function handleDiscardDraft() {
+    const confirmed = window.confirm('确定要放弃当前本地草稿吗？未提交的内容将无法恢复。')
+    if (!confirmed || !newPostDraft.clearDraft()) {
+      return
+    }
+
+    setForm(createEmptyForm())
+    setTagInput('')
+    setError('')
+    setSuccess('本地草稿已清除。')
+  }
+
   if (isLoading) {
     return (
       <Card>
@@ -361,6 +405,24 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
           自动重新部署。图片可粘贴后自动上传，也可填写已有的 COS URL。
         </AlertDescription>
       </Alert>
+
+      {mode === 'create' ? (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border px-4 py-3 text-sm">
+          <span
+            aria-live="polite"
+            className={
+              newPostDraft.status.state === 'error' ? 'text-destructive' : 'text-muted-foreground'
+            }
+          >
+            {getDraftStatusText(newPostDraft.status)}
+          </span>
+          {newPostDraft.hasDraft ? (
+            <Button type="button" variant="outline" size="sm" onClick={handleDiscardDraft}>
+              放弃本地草稿
+            </Button>
+          ) : null}
+        </div>
+      ) : null}
 
       {error ? (
         <Alert variant="destructive">

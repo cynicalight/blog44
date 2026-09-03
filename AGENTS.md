@@ -101,6 +101,7 @@
 - 内容由 `data/blog`、`data/gallery`、`data/snippets` 等 MDX 源文件进入 Contentlayer；构建时生成标签数据和本地搜索索引。新增画廊 MDX 后仍需手动更新 `data/gallery.ts`。
 - 浏览量 Route Handlers 通过 Prisma `views` 表读写；开发环境的 POST 不会自增，生产环境才会写入。
 - 管理后台通过同源 `/api/admin/*` 工作：凭据由环境变量校验，签名会话放入 HttpOnly Cookie；文章 CRUD 通过 GitHub API 读取并提交仓库中的 MDX 内容，而不是写入本地文件或独立数据库。
+- 新建文章编辑器会把有实际内容的表单按版本化结构自动保存到当前浏览器的 `localStorage`，刷新后先校验再恢复。这个本地工作草稿独立于文章 frontmatter 的 `draft` 发布状态，成功提交到 GitHub 后会清除；编辑已有文章暂不自动保存。
 - 管理编辑器会把粘贴到封面或正文输入框的图片提交到 `/api/admin/assets`。Route Handler 在服务端校验会话、同源请求、4 MB 大小上限和实际图片格式，再使用 COS 密钥上传；正文会插入 Markdown 图片链接，封面会回填公开 URL。
 - 当前分支的位图引用已经切换到 Tencent COS，430 个本地位图和 4 个 Playwright 截图已删除。冻结清单按本地原图 SHA-256 将 430 个路径映射为 402 个远端对象；Bucket 工作流会在上传后压缩图片并可能转换格式。SVG 明确保留在 Git 且不上传，字体仍是待确认范围；Git 历史清理尚未执行。
 
@@ -115,6 +116,9 @@
 - `app/api/admin/`
 - `lib/admin-auth.ts`
 - `lib/admin-content.ts`
+- `lib/admin-post-draft.ts`
+- `hooks/use-new-post-draft.ts`
+- `components/admin/post-editor.tsx`
 - `lib/admin-assets.ts`
 - `app/api/admin/assets/route.ts`
 - `scripts/cos-assets/config.ts`
@@ -124,7 +128,7 @@
 
 **何时更新**
 
-- 内容模型、Route Handler、数据库 schema、管理后台认证或 GitHub 内容写入方式变化时。
+- 内容模型、Route Handler、数据库 schema、管理后台认证、浏览器草稿机制或 GitHub 内容写入方式变化时。
 
 **后续修改前先看**
 
@@ -133,6 +137,8 @@
 - `app/api/admin/`
 - `lib/admin-auth.ts`
 - `lib/admin-content.ts`
+- `lib/admin-post-draft.ts`
+- `hooks/use-new-post-draft.ts`
 
 ## 配置与环境变量
 
