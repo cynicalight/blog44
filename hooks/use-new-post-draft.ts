@@ -9,7 +9,7 @@ import {
   writeNewPostDraft,
 } from '~/lib/admin-post-draft'
 
-const AUTOSAVE_DELAY_MS = 600
+const AUTOSAVE_DELAY_MS = 1000
 
 export type NewPostDraftStatus =
   | { state: 'idle' }
