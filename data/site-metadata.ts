@@ -29,17 +29,17 @@ export const SITE_METADATA = {
     provider: 'giscus', // supported providers: giscus, utterances, disqus
     giscusConfig: {
       // https://giscus.app/
-      repo: process.env.NEXT_PUBLIC_GISCUS_REPO!,
-      repositoryId: process.env.NEXT_PUBLIC_GISCUS_REPOSITORY_ID!,
-      category: process.env.NEXT_PUBLIC_GISCUS_CATEGORY!,
-      categoryId: process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID!,
+      repo: 'cynicalight/blog44',
+      repositoryId: 'R_kgDOUMzByA',
+      category: 'Announcements',
+      categoryId: 'DIC_kwDOUMzByM4DExtH',
       mapping: 'title', // supported options: pathname, url, title
       reactions: '1', // Emoji reactions: 1 = enable / 0 = disable
       metadata: '0',
       theme: 'light',
       darkTheme: 'transparent_dark',
       themeURL: '',
-      lang: 'en',
+      lang: 'zh-CN',
     },
   },
   search: {
