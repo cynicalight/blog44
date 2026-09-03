@@ -2,6 +2,9 @@ function getNonJsonErrorMessage(response: Response, fallbackMessage: string) {
   if (response.status === 413) {
     return '图片上传请求超过服务器限制，请压缩图片后重试。'
   }
+  if (response.status === 504) {
+    return '图片上传超时，请稍后重试。'
+  }
   if (response.status === 401) {
     return '登录状态已失效，请重新登录。'
   }
