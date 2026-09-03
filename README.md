@@ -6,7 +6,7 @@
 
 </div>
 
-<img style="border-radius: 6px" src="https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/68/68ab6148d93fc412cfebeec56ed74512cd395461c88f25a3fc436c62367301b5.png">
+<img style="border-radius: 6px" src="https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/51/51ce023adc70b7d6dda49c3ff71ed9134e6899ccee59e87b1d0ea65022b6e6e9.png">
 
 Local configuration belongs in `.env.local`, which is ignored by Git. Copy `.env.example` and fill in the required values locally or in Vercel.
 
