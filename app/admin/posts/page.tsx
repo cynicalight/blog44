@@ -143,9 +143,9 @@ export default function AdminPostsPage() {
                         </div>
                       ) : null}
                     </TableCell>
-                    <TableCell className="whitespace-nowrap align-top">{post.date}</TableCell>
-                    <TableCell className="align-top">
-                      <div className="flex min-w-32 flex-wrap gap-1.5">
+                    <TableCell className="whitespace-nowrap">{post.date}</TableCell>
+                    <TableCell className="whitespace-nowrap">
+                      <div className="flex min-w-32 flex-nowrap gap-1.5">
                         <Badge variant={post.draft ? 'outline' : 'default'}>
                           {post.draft ? 'Draft' : 'Published'}
                         </Badge>
@@ -154,7 +154,7 @@ export default function AdminPostsPage() {
                         </Badge>
                       </div>
                     </TableCell>
-                    <TableCell className="max-w-48 align-top text-muted-foreground">
+                    <TableCell className="max-w-48 text-muted-foreground">
                       {post.tags.length ? post.tags.join(', ') : '—'}
                     </TableCell>
                     <TableCell className="max-w-56 truncate font-mono text-xs text-muted-foreground">
