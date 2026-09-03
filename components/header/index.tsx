@@ -44,7 +44,7 @@ export function Header({ className }: { className?: string }) {
       as="header"
       className={clsx(
         className,
-        'rounded-full border border-white/35 bg-white/30 px-2 py-2 backdrop-blur-sm',
+        'w-[calc(100%-2rem)] rounded-full border border-white/35 bg-white/30 px-2 py-2 backdrop-blur-sm sm:w-full',
         'ring-1 ring-inset ring-white/20 shadow-[0_0_18px_rgba(15,23,42,0.12)]',
         'dark:border-white/15 dark:bg-zinc-950/30 dark:ring-white/10 dark:shadow-[0_0_18px_rgba(0,0,0,0.3)]',
         'transition-[background-color,border-color,box-shadow] duration-200 ease-out',
