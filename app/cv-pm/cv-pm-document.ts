@@ -65,7 +65,6 @@ export const CV_PM_HTML = renderCvPage({
             <ul class="points">
               <li><b>零配置接入 AI</b>：直接复用用户已登录的 Claude Code、Codex 与 Kimi CLI，不必另填 API Key；同时保留 API 接入方式。</li>
               <li><b>减少迁移成本</b>：支持从 Zotero 一键迁移，配套 Chrome 插件从论文页面直接收录；空书库提供示例文档，首次使用有引导。</li>
-              <li><b>建立信任</b>：文档与笔记只存本机，并在产品内明确说明哪些内容会在调用 AI 时离开本机。</li>
             </ul>
           </div>
 
