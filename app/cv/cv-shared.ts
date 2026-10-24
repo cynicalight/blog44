@@ -48,30 +48,9 @@ const CV_STYLES = String.raw`
         border-color: var(--accent);
       }
 
-      .switch {
-        width: min(860px, 100%);
-        margin: 0 auto;
-        padding: 28px 0 14px;
-        display: flex;
-        justify-content: flex-end;
-        gap: 22px;
-        font-size: 13px;
-        letter-spacing: 0.12em;
-        color: var(--muted);
-      }
-
-      .switch a {
-        border: 0;
-      }
-
-      .switch [aria-current="page"] {
-        color: var(--ink);
-        border-bottom: 1px solid var(--ink);
-      }
-
       .sheet {
         width: min(860px, 100%);
-        margin: 0 auto 56px;
+        margin: 48px auto 56px;
         padding: 64px 72px 72px;
         background: var(--paper);
         border: 1px solid var(--rule);
@@ -395,15 +374,10 @@ const CV_STYLES = String.raw`
           font-size: 14.5px;
         }
 
-        .switch {
-          padding: 18px 22px 10px;
-        }
-
         .sheet {
-          margin-bottom: 0;
-          padding: 36px 22px 44px;
-          border-left: 0;
-          border-right: 0;
+          margin: 0;
+          padding: 40px 22px 44px;
+          border: 0;
         }
 
         .masthead {
@@ -495,10 +469,6 @@ const CV_STYLES = String.raw`
           font-size: 20px;
         }
 
-        .switch {
-          display: none;
-        }
-
         .sheet {
           width: 100%;
           margin: 0;
@@ -525,19 +495,7 @@ const CV_STYLES = String.raw`
       }
 `
 
-type CvVariant = 'engineer' | 'pm'
-
-export function renderCvPage({
-  title,
-  variant,
-  body,
-}: {
-  title: string
-  variant: CvVariant
-  body: string
-}) {
-  const current = (v: CvVariant) => (v === variant ? ' aria-current="page"' : '')
-
+export function renderCvPage({ title, body }: { title: string; body: string }) {
   return `<!doctype html>
 <html lang="zh-CN">
   <head>
@@ -548,10 +506,6 @@ export function renderCvPage({
     <style>${CV_STYLES}</style>
   </head>
   <body>
-    <nav class="switch" aria-label="简历版本">
-      <a href="/cv"${current('engineer')}>工程版</a>
-      <a href="/cv-pm"${current('pm')}>产品版</a>
-    </nav>
     <main class="sheet">${body}
     </main>
   </body>

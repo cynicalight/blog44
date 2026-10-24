@@ -2,8 +2,7 @@ import { CONTACT_HTML, EDUCATION_HTML } from '../cv/cv-document'
 import { renderCvPage } from '../cv/cv-shared'
 
 export const CV_PM_HTML = renderCvPage({
-  title: '张杰 | 简历 · 产品',
-  variant: 'pm',
+  title: '张杰 | 简历',
   body: String.raw`
       <header class="masthead">
         <div>

@@ -34,7 +34,6 @@ export const EDUCATION_HTML = String.raw`
 
 export const CV_HTML = renderCvPage({
   title: '张杰 | 简历',
-  variant: 'engineer',
   body: String.raw`
       <header class="masthead">
         <div>
