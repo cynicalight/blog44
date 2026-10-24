@@ -46,12 +46,11 @@ export const CV_PM_HTML = renderCvPage({
           </p>
 
           <div class="figures">
-            <div class="figure"><strong>3 周</strong><span>开源至今</span></div>
+            <div class="figure"><strong>20 万+</strong><span>社交媒体浏览</span></div>
             <div class="figure"><strong>~300</strong><span>GitHub Star</span></div>
             <div class="figure"><strong>7,000+</strong><span>安装包下载</span></div>
-            <div class="figure"><strong>24</strong><span>个发布版本</span></div>
           </div>
-          <p class="figures-note">数据截至 2026.10，来自 GitHub 仓库与 Releases。</p>
+          <p class="figures-note">数据截至 2026.10；Star 与下载量来自 GitHub 仓库与 Releases。</p>
 
           <div class="facet">
             <h4>需求洞察</h4>

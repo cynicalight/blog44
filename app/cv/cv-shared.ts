@@ -290,7 +290,7 @@ const CV_STYLES = String.raw`
 
       .figures {
         display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         margin: 22px 0 6px;
         padding: 16px 0;
         border-top: 1px solid var(--rule);
@@ -443,14 +443,8 @@ const CV_STYLES = String.raw`
           margin-top: 10px;
         }
 
-        .figures {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-          row-gap: 16px;
-        }
-
-        .figure:nth-child(3) {
-          padding-left: 0;
-          border-left: 0;
+        .figure {
+          padding: 0 12px;
         }
 
         .principles {
