@@ -267,10 +267,17 @@ const CV_STYLES = String.raw`
         font-size: 15px;
       }
 
+      .figures-lead {
+        margin: 22px 0 0;
+        color: var(--ink);
+        font-size: 14px;
+        letter-spacing: 0.12em;
+      }
+
       .figures {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        margin: 22px 0 6px;
+        margin: 10px 0 0;
         padding: 16px 0;
         border-top: 1px solid var(--rule);
         border-bottom: 1px solid var(--rule);
@@ -303,13 +310,6 @@ const CV_STYLES = String.raw`
         color: var(--muted);
         font-size: 12px;
         letter-spacing: 0.08em;
-      }
-
-      .figures-note {
-        margin: 0;
-        color: var(--muted);
-        font-size: 12px;
-        font-style: italic;
       }
 
       .facet + .facet {
@@ -460,8 +460,12 @@ const CV_STYLES = String.raw`
           margin-top: 1px;
         }
 
+        .figures-lead {
+          margin-top: 14px;
+        }
+
         .figures {
-          margin: 14px 0 4px;
+          margin: 6px 0 0;
           padding: 10px 0;
         }
 

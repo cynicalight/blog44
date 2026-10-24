@@ -44,12 +44,13 @@ export const CV_PM_HTML = renderCvPage({
             本地优先的 EPUB / PDF AI 阅读器：读电子书与论文时，在同一个界面完成对照翻译、批注，并结合原文向 AI 提问。
           </p>
 
+          <p class="figures-lead">开源发布后一周内：</p>
+
           <div class="figures">
             <div class="figure"><strong>20 万+</strong><span>社交媒体浏览</span></div>
             <div class="figure"><strong>~300</strong><span>GitHub Star</span></div>
             <div class="figure"><strong>7,000+</strong><span>安装包下载</span></div>
           </div>
-          <p class="figures-note">以上均为开源发布后一周内达成。</p>
 
           <div class="facet">
             <h4>需求洞察</h4>
