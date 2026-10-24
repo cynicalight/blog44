@@ -86,7 +86,7 @@ ${EDUCATION_HTML}
             <ul class="points">
               <li>主导设计与开发 Electron + React 桌面端与 Go 本地服务，以 SQLite 与 FTS5 管理文档、批注、对话和全文检索。</li>
               <li>通过 CLI 桥接 Claude Code、Codex 与 Kimi，兼容 OpenAI / Anthropic 协议，统一各家流式输出。</li>
-              <li>开源三周获得近 300 Star，发布 24 个版本，安装包下载 7,000+ 次，6 位外部贡献者合并 50+ 个 PR。</li>
+              <li>开源一周内获得近 300 Star、7,000+ 次安装包下载与 20 万+ 社交媒体浏览；6 位外部贡献者合并 50+ 个 PR。</li>
             </ul>
           </article>
           <article>
