@@ -27,6 +27,31 @@
   padding: 32px 48px;
 }
 
+/* Keep heading semantics while using a more compact type scale. */
+.admin-markdown-editor .milkdown .ProseMirror h1 {
+  font-size: 2em;
+}
+
+.admin-markdown-editor .milkdown .ProseMirror h2 {
+  font-size: 1.75em;
+}
+
+.admin-markdown-editor .milkdown .ProseMirror h3 {
+  font-size: 1.5em;
+}
+
+.admin-markdown-editor .milkdown .ProseMirror h4 {
+  font-size: 1.25em;
+}
+
+.admin-markdown-editor .milkdown .ProseMirror h5 {
+  font-size: 1.125em;
+}
+
+.admin-markdown-editor .milkdown .ProseMirror h6 {
+  font-size: 1em;
+}
+
 @media (max-width: 640px) {
   .admin-markdown-editor .milkdown .ProseMirror {
     padding: 24px 32px;

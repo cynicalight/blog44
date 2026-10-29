@@ -58,6 +58,9 @@ function needsSourceMode(body: string) {
   const prose = body
     .replace(/^(`{3,}|~{3,})[^\n]*\n[\s\S]*?^\1[^\n]*$/gm, '')
     .replace(/`+[^`]*`+/g, '')
+    // Crepe serializes empty paragraphs as <br /> and can parse them back.
+    // Exempt only bare breaks; tags with attributes still require source mode.
+    .replace(/<br\s*\/?\s*>/gi, '')
   return /<\/?[A-Za-z][^>]*>|^(?:import|export)\s/m.test(prose)
 }
 
