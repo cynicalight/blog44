@@ -186,6 +186,14 @@ samp {
 }
 
 @layer base {
+  /* Admin components using bare `border` must follow the active theme.
+     Keep this in base so explicit input/error border utilities still win. */
+  :where(body:has(.admin-layout-root)) *,
+  :where(body:has(.admin-layout-root)) ::before,
+  :where(body:has(.admin-layout-root)) ::after {
+    border-color: hsl(var(--border));
+  }
+
   :root {
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;

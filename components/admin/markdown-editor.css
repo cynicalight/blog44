@@ -1,0 +1,39 @@
+.admin-markdown-editor .milkdown {
+  --crepe-color-background: hsl(var(--background));
+  --crepe-color-on-background: hsl(var(--foreground));
+  --crepe-color-surface: hsl(var(--popover));
+  --crepe-color-surface-low: hsl(var(--muted));
+  --crepe-color-on-surface: hsl(var(--foreground));
+  --crepe-color-on-surface-variant: hsl(var(--muted-foreground));
+  --crepe-color-outline: hsl(var(--border));
+  --crepe-color-primary: hsl(var(--primary));
+  --crepe-color-on-primary: hsl(var(--primary-foreground));
+  --crepe-color-secondary: hsl(var(--accent));
+  --crepe-color-on-secondary: hsl(var(--accent-foreground));
+  --crepe-color-hover: hsl(var(--accent));
+  --crepe-color-selected: hsl(var(--accent));
+  --crepe-color-inverse: hsl(var(--popover));
+  --crepe-color-on-inverse: hsl(var(--popover-foreground));
+  --crepe-color-inline-code: hsl(var(--foreground));
+  --crepe-color-error: hsl(var(--destructive));
+  --crepe-color-inline-area: hsl(var(--muted));
+  --crepe-font-default: inherit;
+  --crepe-font-title: inherit;
+  --crepe-font-code: ui-monospace, monospace;
+}
+
+.admin-markdown-editor .milkdown .ProseMirror {
+  min-height: 520px;
+  padding: 32px 48px;
+}
+
+@media (max-width: 640px) {
+  .admin-markdown-editor .milkdown .ProseMirror {
+    padding: 24px 32px;
+  }
+}
+
+.admin-markdown-editor .ProseMirror:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: -2px;
+}

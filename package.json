@@ -22,6 +22,8 @@
     "@emotion/is-prop-valid": "^1.4.0",
     "@headlessui/react": "2.1.5",
     "@hookform/resolvers": "^5.2.2",
+    "@milkdown/crepe": "^7.23.0",
+    "@milkdown/kit": "^7.23.0",
     "@neondatabase/serverless": "^1.0.0",
     "@next/bundle-analyzer": "16.0.7",
     "@octokit/graphql": "^8.1.1",

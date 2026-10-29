@@ -7,6 +7,7 @@ const PBKDF2_PREFIX = 'pbkdf2_sha256'
 type SessionPayload = {
   email: string
   exp: number
+  localPreview?: boolean
 }
 
 function getRequiredEnv(name: string) {
@@ -86,10 +87,14 @@ export function validateAdminCredentials(email: string, password: string): Admin
   return { email: expectedEmail }
 }
 
-export function createAdminSessionToken(email: string) {
+export function createAdminSessionToken(email: string, localPreview = false) {
+  if (localPreview && process.env.NODE_ENV !== 'development') {
+    throw new Error('Local preview sessions require development mode')
+  }
   const payload: SessionPayload = {
     email,
-    exp: Math.floor(Date.now() / 1000) + SESSION_TTL_SECONDS,
+    exp: Math.floor(Date.now() / 1000) + (localPreview ? 3600 : SESSION_TTL_SECONDS),
+    ...(localPreview ? { localPreview: true } : {}),
   }
   const encodedPayload = toBase64Url(JSON.stringify(payload))
   const signature = signPayload(encodedPayload)
@@ -114,6 +119,7 @@ export function verifyAdminSessionToken(token: string | undefined | null): Admin
 
   try {
     const parsed = JSON.parse(fromBase64Url(encodedPayload).toString('utf8')) as SessionPayload
+    if (parsed.localPreview && process.env.NODE_ENV !== 'development') return null
     if (!parsed.email || !parsed.exp || parsed.exp <= Math.floor(Date.now() / 1000)) {
       return null
     }
