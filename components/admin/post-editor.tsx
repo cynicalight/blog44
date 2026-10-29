@@ -5,6 +5,7 @@ import { format } from 'date-fns'
 import { zhCN } from 'date-fns/locale'
 import { CalendarIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import dynamic from 'next/dynamic'
 import { Alert, AlertDescription } from '~/components/ui/alert'
 import { Badge } from '~/components/ui/badge'
 import { Button } from '~/components/ui/button'
@@ -27,6 +28,11 @@ import {
 import { type BlogScriptVariant } from '~/lib/blog-script'
 import type { AdminContentType, AdminPostDetail, AdminPostInput } from '~/types/admin'
 
+const MarkdownEditor = dynamic(() => import('./markdown-editor'), {
+  ssr: false,
+  loading: () => <p className="p-4 text-muted-foreground">正在加载编辑器…</p>,
+})
+
 type PostEditorProps = {
   mode: 'create' | 'edit'
   sourcePath?: string
@@ -45,6 +51,14 @@ function createEmptyForm(): AdminPostInput {
     coverImage: '',
     body: '',
   }
+}
+
+// Conservatively keep HTML/MDX in source mode; Milkdown does not compile MDX components.
+function needsSourceMode(body: string) {
+  const prose = body
+    .replace(/^(`{3,}|~{3,})[^\n]*\n[\s\S]*?^\1[^\n]*$/gm, '')
+    .replace(/`+[^`]*`+/g, '')
+  return /<\/?[A-Za-z][^>]*>|^(?:import|export)\s/m.test(prose)
 }
 
 function getDraftStatusText(status: NewPostDraftStatus) {
@@ -90,6 +104,8 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
   const bodyInputRef = useRef<HTMLTextAreaElement>(null)
   const [form, setForm] = useState<AdminPostInput>(createEmptyForm)
   const [tagInput, setTagInput] = useState('')
+  const [bodyMode, setBodyMode] = useState<'rich' | 'source'>('rich')
+  const pendingUploads = useRef(0)
   const [isLoading, setIsLoading] = useState(mode === 'edit')
   const [isSaving, setIsSaving] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
@@ -99,6 +115,7 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
 
   const restoreNewPostDraft = useCallback((draft: { form: AdminPostInput; tagInput: string }) => {
     setForm(draft.form)
+    setBodyMode(needsSourceMode(draft.form.body) ? 'source' : 'rich')
     setTagInput(draft.tagInput)
   }, [])
   const newPostDraftValue = useMemo(() => ({ form, tagInput }), [form, tagInput])
@@ -150,6 +167,7 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
           body: post.body,
         })
         setTagInput(post.tags.join(', '))
+        setBodyMode(needsSourceMode(post.body) ? 'source' : 'rich')
       })
       .catch((err: Error) => {
         if (active) {
@@ -234,6 +252,21 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
     }
   }
 
+  async function uploadBodyImage(file: File) {
+    pendingUploads.current += 1
+    setUploadingTarget('body')
+    setError('')
+    try {
+      return await uploadPastedImage(file)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '正文图片上传失败')
+      throw err
+    } finally {
+      pendingUploads.current -= 1
+      if (pendingUploads.current === 0) setUploadingTarget(null)
+    }
+  }
+
   async function handleBodyPaste(event: React.ClipboardEvent<HTMLTextAreaElement>) {
     const images = getPastedImages(event)
     if (images.length === 0) {
@@ -281,7 +314,7 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    if (uploadingTarget) {
+    if (uploadingTarget || pendingUploads.current > 0) {
       setError('请等待图片上传完成后再保存。')
       return
     }
@@ -368,6 +401,7 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
     }
 
     setForm(createEmptyForm())
+    setBodyMode('rich')
     setTagInput('')
     setError('')
     setSuccess('本地草稿已清除。')
@@ -599,26 +633,59 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
 
         <Card>
           <CardHeader>
-            <CardTitle>正文</CardTitle>
+            <CardTitle id="post-body-label">正文</CardTitle>
           </CardHeader>
           <CardContent>
             <Label htmlFor="post-body" className="sr-only">
               正文
             </Label>
-            <Textarea
-              ref={bodyInputRef}
-              id="post-body"
-              value={form.body}
-              onChange={(event) => updateField('body', event.target.value)}
-              onPaste={handleBodyPaste}
-              className="min-h-[520px] font-mono"
-              placeholder={'# 标题\n\n可在这里直接粘贴图片'}
-              disabled={uploadingTarget === 'body'}
-            />
+            <div className="mb-3 flex gap-2" role="group" aria-label="正文编辑模式">
+              <Button
+                type="button"
+                size="sm"
+                variant={bodyMode === 'rich' ? 'default' : 'outline'}
+                aria-pressed={bodyMode === 'rich'}
+                disabled={Boolean(uploadingTarget) || needsSourceMode(form.body)}
+                onClick={() => setBodyMode('rich')}
+              >
+                即时渲染
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant={bodyMode === 'source' ? 'default' : 'outline'}
+                aria-pressed={bodyMode === 'source'}
+                disabled={Boolean(uploadingTarget)}
+                onClick={() => setBodyMode('source')}
+              >
+                Markdown 源码
+              </Button>
+            </div>
+            {bodyMode === 'rich' ? (
+              <MarkdownEditor
+                value={form.body}
+                onChange={(body) => updateField('body', body)}
+                uploadImage={uploadBodyImage}
+                disabled={isSaving || Boolean(uploadingTarget)}
+              />
+            ) : (
+              <Textarea
+                ref={bodyInputRef}
+                id="post-body"
+                value={form.body}
+                onChange={(event) => updateField('body', event.target.value)}
+                onPaste={handleBodyPaste}
+                className="min-h-[520px] font-mono"
+                placeholder={'# 标题\n\n可在这里直接粘贴图片'}
+                disabled={uploadingTarget === 'body'}
+              />
+            )}
             <p className="mt-2 text-xs text-muted-foreground">
               {uploadingTarget === 'body'
                 ? '正在上传图片到 COS…'
-                : '粘贴图片后会自动上传，并在光标位置插入 Markdown 图片链接。'}
+                : needsSourceMode(form.body)
+                  ? '正文包含 HTML 或 MDX 标签，请使用源码模式保留原始内容。粘贴图片仍会自动上传 COS。'
+                  : '支持 Markdown 即时渲染，粘贴图片自动上传 COS。可切换源码编辑。'}
             </p>
           </CardContent>
         </Card>

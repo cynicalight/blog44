@@ -18,3 +18,36 @@ body:has(.admin-layout-root) {
 body:has(.admin-layout-root) .site-main {
   margin-bottom: 0;
 }
+
+/* NeoRead-pro graphite palette, converted to HSL for the existing UI tokens.
+   Scope to admin, including popovers mounted directly under body. */
+html.dark:has(.admin-layout-root) {
+  color-scheme: dark;
+  --background: 300 3.297% 17.843%; /* #2f2c2f */
+  --foreground: 30 15.625% 87.451%; /* #e4dfda */
+  --card: 300 3.297% 17.843%; /* #2f2c2f */
+  --card-foreground: 30 15.625% 87.451%; /* #e4dfda */
+  --popover: 300 3.704% 21.176%; /* #383438 */
+  --popover-foreground: 30 15.625% 87.451%; /* #e4dfda */
+  --primary: 30 15.625% 87.451%; /* #e4dfda */
+  --primary-foreground: 300 3.297% 17.843%; /* #2f2c2f */
+  --secondary: 300 3.571% 21.961%; /* #3a363a */
+  --secondary-foreground: 30 15.625% 87.451%; /* #e4dfda */
+  --muted: 300 3.571% 21.961%; /* #3a363a */
+  --muted-foreground: 324 2.646% 62.941%; /* #a39ea1 */
+  --accent: 300 3.125% 25.098%; /* #423e42 */
+  --accent-foreground: 30 15.625% 87.451%; /* #e4dfda */
+  --border: 300 3.125% 25.098%; /* #423e42 */
+  --input: 300 2.667% 29.412%; /* #4d494d */
+  --ring: 300 1.277% 46.078%; /* #777477 */
+  --destructive: 0 90.604% 70.784%; /* #f87171 */
+  --destructive-foreground: 300 4.762% 12.353%; /* #211e21 */
+  --sidebar-background: 300 4.762% 12.353%; /* #211e21 */
+  --sidebar-foreground: 30 15.625% 87.451%; /* #e4dfda */
+  --sidebar-primary: 30 15.625% 87.451%; /* #e4dfda */
+  --sidebar-primary-foreground: 300 3.297% 17.843%; /* #2f2c2f */
+  --sidebar-accent: 300 3.125% 25.098%; /* #423e42 */
+  --sidebar-accent-foreground: 30 15.625% 87.451%; /* #e4dfda */
+  --sidebar-border: 300 3.125% 25.098%; /* #423e42 */
+  --sidebar-ring: 300 1.277% 46.078%; /* #777477 */
+}

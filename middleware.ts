@@ -21,7 +21,7 @@ export function middleware(request: NextRequest) {
   }
 
   if (pathname.startsWith('/api/admin')) {
-    if (pathname === '/api/admin/auth/login') {
+    if (pathname === '/api/admin/auth/login' || pathname === '/api/admin/auth/local-preview') {
       return NextResponse.next()
     }
 
