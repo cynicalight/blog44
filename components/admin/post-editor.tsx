@@ -20,6 +20,7 @@ import { useNewPostDraft, type NewPostDraftStatus } from '~/hooks/use-new-post-d
 import { readAdminApiResponse } from '~/lib/admin-api-response'
 import { MAX_ADMIN_IMAGE_BYTES } from '~/lib/admin-asset-constants'
 import { cn } from '~/lib/utils'
+import { getSourceModeReason } from '~/lib/admin-markdown'
 import {
   buildSourcePath,
   encodeAdminApiPath,
@@ -51,17 +52,6 @@ function createEmptyForm(): AdminPostInput {
     coverImage: '',
     body: '',
   }
-}
-
-// Conservatively keep HTML/MDX in source mode; Milkdown does not compile MDX components.
-function needsSourceMode(body: string) {
-  const prose = body
-    .replace(/^(`{3,}|~{3,})[^\n]*\n[\s\S]*?^\1[^\n]*$/gm, '')
-    .replace(/`+[^`]*`+/g, '')
-    // Crepe serializes empty paragraphs as <br /> and can parse them back.
-    // Exempt only bare breaks; tags with attributes still require source mode.
-    .replace(/<br\s*\/?\s*>/gi, '')
-  return /<\/?[A-Za-z][^>]*>|^(?:import|export)\s/m.test(prose)
 }
 
 function getDraftStatusText(status: NewPostDraftStatus) {
@@ -106,6 +96,7 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
   const router = useRouter()
   const bodyInputRef = useRef<HTMLTextAreaElement>(null)
   const [form, setForm] = useState<AdminPostInput>(createEmptyForm)
+  const sourceModeReason = useMemo(() => getSourceModeReason(form.body), [form.body])
   const [tagInput, setTagInput] = useState('')
   const [bodyMode, setBodyMode] = useState<'rich' | 'source'>('rich')
   const pendingUploads = useRef(0)
@@ -118,7 +109,7 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
 
   const restoreNewPostDraft = useCallback((draft: { form: AdminPostInput; tagInput: string }) => {
     setForm(draft.form)
-    setBodyMode(needsSourceMode(draft.form.body) ? 'source' : 'rich')
+    setBodyMode(getSourceModeReason(draft.form.body) ? 'source' : 'rich')
     setTagInput(draft.tagInput)
   }, [])
   const newPostDraftValue = useMemo(() => ({ form, tagInput }), [form, tagInput])
@@ -170,7 +161,7 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
           body: post.body,
         })
         setTagInput(post.tags.join(', '))
-        setBodyMode(needsSourceMode(post.body) ? 'source' : 'rich')
+        setBodyMode(getSourceModeReason(post.body) ? 'source' : 'rich')
       })
       .catch((err: Error) => {
         if (active) {
@@ -648,7 +639,8 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
                 size="sm"
                 variant={bodyMode === 'rich' ? 'default' : 'outline'}
                 aria-pressed={bodyMode === 'rich'}
-                disabled={Boolean(uploadingTarget) || needsSourceMode(form.body)}
+                disabled={Boolean(uploadingTarget) || Boolean(sourceModeReason)}
+                aria-describedby="post-body-help"
                 onClick={() => setBodyMode('rich')}
               >
                 即时渲染
@@ -683,11 +675,11 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
                 disabled={uploadingTarget === 'body'}
               />
             )}
-            <p className="mt-2 text-xs text-muted-foreground">
+            <p id="post-body-help" className="mt-2 text-xs text-muted-foreground">
               {uploadingTarget === 'body'
                 ? '正在上传图片到 COS…'
-                : needsSourceMode(form.body)
-                  ? '正文包含 HTML 或 MDX 标签，请使用源码模式保留原始内容。粘贴图片仍会自动上传 COS。'
+                : sourceModeReason
+                  ? `${sourceModeReason}。请使用源码模式保留原始内容。粘贴图片仍会自动上传 COS。`
                   : '支持 Markdown 即时渲染，粘贴图片自动上传 COS。可切换源码编辑。'}
             </p>
           </CardContent>
