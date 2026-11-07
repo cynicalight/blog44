@@ -1,4 +1,5 @@
 import matter from 'gray-matter'
+import { normalizeMdxAutolinks } from '~/lib/admin-markdown'
 import { z } from 'zod'
 import {
   buildSourcePath,
@@ -295,7 +296,7 @@ function serializePost(input: AdminPostInput, existingFrontmatter?: Record<strin
     next.authors = ['default']
   }
 
-  const normalizedBody = input.body.replace(/\r\n/g, '\n').trimEnd()
+  const normalizedBody = normalizeMdxAutolinks(input.body.replace(/\r\n/g, '\n')).body.trimEnd()
   return matter.stringify(normalizedBody ? `${normalizedBody}\n` : '', next)
 }
 

@@ -20,7 +20,7 @@ import { useNewPostDraft, type NewPostDraftStatus } from '~/hooks/use-new-post-d
 import { readAdminApiResponse } from '~/lib/admin-api-response'
 import { MAX_ADMIN_IMAGE_BYTES } from '~/lib/admin-asset-constants'
 import { cn } from '~/lib/utils'
-import { getSourceModeReason } from '~/lib/admin-markdown'
+import { getSourceModeReason, normalizeMdxAutolinks } from '~/lib/admin-markdown'
 import {
   buildSourcePath,
   encodeAdminApiPath,
@@ -264,6 +264,17 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
   async function handleBodyPaste(event: React.ClipboardEvent<HTMLTextAreaElement>) {
     const images = getPastedImages(event)
     if (images.length === 0) {
+      const pasted = event.clipboardData.getData('text/plain')
+      if (!/<https?:\/\//i.test(pasted)) return
+      const { selectionStart, selectionEnd } = event.currentTarget
+      const candidate = form.body.slice(0, selectionStart) + pasted + form.body.slice(selectionEnd)
+      const normalized = normalizeMdxAutolinks(candidate, selectionStart + pasted.length)
+      if (candidate === normalized.body) return
+      event.preventDefault()
+      updateField('body', normalized.body)
+      requestAnimationFrame(() => {
+        bodyInputRef.current?.setSelectionRange(normalized.cursor, normalized.cursor)
+      })
       return
     }
 

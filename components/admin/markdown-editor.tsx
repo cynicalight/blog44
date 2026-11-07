@@ -7,6 +7,7 @@ import { uploadConfig } from '@milkdown/kit/plugin/upload'
 import { Plugin } from '@milkdown/kit/prose/state'
 import type { Node as ProseMirrorNode } from '@milkdown/kit/prose/model'
 import { $prose, replaceAll } from '@milkdown/kit/utils'
+import { normalizeMdxAutolinks } from '~/lib/admin-markdown'
 import '@milkdown/crepe/theme/common/style.css'
 import '@milkdown/crepe/theme/frame.css'
 import './markdown-editor.css'
@@ -84,7 +85,7 @@ export default function MarkdownEditor(props: Props) {
                   view.state.doc.eq(previous.doc)
                 )
                   return
-                const markdown = ctx.get(serializerCtx)(view.state.doc)
+                const markdown = normalizeMdxAutolinks(ctx.get(serializerCtx)(view.state.doc)).body
                 valueRef.current = markdown
                 propsRef.current.onChange(markdown)
               },
