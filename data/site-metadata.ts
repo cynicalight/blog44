@@ -8,7 +8,7 @@ export const SITE_METADATA = {
   theme: 'dark', // dark or light
   siteUrl: 'https://www.bu44er.ink',
   siteRepo: 'https://github.com/cynicalight/bu44er.ink',
-  siteLogo: `https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/39/395993d7b60a20be9e1c5f2dfb93f8573d5cda5b848b9753c2d65ac2f5d8c215.webp`,
+  siteLogo: `https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/b6/b668caed71a8836a69d55f03affb92218ae4d6d978663579a278f73f3e8577fe.jpg`,
   socialBanner:
     'https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/4e/4eca87e6c32b6a0db30e27a9a4bee7377982fdf2d8dd21d1ab9ba714843377c8.webp',
 
