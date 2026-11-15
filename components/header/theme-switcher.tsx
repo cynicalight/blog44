@@ -11,7 +11,8 @@ export function ThemeSwitcher() {
   // When mounted on client, now we can show the UI
   useEffect(() => setMounted(true), [])
 
-  const nextTheme = resolvedTheme === 'dark' ? 'light' : 'dark'
+  // Before mount, assume the site default (dark) so SSR and hydration agree.
+  const nextTheme = mounted && resolvedTheme === 'light' ? 'dark' : 'light'
 
   return (
     <button

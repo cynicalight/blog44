@@ -33,6 +33,7 @@ export function LunarChrome() {
   const moonLayerRef = useRef<HTMLDivElement>(null)
   const moonFromRef = useRef<HTMLCanvasElement>(null)
   const moonToRef = useRef<HTMLCanvasElement>(null)
+  const moonSurfaceRef = useRef<HTMLCanvasElement>(null)
   const particlesRef = useRef<HTMLCanvasElement>(null)
   const moonRef = useRef<HTMLDivElement>(null)
   const sceneRef = useRef<LunarScene | null>(null)
@@ -46,11 +47,12 @@ export function LunarChrome() {
     const moon = moonLayerRef.current
     const moonFrom = moonFromRef.current
     const moonTo = moonToRef.current
+    const moonSurface = moonSurfaceRef.current
     const particles = particlesRef.current
     const moonHost = moonRef.current
-    if (!base || !moon || !moonFrom || !moonTo || !particles || !moonHost) return
+    if (!base || !moon || !moonFrom || !moonTo || !moonSurface || !particles || !moonHost) return
     const scene = createLunarScene({
-      layers: { base, moon, moonFrom, moonTo, particles },
+      layers: { base, moon, moonFrom, moonTo, moonSurface, particles },
       host: document.documentElement,
       moonHost,
       theme,
@@ -79,6 +81,10 @@ export function LunarChrome() {
         <canvas
           ref={moonToRef}
           className="absolute inset-0 h-full w-full opacity-0 [image-rendering:pixelated]"
+        />
+        <canvas
+          ref={moonSurfaceRef}
+          className="absolute inset-0 h-full w-full [image-rendering:pixelated]"
         />
       </div>
       <canvas ref={particlesRef} aria-hidden className={LAYER_CLASS} />

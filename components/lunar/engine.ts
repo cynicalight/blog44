@@ -118,7 +118,8 @@ function makeCraters(count: number, seed: number, minRadius: number, maxRadius: 
   return craters
 }
 
-// Writes a dithered moon (disc, craters, maria, limb glow) into an RGBA buffer.
+// Writes the moon's static frame (flat disc, lit rim, halo) into an RGBA buffer;
+// the disc's grain is painted separately so it can flicker in place.
 function renderMoon(
   target: Uint8ClampedArray,
   width: number,
@@ -129,10 +130,8 @@ function renderMoon(
   light: Vec3,
   palette: Palette,
   craters: Crater[],
-  /** Optional per-pixel shading out (0 = outside disc, 1..255 = brightness). */
-  shadeOut?: Uint8Array,
-  /** Scales static dither density; animated surface pixels fill the rest. */
-  ditherScale = 1
+  /** Per-pixel shading out (0 = outside disc, 1..255 = brightness). */
+  shadeOut: Uint8Array
 ) {
   // Halo size is capped so a huge limb doesn't fog the whole screen.
   const haloScale = Math.min(radius, 170)
@@ -208,25 +207,13 @@ function renderMoon(
       const value = brightness[(y - y0) * boxWidth + (x - x0)]
       if (value >= 0) {
         const b = Math.min(1, value)
-        if (shadeOut) shadeOut[y * width + x] = 1 + b * 254
+        shadeOut[y * width + x] = 1 + b * 254
         const edge = 1 - Math.sqrt(dx * dx + dy * dy)
         if (edge * radius < 1.4 && dx * lx + dy * ly > 0.08) {
           writePixel(target, index, palette.rim, 1)
           continue
         }
-        const probability =
-          (palette.light ? 0.035 + 0.8 * (1 - b) : 0.06 + 0.8 * Math.pow(b, 0.9)) * ditherScale
-        if (noise < probability) {
-          writePixel(
-            target,
-            index,
-            mixColor(palette.shade, palette.lit, b),
-            1,
-            palette.light ? 1 : 0.42 + 0.5 * b
-          )
-        } else {
-          writePixel(target, index, palette.disc, 1)
-        }
+        writePixel(target, index, palette.disc, 1)
         continue
       }
       const distance = Math.sqrt(dx * dx + dy * dy)
@@ -348,12 +335,12 @@ function sceneLayout(width: number, height: number, mode: LunarMode): Layout {
 const LIGHT_FROM = normalize(Math.cos(0.55) * 0.95, Math.sin(0.55) * 0.95, 0.12)
 const LIGHT_TO = normalize(0.1, -0.12, 0.99)
 const RIPPLE_SLOTS = 12
-// ~2.4°/s of rotation for the surface grain; axial tilt keeps the drift diagonal.
-const SURFACE_SPIN = 0.00004
-// Static dither density in the moon sprites; the rest of the disc is moving pixels.
-const SPRITE_DITHER = 0.7
-const SURFACE_TILT_COS = Math.cos(0.35)
-const SURFACE_TILT_SIN = Math.sin(0.35)
+// Disc grain re-rolls one bucket per frame tick, so every pixel changes colour
+// roughly every BUCKETS ticks without the pixels themselves ever moving.
+const SURFACE_BUCKETS = 90
+const SURFACE_TICK_MS = 1000 / 60
+// Phase drift (0..1) that forces a full grain repaint instead of waiting for re-rolls.
+const SURFACE_PHASE_STEP = 0.02
 const RIPPLE_LIFE = 2600
 // Ripples are circles on a tilted water plane, so they squash along the sea normal.
 const RIPPLE_SQUASH = 0.5
@@ -372,6 +359,8 @@ export type LunarLayers = {
   moonFrom: HTMLCanvasElement
   /** Cross-faded in with CSS opacity as the phase fills. */
   moonTo: HTMLCanvasElement
+  /** Disc grain: fixed pixels whose colours flicker; shares the moon's transform. */
+  moonSurface: HTMLCanvasElement
   /** Transparent per-frame layer: dust, stars, glitter, ripples, title. */
   particles: HTMLCanvasElement
 }
@@ -398,7 +387,8 @@ export function createLunarScene({
   const baseContext = layers.base.getContext('2d')
   const fromContext = layers.moonFrom.getContext('2d')
   const toContext = layers.moonTo.getContext('2d')
-  if (!context || !baseContext || !fromContext || !toContext)
+  const surfaceContext = layers.moonSurface.getContext('2d')
+  if (!context || !baseContext || !fromContext || !toContext || !surfaceContext)
     return { setExcited() {}, destroy() {} }
   const palette = PALETTES[theme]
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -427,7 +417,7 @@ export function createLunarScene({
   // phase crossfade are CSS transform/opacity, so the moon costs no CPU per frame.
   let spriteSize = 0
   let spriteRadius = 1
-  // Continuous shading of both phases, sampled by the moving surface pixels.
+  // Continuous shading of both phases, sampled by the flickering disc grain.
   let shadeFrom = new Uint8Array(0)
   let shadeTo = new Uint8Array(0)
   let lastMoonLayer = ''
@@ -454,15 +444,17 @@ export function createLunarScene({
   let sprayLife = new Float32Array(0)
   let sprayRate = new Float32Array(0)
 
-  // Surface grain on the near hemisphere, drifting as the moon slowly turns.
-  let surfaceCount = 0
-  // Sphere coordinates as precomputed sines/cosines; spin is an incremental rotation.
-  let surfaceCosLat = new Float64Array(0)
-  let surfaceSinLat = new Float64Array(0)
-  let surfaceCosLon = new Float64Array(0)
-  let surfaceSinLon = new Float64Array(0)
-  let surfaceFrames = 0
-  let surfacePhase = new Float32Array(0)
+  // Disc grain (like omp.sh's hero field): each disc pixel keeps its place and is
+  // re-rolled to a new tone, or to empty, whenever its bucket comes up.
+  let surfaceImage: ImageData | null = null
+  // Disc texels grouped by bucket: bucket k owns surfaceTexels[start[k]..start[k+1]).
+  let surfaceTexels = new Int32Array(0)
+  let surfaceBucketStart = new Int32Array(SURFACE_BUCKETS + 1)
+  let surfaceBoxX = 0
+  let surfaceBoxY = 0
+  let surfaceBoxSize = 0
+  let surfaceTick = 0
+  let surfacePaintedPhase = -1
 
   let starCount = 0
   let starX = new Float32Array(0)
@@ -582,23 +574,6 @@ export function createLunarScene({
     sprayRate = new Float32Array(sprayCount)
     for (let i = 0; i < sprayCount; i++) respawnSpray(i, 0, true)
 
-    const discArea = Math.PI * (layout.moonFrom.r * scale) ** 2
-    surfaceCount = Math.round(Math.min(140000, Math.max(600, discArea * 0.35)))
-    surfaceCosLat = new Float64Array(surfaceCount)
-    surfaceSinLat = new Float64Array(surfaceCount)
-    surfaceCosLon = new Float64Array(surfaceCount)
-    surfaceSinLon = new Float64Array(surfaceCount)
-    surfacePhase = new Float32Array(surfaceCount)
-    for (let i = 0; i < surfaceCount; i++) {
-      const sinLat = 2 * hash(i * 7 + 501) - 1
-      const lon = hash(i * 7 + 502) * TAU
-      surfaceSinLat[i] = sinLat
-      surfaceCosLat[i] = Math.sqrt(1 - sinLat * sinLat)
-      surfaceCosLon[i] = Math.cos(lon)
-      surfaceSinLon[i] = Math.sin(lon)
-      surfacePhase[i] = hash(i * 7 + 503) * TAU
-    }
-
     const stars: number[] = []
     for (let i = 0; stars.length < 520 * area && i < 4000; i++) {
       const x = hash(i * 3 + 101) * width
@@ -674,8 +649,7 @@ export function createLunarScene({
         light,
         palette,
         craters,
-        shade,
-        SPRITE_DITHER
+        shade
       )
       target.width = spriteSize
       target.height = spriteSize
@@ -684,6 +658,92 @@ export function createLunarScene({
     layers.moon.style.width = `${spriteSize / scale}px`
     layers.moon.style.height = `${spriteSize / scale}px`
     lastMoonLayer = ''
+
+    // Grain canvas shares the sprite box; only interior texels are listed, leaving
+    // the outer 1.4px to the sprites' lit rim.
+    layers.moonSurface.width = spriteSize
+    layers.moonSurface.height = spriteSize
+    surfaceImage = new ImageData(spriteSize, spriteSize)
+    surfaceBoxX = surfaceBoxY = Math.max(0, Math.floor(center - spriteRadius))
+    surfaceBoxSize = Math.min(spriteSize - surfaceBoxX, Math.ceil(spriteRadius * 2) + 2)
+    const inner = (spriteRadius - 1.4) ** 2
+    const bucketOf = (texel: number) => (hash(texel ^ 0x85ebca6b) * SURFACE_BUCKETS) | 0
+    const isGrain = (x: number, y: number, texel: number) =>
+      shadeFrom[texel] !== 0 &&
+      shadeTo[texel] !== 0 &&
+      (x + 0.5 - center) ** 2 + (y + 0.5 - center) ** 2 < inner
+    const counts = new Int32Array(SURFACE_BUCKETS + 1)
+    const boxEnd = surfaceBoxX + surfaceBoxSize
+    for (let y = surfaceBoxY; y < boxEnd; y++) {
+      for (let x = surfaceBoxX; x < boxEnd; x++) {
+        const texel = y * spriteSize + x
+        if (isGrain(x, y, texel)) counts[bucketOf(texel) + 1]++
+      }
+    }
+    for (let k = 0; k < SURFACE_BUCKETS; k++) counts[k + 1] += counts[k]
+    surfaceBucketStart = counts.slice()
+    surfaceTexels = new Int32Array(counts[SURFACE_BUCKETS])
+    for (let y = surfaceBoxY; y < boxEnd; y++) {
+      for (let x = surfaceBoxX; x < boxEnd; x++) {
+        const texel = y * spriteSize + x
+        if (isGrain(x, y, texel)) surfaceTexels[counts[bucketOf(texel)]++] = texel
+      }
+    }
+    surfacePaintedPhase = -1
+  }
+
+  // Re-rolls every texel in one bucket for the generation that bucket is on at `tick`:
+  // blank (disc shows through) or one of three tones, denser where the moon is lit.
+  const paintSurfaceBucket = (data: Uint8ClampedArray, bucket: number, tick: number) => {
+    const generation = Math.floor((tick + SURFACE_BUCKETS - bucket) / SURFACE_BUCKETS)
+    const salt = Math.imul(generation, 0xc2b2ae35)
+    const { shade, lit } = palette
+    const end = surfaceBucketStart[bucket + 1]
+    for (let k = surfaceBucketStart[bucket]; k < end; k++) {
+      const texel = surfaceTexels[k]
+      const from = shadeFrom[texel]
+      const b = (from + (shadeTo[texel] - from) * phase - 1) / 254
+      const probability = palette.light ? 0.035 + 0.8 * (1 - b) : 0.06 + 0.8 * Math.pow(b, 0.9)
+      const roll = hash(Math.imul(texel, 0x9e3779b1) ^ salt)
+      const index = texel * 4
+      if (roll >= probability) {
+        data[index + 3] = 0
+        continue
+      }
+      const band = roll / probability
+      const t = clamp01(b + (band < 0.35 ? 0.22 : band < 0.7 ? 0 : -0.22))
+      const tone = palette.light ? 1 : 0.42 + 0.5 * t
+      data[index] = (shade[0] + (lit[0] - shade[0]) * t) * tone
+      data[index + 1] = (shade[1] + (lit[1] - shade[1]) * t) * tone
+      data[index + 2] = (shade[2] + (lit[2] - shade[2]) * t) * tone
+      data[index + 3] = 255
+    }
+  }
+
+  const updateSurface = (time: number, animate: boolean) => {
+    if (!surfaceImage) return
+    const data = surfaceImage.data
+    const tick = Math.floor(time / SURFACE_TICK_MS)
+    if (surfacePaintedPhase < 0 || Math.abs(phase - surfacePaintedPhase) > SURFACE_PHASE_STEP) {
+      if (animate) surfaceTick = tick
+      for (let k = 0; k < SURFACE_BUCKETS; k++) paintSurfaceBucket(data, k, surfaceTick)
+      surfacePaintedPhase = phase
+    } else {
+      if (!animate || tick <= surfaceTick) return
+      // After a pause only catch up a few ticks; stale buckets refresh on their next turn.
+      for (let t = Math.max(surfaceTick + 1, tick - 4); t <= tick; t++)
+        paintSurfaceBucket(data, t % SURFACE_BUCKETS, t)
+      surfaceTick = tick
+    }
+    surfaceContext.putImageData(
+      surfaceImage,
+      0,
+      0,
+      surfaceBoxX,
+      surfaceBoxY,
+      surfaceBoxSize,
+      surfaceBoxSize
+    )
   }
 
   const buildTitle = async () => {
@@ -945,6 +1005,7 @@ export function createLunarScene({
       layers.moon.style.opacity = moonAlpha.toFixed(3)
       layers.moonTo.style.opacity = phase.toFixed(3)
     }
+    updateSurface(time, dt > 0)
     data.fill(0)
 
     drawGlitter(data, time, dim)
@@ -956,52 +1017,6 @@ export function createLunarScene({
       if (dx * dx + dy * dy < mr * mr * 1.1) continue
       const pulse = 0.5 + 0.5 * Math.sin(time * 0.0011 + starPhase[i] * 7)
       plot(data, width, height, starX[i], starY[i], palette.star, pulse * pulse * pulse * 0.9)
-    }
-
-    // Surface grain: points on a slowly spinning, slightly tilted sphere; only the
-    // near hemisphere is drawn, lit by the same light as the sprite.
-    // The moving pixels take their brightness from the moon's own shading (light,
-    // craters, maria), so the disc keeps its look while its grain turns.
-    const surfaceColor = palette.light ? palette.shade : palette.lit
-    const spin = dt * SURFACE_SPIN * speedBoost
-    const spinCos = Math.cos(spin)
-    const spinSin = Math.sin(spin)
-    // Re-normalise now and then so float error never shrinks or grows the sphere.
-    const renormalise = dt > 0 && ++surfaceFrames % 600 === 0
-    const spriteCenter = spriteSize / 2
-    const surfaceAlpha = palette.light ? moonAlpha : moonAlpha * 0.95
-    for (let i = 0; i < surfaceCount; i++) {
-      if (dt > 0) {
-        const sinLon = surfaceSinLon[i]
-        const cosLon = surfaceCosLon[i]
-        surfaceSinLon[i] = sinLon * spinCos + cosLon * spinSin
-        surfaceCosLon[i] = cosLon * spinCos - sinLon * spinSin
-        if (renormalise) {
-          const length = Math.hypot(surfaceSinLon[i], surfaceCosLon[i])
-          surfaceSinLon[i] /= length
-          surfaceCosLon[i] /= length
-        }
-      }
-      const cosLat = surfaceCosLat[i]
-      const sx = cosLat * surfaceSinLon[i]
-      const sy = surfaceSinLat[i]
-      const sz = cosLat * surfaceCosLon[i]
-      const y = sy * SURFACE_TILT_COS - sz * SURFACE_TILT_SIN
-      const z = sy * SURFACE_TILT_SIN + sz * SURFACE_TILT_COS
-      if (z <= 0) continue
-      const px = mx + sx * mr
-      const py = my + y * mr
-      if (px < 0 || py < 0 || px >= width || py >= height) continue
-      const texel =
-        ((spriteCenter + y * spriteRadius) | 0) * spriteSize +
-        ((spriteCenter + sx * spriteRadius) | 0)
-      const from = shadeFrom[texel]
-      const to = shadeTo[texel]
-      if (from === 0 || to === 0) continue
-      const b = (from + (to - from) * phase - 1) / 254
-      const twinkle = 0.8 + 0.2 * Math.sin(time * 0.0016 + surfacePhase[i])
-      const alpha = palette.light ? 0.08 + 0.8 * (1 - b) : 0.12 + 0.85 * b
-      plot(data, width, height, px, py, surfaceColor, alpha * twinkle * surfaceAlpha)
     }
 
     // Dust shell: thickness is capped in pixels so the huge cropped moon stays crisp.

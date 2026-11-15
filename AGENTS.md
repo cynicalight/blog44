@@ -99,7 +99,7 @@
 
 **结论**
 
-- 非管理页面不再有顶部导航栏：`components/site-chrome.tsx` 挂载 `LunarChrome`，固定的全屏 Canvas 在 `/` 绘制大月球、对角线海面和像素标题，在其他路由绘制左上角小月球和角落海面；小月球的月相随阅读进度变化。悬停或点击月球展开站点导航，内页额外提供 HOME。页面标题统一使用 `PageHeader`，文章和画廊详情页的正文放在 `ReadingSurface` 中以保证可读性。Canvas 在标签页隐藏和开启减少动态效果时暂停。
+- 非管理页面不再有顶部导航栏：`components/site-chrome.tsx` 挂载 `LunarChrome`，固定的全屏 Canvas 在 `/` 绘制大月球、对角线海面和像素标题，在其他路由绘制左上角小月球和角落海面；小月球的月相随阅读进度变化。月面颗粒是位置固定的像素，按 90 个错开的桶逐帧重抽明暗色调（参考 omp.sh 首页的同类效果），不再叠加移动的粒子层。悬停或点击月球展开站点导航，内页额外提供 HOME。页面标题统一使用 `PageHeader`，文章和画廊详情页的正文放在 `ReadingSurface` 中以保证可读性。Canvas 在标签页隐藏和开启减少动态效果时暂停。
 - 内容由 `data/blog`、`data/gallery`、`data/projects` 等 MDX 源文件进入 Contentlayer；构建时生成标签数据和本地搜索索引。新增画廊 MDX 后仍需手动更新 `data/gallery.ts`。
 - 浏览量 Route Handlers 通过 Prisma `views` 表读写；开发环境的 POST 不会自增，生产环境才会写入。
 - 本地开发可访问 `/api/admin/auth/local-preview` 获取一小时免登录预览会话并进入新建文章页；入口仅接受 development 模式下的本机 Host，拒绝 Vercel 环境与跨站导航，生产环境拒绝预览会话。预览服务应绑定 `127.0.0.1`。
