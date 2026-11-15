@@ -78,6 +78,8 @@ export async function generateRssFeed() {
     // RSS for tags
     for (const tag of Object.keys(tagData)) {
       const filteredPosts = blogs.filter((p) => p.tags.map((t) => slug(t)).includes(tag))
+      // Tags used only by projects or galleries have no blog feed.
+      if (filteredPosts.length === 0) continue
       const rss = generateRss(filteredPosts, `tags/${tag}/feed.xml`)
       const rssPath = path.join('public', 'tags', tag)
       mkdirSync(rssPath, { recursive: true })
