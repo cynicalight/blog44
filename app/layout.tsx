@@ -7,9 +7,8 @@ import 'css/gallery.css'
 
 import clsx from 'clsx'
 import type { Metadata } from 'next'
-import type { SearchConfig } from 'pliny/search'
-import { SearchProvider } from 'pliny/search'
 import { UmamiAnalytics } from '~/components/analytics/umami'
+import { MoonSearchProvider } from '~/components/lunar/moon-search'
 import { SiteChrome } from '~/components/site-chrome'
 import { SITE_METADATA } from '~/data/site-metadata'
 import { ThemeProviders } from './theme-providers'
@@ -72,7 +71,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       )}
       suppressHydrationWarning
     >
-      <link rel="apple-touch-icon" sizes="76x76" href={`https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/18/1863a330ef629f70969df36034f2105c3d49b63107bc6dc352860c7e17c919b4.ico`} />
+      <link
+        rel="apple-touch-icon"
+        sizes="76x76"
+        href={`https://bu44er-1313346488.cos.ap-shanghai.myqcloud.com/bu44er-ink/assets/18/1863a330ef629f70969df36034f2105c3d49b63107bc6dc352860c7e17c919b4.ico`}
+      />
       <link
         rel="icon"
         type="image/png"
@@ -106,9 +109,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       >
         <ThemeProviders>
           <UmamiAnalytics websiteId={SITE_METADATA.analytics.umamiAnalytics.websiteId} />
-          <SearchProvider searchConfig={SITE_METADATA.search as SearchConfig}>
+          <MoonSearchProvider
+            searchDocumentsPath={SITE_METADATA.search.kbarConfig.searchDocumentsPath}
+          >
             <SiteChrome>{children}</SiteChrome>
-          </SearchProvider>
+          </MoonSearchProvider>
           <SpeedInsights />
         </ThemeProviders>
         <Analytics />

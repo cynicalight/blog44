@@ -19,7 +19,7 @@ export function ThemeSwitcher() {
       aria-label={`Switch to ${nextTheme} theme`}
       title={`切换到${nextTheme === 'dark' ? '深色' : '浅色'}模式`}
       onClick={() => setTheme(nextTheme)}
-      className="flex h-9 w-9 items-center justify-center rounded transition-colors hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:hover:bg-gray-700 sm:h-[34px] sm:w-[34px]"
+      className="flex h-9 w-9 items-center justify-center rounded outline-none transition-colors hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-900/60 dark:hover:bg-gray-700 dark:focus-visible:ring-white/60 sm:h-[34px] sm:w-[34px]"
       data-umami-event="nav-theme-switcher"
     >
       {mounted ? (

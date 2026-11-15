@@ -81,7 +81,7 @@ export function ScriptSwitcher() {
       className={clsx(
         'flex h-9 w-9 items-center justify-center rounded text-[17px] font-semibold leading-none transition-colors sm:h-[34px] sm:w-[34px] sm:text-lg',
         'hover:bg-gray-200 dark:hover:bg-gray-700',
-        'focus:outline-none focus:ring-2 focus:ring-indigo-500'
+        'outline-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-900/60 dark:focus-visible:ring-white/60'
       )}
       data-umami-event="nav-script-switcher"
     >

@@ -4,7 +4,6 @@ import clsx from 'clsx'
 import { useTheme } from 'next-themes'
 import { usePathname } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type RefObject } from 'react'
-import { SearchButton } from '~/components/header/search'
 import { ScriptSwitcher } from '~/components/header/script-switcher'
 import { ThemeSwitcher } from '~/components/header/theme-switcher'
 import { Link } from '~/components/ui/link'
@@ -92,7 +91,6 @@ export function LunarChrome() {
       >
         <ScriptSwitcher />
         <ThemeSwitcher />
-        <SearchButton />
       </div>
     </>
   )

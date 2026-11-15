@@ -81,7 +81,7 @@ export function ProfileCard() {
           ])}
         />
         <ProfileCardInfo />
-        <span className="h-1.5 bg-gradient-to-r from-green-300 via-blue-500 to-purple-600" />
+        <span className="h-1.5 bg-gradient-to-r from-gray-500 via-gray-200 to-gray-500" />
       </div>
     </div>
   )

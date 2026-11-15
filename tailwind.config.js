@@ -92,8 +92,9 @@ module.exports = {
         ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
+        // Moon theme: highlights are neutral grays/white, never indigo.
         primary: {
-          ...colors.indigo,
+          ...colors.neutral,
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
         },
@@ -183,7 +184,7 @@ module.exports = {
             '--tw-prose-body': theme('colors.black'),
             '--tw-prose-headings': theme('colors.black'),
             '--tw-prose-lead': theme('colors.gray.800'),
-            '--tw-prose-links': theme('colors.primary.500'),
+            '--tw-prose-links': theme('colors.primary.900'),
             '--tw-prose-bold': theme('colors.black'),
             '--tw-prose-counters': theme('colors.gray.600'),
             '--tw-prose-bullets': theme('colors.gray.400'),
@@ -191,18 +192,18 @@ module.exports = {
             '--tw-prose-quotes': theme('colors.black'),
             '--tw-prose-quote-borders': theme('colors.gray.200'),
             '--tw-prose-captions': theme('colors.gray.600'),
-            '--tw-prose-code': theme('colors.indigo.500'),
+            '--tw-prose-code': theme('colors.primary.800'),
             '--tw-prose-pre-code': theme('colors.gray.200'),
             '--tw-prose-pre-bg': theme('colors.gray.800'),
             '--tw-prose-th-borders': theme('colors.gray.300'),
             '--tw-prose-td-borders': theme('colors.gray.200'),
             a: {
-              color: theme('colors.primary.500'),
+              color: theme('colors.primary.900'),
               'text-underline-offset': '4px',
               '&:hover': {
                 color: `${theme('colors.primary.600')}`,
               },
-              code: { color: theme('colors.primary.400') },
+              code: { color: theme('colors.primary.700') },
             },
             'h1,h2,h3,h4,h5,h6': {
               scrollMarginTop: '6rem',
@@ -239,7 +240,7 @@ module.exports = {
               },
             },
             code: {
-              color: theme('colors.indigo.500'),
+              color: theme('colors.primary.800'),
               fontWeight: '500',
             },
             strong: {
@@ -301,7 +302,7 @@ module.exports = {
             '--tw-prose-body': '#DED7CD',
             '--tw-prose-headings': '#DED7CD',
             '--tw-prose-lead': theme('colors.gray.300'),
-            '--tw-prose-links': theme('colors.primary.400'),
+            '--tw-prose-links': theme('colors.primary.100'),
             '--tw-prose-bold': theme('colors.white'),
             '--tw-prose-counters': theme('colors.gray.400'),
             '--tw-prose-bullets': theme('colors.gray.600'),
@@ -309,20 +310,20 @@ module.exports = {
             '--tw-prose-quotes': theme('colors.white'),
             '--tw-prose-quote-borders': theme('colors.gray.700'),
             '--tw-prose-captions': theme('colors.gray.400'),
-            '--tw-prose-code': theme('colors.primary.400'),
+            '--tw-prose-code': theme('colors.primary.200'),
             '--tw-prose-pre-code': theme('colors.gray.300'),
             '--tw-prose-pre-bg': theme('colors.gray.800'),
             '--tw-prose-th-borders': theme('colors.gray.600'),
             '--tw-prose-td-borders': theme('colors.gray.700'),
             a: {
-              color: theme('colors.primary.400'),
+              color: theme('colors.primary.100'),
               '&:hover': {
-                color: `${theme('colors.primary.400')}`,
+                color: theme('colors.white'),
               },
-              code: { color: theme('colors.primary.400') },
+              code: { color: theme('colors.primary.200') },
             },
             code: {
-              color: theme('colors.primary.400'),
+              color: theme('colors.primary.200'),
             },
             strong: {
               color: '#ff6b6b',

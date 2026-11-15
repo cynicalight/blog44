@@ -103,6 +103,7 @@
 - 内容由 `data/blog`、`data/gallery`、`data/projects` 等 MDX 源文件进入 Contentlayer；构建时生成标签数据和本地搜索索引。新增画廊 MDX 后仍需手动更新 `data/gallery.ts`。
 - 浏览量 Route Handlers 通过 Prisma `views` 表读写；开发环境的 POST 不会自增，生产环境才会写入。
 - 本地开发可访问 `/api/admin/auth/local-preview` 获取一小时免登录预览会话并进入新建文章页；入口仅接受 development 模式下的本机 Host，拒绝 Vercel 环境与跨站导航，生产环境拒绝预览会话。预览服务应绑定 `127.0.0.1`。
+- 全局搜索（Cmd/Ctrl+K）由 `components/lunar/moon-search.tsx` 基于 `kbar` 实现，读取构建生成的 `search.json`，不再使用 pliny 的 `SearchProvider`；页面上不放搜索按钮。Tailwind 的 `primary` 色板映射为 `neutral`，高亮与焦点环只用月球主题的黑白灰，不使用 indigo/紫色。
 - Project 是带 `github`（规范化为 `owner/repo`）字段的 MDX 文章，`/projects` 和 `/projects/[...slug]` 复用文章布局，并以 `revalidate = 3600` 每小时重新拉取 star 数；配置了 `GITHUB_API_TOKEN` 时走 GraphQL，否则回退到未认证的 GitHub REST 接口。
 - 博客默认字形为简体（`DEFAULT_BLOG_SCRIPT_VARIANT = 'zh-Hans'`），`/blog/...` 是简体，`/blog/zh-hant/...` 是繁体，访客的字形偏好保存在 `localStorage`。
 - 管理后台通过同源 `/api/admin/*` 工作：凭据由环境变量校验，签名会话放入 HttpOnly Cookie；文章 CRUD 支持 Blog、Gallery、Project 三类（Project 必填 GitHub 仓库），通过 GitHub API 读取并提交仓库中的 MDX 内容，而不是写入本地文件或独立数据库。

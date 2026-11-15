@@ -254,3 +254,22 @@ samp {
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
+
+/* @tailwindcss/forms focuses inputs with a blue ring; use the moon gray instead. */
+@layer base {
+  [type='text']:focus,
+  [type='email']:focus,
+  [type='url']:focus,
+  [type='password']:focus,
+  [type='number']:focus,
+  [type='date']:focus,
+  [type='search']:focus,
+  [type='tel']:focus,
+  [multiple]:focus,
+  textarea:focus,
+  select:focus,
+  input:where(:not([type])):focus {
+    --tw-ring-color: rgb(115 115 115 / 0.6);
+    border-color: rgb(115 115 115);
+  }
+}
