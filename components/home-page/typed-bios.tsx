@@ -28,7 +28,7 @@ const COMPLETED_LINE_DELAY = 5000
 const INTERACTION_RADIUS = 96
 const INTERACTION_FORCE = 0.65
 
-export function TypedBios() {
+export function TypedBios({ align = 'center' }: { align?: 'left' | 'center' | 'right' }) {
   const textRef = useRef<HTMLSpanElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const particlesRef = useRef<Particle[]>([])
@@ -119,7 +119,8 @@ export function TypedBios() {
       sourceContext.font = `${styles.fontStyle} ${styles.fontWeight} ${styles.fontSize}/${styles.lineHeight} ${styles.fontFamily}`
       sourceContext.textBaseline = 'middle'
       const textWidth = sourceContext.measureText(textElement.textContent || '').width
-      const textStart = (width - textWidth) / 2
+      const textStart =
+        align === 'left' ? 0 : align === 'right' ? width - textWidth : (width - textWidth) / 2
       sourceContext.fillText(textElement.textContent || '', textStart, height / 2 + 1)
 
       const pixels = sourceContext.getImageData(0, 0, source.width, source.height).data
@@ -195,11 +196,13 @@ export function TypedBios() {
       observer.disconnect()
       if (frameRef.current) cancelAnimationFrame(frameRef.current)
     }
-  }, [text])
+  }, [text, align])
 
   return (
     <div
-      className="relative mx-auto h-8 w-full max-w-3xl cursor-none select-none md:h-9"
+      className={`relative h-8 w-full max-w-3xl cursor-none select-none md:h-9 ${
+        align === 'center' ? 'mx-auto' : align === 'right' ? 'ml-auto' : ''
+      }`}
       onPointerEnter={(event) => {
         const rect = event.currentTarget.getBoundingClientRect()
         pointerRef.current = { x: event.clientX - rect.left, y: event.clientY - rect.top, active: true }

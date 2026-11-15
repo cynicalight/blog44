@@ -17,7 +17,7 @@ export function SearchArticles({
           type="text"
           onChange={onChange}
           placeholder={label}
-          className="block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-900 dark:bg-gray-800 dark:text-gray-100"
+          className="block w-full rounded-none border border-dashed border-gray-400 bg-transparent px-4 py-2 font-mono text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-900 focus:ring-0 dark:border-white/20 dark:text-gray-100 dark:focus:border-white/60"
         />
       </label>
       <Search

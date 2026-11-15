@@ -11,11 +11,10 @@ import type { SearchConfig } from 'pliny/search'
 import { SearchProvider } from 'pliny/search'
 import { UmamiAnalytics } from '~/components/analytics/umami'
 import { SiteChrome } from '~/components/site-chrome'
-import { TiltedGridBackground } from '~/components/ui/tilted-grid-background'
 import { SITE_METADATA } from '~/data/site-metadata'
 import { ThemeProviders } from './theme-providers'
 import { SpeedInsights } from '@vercel/speed-insights/next'
-import { FONT_JETBRAINS_MONO, FONT_PLAYPEN_SANS, FONT_EXO_2 } from '~/lib/fonts'
+import { FONT_JETBRAINS_MONO, FONT_PLAYPEN_SANS, FONT_EXO_2, FONT_SILKSCREEN } from '~/lib/fonts'
 import { Analytics } from '@vercel/analytics/next'
 
 export const metadata: Metadata = {
@@ -68,7 +67,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         'scroll-smooth',
         FONT_JETBRAINS_MONO.variable,
         FONT_PLAYPEN_SANS.variable,
-        FONT_EXO_2.variable
+        FONT_EXO_2.variable,
+        FONT_SILKSCREEN.variable
       )}
       suppressHydrationWarning
     >
@@ -104,7 +104,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           'dark:bg-dark dark:text-gray-100',
         ])}
       >
-        <TiltedGridBackground className="inset-x-0 top-0 z-[-1] h-[50vh]" />
         <ThemeProviders>
           <UmamiAnalytics websiteId={SITE_METADATA.analytics.umamiAnalytics.websiteId} />
           <SearchProvider searchConfig={SITE_METADATA.search as SearchConfig}>

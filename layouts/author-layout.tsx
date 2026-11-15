@@ -15,7 +15,6 @@ export function AuthorLayout({ children }: Props) {
       <PageHeader
         title="About"
         description="A bit of background on who I am, what I do, and why I started this blog."
-        className="border-b border-gray-200 dark:border-gray-700"
       />
       <div className="py-8 md:grid md:grid-cols-3">
         <div className="pr-4">

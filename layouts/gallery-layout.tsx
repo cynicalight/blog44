@@ -8,6 +8,7 @@ import { PostTitle } from '~/components/blog/post-title'
 import { ScrollButtons } from '~/components/blog/scroll-buttons'
 import { SocialShare } from '~/components/blog/social-share'
 import { Container } from '~/components/ui/container'
+import { ReadingSurface } from '~/components/lunar/pixel-ui'
 import { SITE_METADATA } from '~/data/site-metadata'
 import { EditOnGithub } from '~/components/blog/edit-on-github'
 import { ParallaxGallery } from '~/components/gallery/parallax-gallery'
@@ -38,40 +39,42 @@ export function GalleryLayout({ content, children }: GalleryLayoutProps) {
   return (
     <Container className="pt-4 lg:pt-12">
       <ScrollButtons />
-      <article className="space-y-4 pt-4 lg:space-y-8">
-        <div className="space-y-4">
-          <TagsList tags={tags} />
-          <PostTitle>{title}</PostTitle>
-          <dl>
-            <div>
-              <dt className="sr-only">Published on</dt>
-              <BlogMeta date={date} slug={slug} readingTime={readingTime} />
-            </div>
-          </dl>
-        </div>
-
-        {/* 正文只显示文字描述 */}
-        <div className="gallery-grid prose max-w-none dark:prose-invert [&>p:empty]:hidden [&>p]:m-0">
-          {children}
-        </div>
-
-        {/* 视差滚动画廊 */}
-        {galleryImages.length > 0 && (
-          <div className="mt-4">
-            <ParallaxGallery images={galleryImages} />
+      <ReadingSurface>
+        <article className="space-y-4 pt-4 lg:space-y-8">
+          <div className="space-y-4">
+            <TagsList tags={tags} />
+            <PostTitle>{title}</PostTitle>
+            <dl>
+              <div>
+                <dt className="sr-only">Published on</dt>
+                <BlogMeta date={date} slug={slug} readingTime={readingTime} />
+              </div>
+            </dl>
           </div>
-        )}
 
-        <div className="space-y-8 border-t border-gray-200 pt-6 dark:border-gray-700">
-          <div className="flex justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <EditOnGithub filePath={filePath} />
-            </div>
-            <SocialShare postUrl={postUrl} title={title} />
+          {/* 正文只显示文字描述 */}
+          <div className="gallery-grid prose max-w-none dark:prose-invert [&>p:empty]:hidden [&>p]:m-0">
+            {children}
           </div>
-          <Comments slug={slug} />
-        </div>
-      </article>
+
+          {/* 视差滚动画廊 */}
+          {galleryImages.length > 0 && (
+            <div className="mt-4">
+              <ParallaxGallery images={galleryImages} />
+            </div>
+          )}
+
+          <div className="space-y-8 border-t border-gray-200 pt-6 dark:border-gray-700">
+            <div className="flex justify-between gap-4">
+              <div className="flex items-center gap-2">
+                <EditOnGithub filePath={filePath} />
+              </div>
+              <SocialShare postUrl={postUrl} title={title} />
+            </div>
+            <Comments slug={slug} />
+          </div>
+        </article>
+      </ReadingSurface>
     </Container>
   )
 }

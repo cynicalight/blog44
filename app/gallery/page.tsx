@@ -15,7 +15,6 @@ export default function GalleryPage() {
       <PageHeader
         title="Gallery"
         description="This is my life, my world, my journey, and my gallery."
-        className="border-b border-gray-200 dark:border-gray-700"
       />
       <div className="py-10">
         <div className="grid-cols-2 gap-x-6 gap-y-10 space-y-10 md:grid md:space-y-0">

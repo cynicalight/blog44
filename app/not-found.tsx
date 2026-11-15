@@ -1,29 +1,23 @@
-import { Button } from '~/components/ui/button'
+import { PixelEyebrow } from '~/components/lunar/pixel-ui'
 import { Container } from '~/components/ui/container'
 import { Link } from '~/components/ui/link'
-import { Twemoji } from '~/components/ui/twemoji'
-import FourOhFour from '~/icons/404.svg'
 
 export default function NotFound() {
   return (
-    <Container className="pt-4 lg:pt-12">
-      <div className="flex flex-col items-center justify-center py-6">
-        <FourOhFour className="mx-auto aspect-square w-[300px] max-w-[80vw] md:w-[500px]" />
-        <div className="space-x-2 pt-8 md:space-y-5 md:pt-12 xl:pt-16">
-          <div className="max-w-md text-center">
-            <p className="mb-4 text-xl font-bold leading-normal md:text-2xl">
-              Hmm... it looks like you're lost.
-              <Twemoji emoji={'face-with-monocle'} />
-            </p>
-            <p className="mb-8">
-              But don't worry, you can find plenty of other things on my homepage.
-            </p>
-            <Link href="/">
-              <Button>Back to homepage</Button>
-            </Link>
-          </div>
-        </div>
-      </div>
+    <Container className="flex min-h-[60vh] flex-col items-center justify-center gap-6 py-16 text-center">
+      <PixelEyebrow phase={0}>404 / Lost in orbit</PixelEyebrow>
+      <h1 className="font-[family-name:var(--font-exo-2)] text-4xl font-semibold tracking-tight md:text-6xl">
+        Nothing out here.
+      </h1>
+      <p className="max-w-md text-gray-600 dark:text-gray-400">
+        This page drifted off. Hover the moon in the corner to find your way, or head home.
+      </p>
+      <Link
+        href="/"
+        className="border border-dashed border-gray-400 px-4 py-2 font-pixel text-[11px] tracking-[0.25em] transition-colors hover:border-gray-900 dark:border-white/20 dark:hover:border-white"
+      >
+        BACK HOME →
+      </Link>
     </Container>
   )
 }

@@ -153,65 +153,6 @@ export const Blog = defineDocumentType(() => ({
   },
 }))
 
-export const Snippet = defineDocumentType(() => ({
-  name: 'Snippet',
-  filePathPattern: 'snippets/**/*.mdx',
-  contentType: 'mdx',
-  fields: {
-    heading: { type: 'string', required: true },
-    title: { type: 'string', required: true },
-    icon: { type: 'string', required: true },
-    date: { type: 'date', required: true },
-    tags: { type: 'list', of: { type: 'string' }, default: [] },
-    lastmod: { type: 'date' },
-    draft: { type: 'boolean' },
-    summary: { type: 'string' },
-    images: { type: 'json' },
-    authors: { type: 'list', of: { type: 'string' } },
-    layout: { type: 'string' },
-    bibliography: { type: 'string' },
-  },
-  computedFields: {
-    ...computedFields,
-    imagesList: {
-      type: 'list',
-      of: { type: 'string' },
-      resolve: (doc) => {
-        // 使用正则提取所有图片链接
-        // 匹配 ![](/path/to/image) 或 <img src="/path/to/image" />
-        const markdownImageRegex = /!\[.*?\]\((.*?)\)/g
-        const htmlImageRegex = /<img.*?src=["'](.*?)["']/g
-
-        const images: string[] = []
-        let match
-
-        while ((match = markdownImageRegex.exec(doc.body.raw)) !== null) {
-          images.push(match[1])
-        }
-
-        while ((match = htmlImageRegex.exec(doc.body.raw)) !== null) {
-          images.push(match[1])
-        }
-
-        return images
-      },
-    },
-    structuredData: {
-      type: 'json',
-      resolve: (doc) => ({
-        '@context': 'https://schema.org',
-        '@type': 'CodeSnippet',
-        headline: doc.title,
-        datePublished: doc.date,
-        dateModified: doc.lastmod || doc.date,
-        description: doc.summary,
-        image: doc.images ? doc.images[0] : SITE_METADATA.socialBanner,
-        url: `${SITE_METADATA.siteUrl}/${doc._raw.flattenedPath}`,
-      }),
-    },
-  },
-}))
-
 export const Gallery = defineDocumentType(() => ({
   name: 'Gallery',
   filePathPattern: 'gallery/**/*.mdx',
@@ -302,7 +243,7 @@ export const Author = defineDocumentType(() => ({
 
 export default makeSource({
   contentDirPath: 'data',
-  documentTypes: [Blog, Snippet, Gallery, Author],
+  documentTypes: [Blog, Gallery, Author],
   mdx: {
     cwd: process.cwd(),
     remarkPlugins: [
@@ -339,10 +280,9 @@ export default makeSource({
     ],
   },
   onSuccess: async (importData) => {
-    const { allBlogs, allSnippets, allGalleries } = await importData()
+    const { allBlogs, allGalleries } = await importData()
     createTagCount([
       ...allBlogs.filter((post) => isDefaultBlogScriptVariant(post)),
-      ...allSnippets,
       ...allGalleries,
     ])
     createSearchIndex(allBlogs)

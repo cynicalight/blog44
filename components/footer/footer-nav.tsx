@@ -1,5 +1,6 @@
 import { ExternalLink } from 'lucide-react'
 import { Fragment } from 'react'
+import { PixelEyebrow } from '~/components/lunar/pixel-ui'
 import { GrowingUnderline } from '~/components/ui/growing-underline'
 import { Link } from '~/components/ui/link'
 import { FOOTER_NAV_LINKS, FOOTER_PERSONAL_STUFF } from '~/data/navigation'
@@ -8,9 +9,7 @@ export function FooterNav() {
   return (
     <div className="flex flex-col gap-4 px-1 md:flex-row md:justify-end md:gap-24 md:px-0 md:text-right">
       <div className="space-y-1 md:space-y-4">
-        <div className="flex h-11 items-center font-semibold md:justify-end">
-          <span>Sitemap</span>
-        </div>
+        <PixelEyebrow className="h-11 md:justify-end">Sitemap</PixelEyebrow>
         <ul className="flex gap-4 md:flex-col md:gap-3">
           {FOOTER_NAV_LINKS.map((link, idx) => (
             <Fragment key={link.title}>
@@ -25,9 +24,9 @@ export function FooterNav() {
         </ul>
       </div>
       <div className="space-y-1 md:space-y-4">
-        <div className="flex h-11 items-center font-semibold">
-          <span>Personal stuff</span>
-        </div>
+        <PixelEyebrow className="h-11 md:justify-end" phase={0.75}>
+          Personal stuff
+        </PixelEyebrow>
         <ul className="flex gap-4 md:flex-col md:gap-3">
           {FOOTER_PERSONAL_STUFF.map((link, idx) => (
             <Fragment key={link.title}>

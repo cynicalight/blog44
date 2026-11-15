@@ -11,6 +11,7 @@ import { ScrollButtons } from '~/components/blog/scroll-buttons'
 import { SocialShare } from '~/components/blog/social-share'
 import { TagsList } from '~/components/blog/tags'
 import { Container } from '~/components/ui/container'
+import { ReadingSurface } from '~/components/lunar/pixel-ui'
 import { SITE_METADATA } from '~/data/site-metadata'
 
 interface LayoutProps {
@@ -27,34 +28,36 @@ export function PostBanner({ content, children }: LayoutProps) {
   return (
     <Container className="pt-4 lg:pt-12">
       <ScrollButtons />
-      <article className="space-y-6 pt-6 lg:space-y-16">
-        <div className="space-y-4">
-          <TagsList tags={tags} />
-          <PostTitle>{title}</PostTitle>
-          <dl>
-            <div>
-              <dt className="sr-only">Published on</dt>
-              <BlogMeta date={date} lastmod={lastmod} slug={slug} readingTime={readingTime} />
+      <ReadingSurface>
+        <article className="space-y-6 pt-6 lg:space-y-16">
+          <div className="space-y-4">
+            <TagsList tags={tags} />
+            <PostTitle>{title}</PostTitle>
+            <dl>
+              <div>
+                <dt className="sr-only">Published on</dt>
+                <BlogMeta date={date} lastmod={lastmod} slug={slug} readingTime={readingTime} />
+              </div>
+            </dl>
+            <div className="space-y-4 pt-4 md:pt-10">
+              <Banner
+                banner={images?.[0] || SITE_METADATA.socialBanner}
+                className="-mx-4 sm:-mx-8 md:-mx-10"
+              />
             </div>
-          </dl>
-          <div className="space-y-4 pt-4 md:pt-10">
-            <Banner
-              banner={images?.[0] || SITE_METADATA.socialBanner}
-              className="lg:-mx-8 xl:-mx-36 2xl:-mx-52"
-            />
           </div>
-        </div>
-        <div className="prose prose-lg max-w-none dark:prose-invert">{children}</div>
-        <div className="space-y-8 border-t border-gray-200 pt-4 dark:border-gray-700">
-          <div className="flex justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <EditOnGithub filePath={filePath} />
+          <div className="prose prose-lg max-w-none dark:prose-invert">{children}</div>
+          <div className="space-y-8 border-t border-gray-200 pt-4 dark:border-gray-700">
+            <div className="flex justify-between gap-4">
+              <div className="flex items-center gap-2">
+                <EditOnGithub filePath={filePath} />
+              </div>
+              <SocialShare postUrl={postUrl} title={title} />
             </div>
-            <SocialShare postUrl={postUrl} title={title} />
+            <Comments slug={slug} />
           </div>
-          <Comments slug={slug} />
-        </div>
-      </article>
+        </article>
+      </ReadingSurface>
     </Container>
   )
 }

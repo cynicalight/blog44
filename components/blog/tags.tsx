@@ -22,10 +22,10 @@ export function Tag({ text, size = 'sm' }: { text: string; size?: 'sm' | 'md' })
     <Link
       href={`/tags/${slug(text)}`}
       className={clsx([
-        'rounded-lg px-2 py-0.5 font-semibold',
-        'bg-slate-100 text-gray-600 hover:text-gray-800',
-        'dark:bg-gray-700 dark:text-gray-300',
-        size === 'sm' ? 'text-sm' : 'text-base',
+        'border border-dashed px-2 py-0.5 font-mono tracking-wide transition-colors',
+        'border-gray-300 text-gray-600 hover:border-gray-500 hover:text-gray-950',
+        'dark:border-white/15 dark:text-gray-300 dark:hover:border-white/40 dark:hover:text-white',
+        size === 'sm' ? 'text-xs' : 'text-sm',
       ])}
     >
       <span data-umami-event={`tag-${tagName}`}>#{tagName}</span>

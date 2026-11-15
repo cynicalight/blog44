@@ -70,6 +70,7 @@ module.exports = {
         14: '3.5rem',
       },
       fontFamily: {
+        pixel: ['var(--font-silkscreen)', ...fontFamily.mono],
         // sans: ['var(--font-nunito)', ...fontFamily.sans],
         sans: [
           '"SwiftLTPro"',

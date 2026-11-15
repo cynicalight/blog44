@@ -65,6 +65,7 @@
 - `data/` 保存站点元数据和 MDX 内容源，`contentlayer.config.ts` 定义内容模型；`public/` 保存静态资源。
 - `server/` 放服务端辅助模块，例如 GitHub GraphQL 查询、Prisma client、Markdown TOC 提取；`prisma/` 维护浏览量表的 schema 与迁移。
 - `lib/admin-*` 与 `app/api/admin/` 共同实现管理后台认证、GitHub 内容读写和 COS 图片上传。
+- `components/lunar/` 是全站像素月球视觉层：`engine.ts` 是单一 Canvas 场景，`lunar-chrome.tsx` 提供背景与月球导航，`pixel-ui.tsx` 提供共享像素组件，`lunar-home.tsx` 是首页内容。
 - `scripts/cos-assets*` 负责静态资源清点、COS 上传与校验；`data/cos-assets-manifest.json` 是当前 Git 资源的内容哈希清单。
 
 **来源**
@@ -98,7 +99,8 @@
 
 **结论**
 
-- 内容由 `data/blog`、`data/gallery`、`data/snippets` 等 MDX 源文件进入 Contentlayer；构建时生成标签数据和本地搜索索引。新增画廊 MDX 后仍需手动更新 `data/gallery.ts`。
+- 非管理页面不再有顶部导航栏：`components/site-chrome.tsx` 挂载 `LunarChrome`，固定的全屏 Canvas 在 `/` 绘制大月球、对角线海面和像素标题，在其他路由绘制左上角小月球和角落海面；小月球的月相随阅读进度变化。悬停或点击月球展开站点导航，内页额外提供 HOME。页面标题统一使用 `PageHeader`，文章和画廊详情页的正文放在 `ReadingSurface` 中以保证可读性。Canvas 在标签页隐藏和开启减少动态效果时暂停。
+- 内容由 `data/blog`、`data/gallery` 等 MDX 源文件进入 Contentlayer；构建时生成标签数据和本地搜索索引。新增画廊 MDX 后仍需手动更新 `data/gallery.ts`。
 - 浏览量 Route Handlers 通过 Prisma `views` 表读写；开发环境的 POST 不会自增，生产环境才会写入。
 - 本地开发可访问 `/api/admin/auth/local-preview` 获取一小时免登录预览会话并进入新建文章页；入口仅接受 development 模式下的本机 Host，拒绝 Vercel 环境与跨站导航，生产环境拒绝预览会话。预览服务应绑定 `127.0.0.1`。
 - 管理后台通过同源 `/api/admin/*` 工作：凭据由环境变量校验，签名会话放入 HttpOnly Cookie；文章 CRUD 通过 GitHub API 读取并提交仓库中的 MDX 内容，而不是写入本地文件或独立数据库。
@@ -123,6 +125,8 @@
 - `components/admin/post-editor.tsx`
 - `components/admin/markdown-editor.tsx`
 - `components/admin/markdown-editor.css`
+- `components/lunar/`
+- `components/site-chrome.tsx`
 - `lib/admin-assets.ts`
 - `lib/admin-api-response.ts`
 - `app/api/admin/assets/route.ts`
@@ -150,6 +154,7 @@
 
 **结论**
 
+- 字体在 `lib/fonts.ts` 中通过 `next/font/google` 加载并以 CSS 变量挂到 `<html>`；像素小字使用 Silkscreen（Tailwind `font-pixel`），首页 Canvas 标题读取 `--font-exo-2`。
 - Next 侧配置主要分布在 `next.config.js`、`data/site-metadata.ts` 和 `contentlayer.config.ts`，覆盖 CSP、安全头、图片远程域和第三方内容功能。
 - 浏览量使用 Prisma 的 `DATABASE_URL`。管理后台在部署环境需要认证变量，以及具有内容读写权限的 GitHub token、仓库所有者、仓库名和目标分支配置。
 - COS 维护工具和管理后台图片上传共用 Bucket、Region、存储类型、前缀、公开域名和访问凭据。管理后台部署到 Vercel 后，Production 和需要使用上传功能的 Preview 环境必须分别配置这些服务端变量；变量不得使用 `NEXT_PUBLIC_` 前缀。`STANDARD` 与 `MAZ_STANDARD` 必须分别匹配单可用区和多可用区 Bucket。
