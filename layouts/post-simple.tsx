@@ -11,7 +11,6 @@ import { Container } from '~/components/ui/container'
 import { ReadingSurface } from '~/components/lunar/pixel-ui'
 import { PostBody } from '~/components/blog/post-body'
 import { SITE_METADATA } from '~/data/site-metadata'
-import { EditOnGithub } from '~/components/blog/edit-on-github'
 
 interface PostSimpleProps {
   content: CoreContent<Blog>
@@ -21,7 +20,7 @@ interface PostSimpleProps {
 }
 
 export function PostSimple({ content, children }: PostSimpleProps) {
-  const { slug, path, date, title, tags, readingTime, filePath } = content
+  const { slug, path, date, title, tags, readingTime } = content
   const postUrl = `${SITE_METADATA.siteUrl}/${path}`
 
   return (
@@ -43,10 +42,7 @@ export function PostSimple({ content, children }: PostSimpleProps) {
             <div className="prose prose-lg max-w-none pt-10 dark:prose-invert">{children}</div>
           </PostBody>
           <div className="space-y-8 pt-6">
-            <div className="flex justify-between gap-4">
-              <div className="flex items-center gap-2">
-                <EditOnGithub filePath={filePath} />
-              </div>
+            <div className="flex justify-end">
               <SocialShare postUrl={postUrl} title={title} />
             </div>
             <Comments slug={slug} />

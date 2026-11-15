@@ -1,11 +1,9 @@
-import type { Author, Blog } from 'contentlayer/generated'
+import type { Author, Blog, Project } from 'contentlayer/generated'
 import type { CoreContent } from 'pliny/utils/contentlayer'
 import type { ReactNode } from 'react'
-import { BackToPosts } from '~/components/blog/back-to-posts'
 import { Banner } from '~/components/blog/banner'
 import { BlogMeta } from '~/components/blog/blog-meta'
 import { Comments } from '~/components/blog/comments'
-import { EditOnGithub } from '~/components/blog/edit-on-github'
 import { PostNav } from '~/components/blog/post-nav'
 import { PostTitle } from '~/components/blog/post-title'
 import { ScrollButtons } from '~/components/blog/scroll-buttons'
@@ -18,15 +16,17 @@ import { PostBody } from '~/components/blog/post-body'
 import { SITE_METADATA } from '~/data/site-metadata'
 
 interface LayoutProps {
-  content: CoreContent<Blog>
+  content: CoreContent<Blog | Project>
   authorDetails: CoreContent<Author>[]
   next?: { path: string; title: string }
   prev?: { path: string; title: string }
   children: ReactNode
+  /** Extra line under the title (e.g. a project's repository badge). */
+  meta?: ReactNode
 }
 
-export function PostLayout({ content, next, prev, children }: LayoutProps) {
-  let { slug, path, images, lastmod, readingTime, date, title, tags, filePath, toc } = content
+export function PostLayout({ content, next, prev, children, meta }: LayoutProps) {
+  let { slug, path, images, lastmod, readingTime, date, title, tags, toc } = content
   let postUrl = `${SITE_METADATA.siteUrl}/${path}`
 
   return (
@@ -41,6 +41,7 @@ export function PostLayout({ content, next, prev, children }: LayoutProps) {
           <div className="space-y-4">
             <TagsList tags={tags} />
             <PostTitle>{title}</PostTitle>
+            {meta}
             <div className="space-y-4 pt-4 md:pt-10">
               <Banner banner={images?.[0] || SITE_METADATA.socialBanner} />
             </div>
@@ -60,12 +61,8 @@ export function PostLayout({ content, next, prev, children }: LayoutProps) {
             </div>
             {/* ≥1280px: pinned to the window's right edge, sticky alongside the article. */}
             <aside className="hidden lg:col-span-4 lg:block xl:absolute xl:right-[calc((100%_-_100vw)_/_2_+_1.5rem)] xl:top-0 xl:h-full xl:w-56">
-              <div className="space-y-4 divide-y divide-gray-200 dark:divide-gray-700 lg:sticky lg:top-24">
-                <BackToPosts label="Back to posts" />
-                <TableOfContents toc={toc} className="pt-4" />
-                <div className="flex flex-col gap-2 pt-4">
-                  <EditOnGithub filePath={filePath} />
-                </div>
+              <div className="lg:sticky lg:top-24">
+                <TableOfContents toc={toc} />
               </div>
             </aside>
           </div>

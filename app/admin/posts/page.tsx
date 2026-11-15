@@ -89,7 +89,7 @@ export default function AdminPostsPage() {
         <div>
           <h2 className="text-2xl font-semibold tracking-tight">文章管理</h2>
           <p className="text-sm text-muted-foreground">
-            管理 Blog 与 Gallery 内容，保存后会提交到 GitHub。
+            管理 Blog、Gallery 与 Project 内容，保存后会提交到 GitHub。
           </p>
         </div>
         <Button asChild>
@@ -150,7 +150,11 @@ export default function AdminPostsPage() {
                           {post.draft ? 'Draft' : 'Published'}
                         </Badge>
                         <Badge variant="secondary">
-                          {post.contentType === 'gallery' ? 'Gallery' : 'Blog'}
+                          {
+                            { blog: 'Blog', gallery: 'Gallery', project: 'Project' }[
+                              post.contentType
+                            ]
+                          }
                         </Badge>
                       </div>
                     </TableCell>

@@ -5,7 +5,6 @@ import type { ReactNode } from 'react'
 import { Banner } from '~/components/blog/banner'
 import { BlogMeta } from '~/components/blog/blog-meta'
 import { Comments } from '~/components/blog/comments'
-import { EditOnGithub } from '~/components/blog/edit-on-github'
 import { PostTitle } from '~/components/blog/post-title'
 import { ScrollButtons } from '~/components/blog/scroll-buttons'
 import { SocialShare } from '~/components/blog/social-share'
@@ -22,7 +21,7 @@ interface LayoutProps {
 }
 
 export function PostBanner({ content, children }: LayoutProps) {
-  const { slug, path, title, images, date, lastmod, readingTime, tags, filePath, toc } = content
+  const { slug, path, title, images, date, lastmod, readingTime, tags, toc } = content
   const postUrl = `${SITE_METADATA.siteUrl}/${path}`
 
   return (
@@ -48,10 +47,7 @@ export function PostBanner({ content, children }: LayoutProps) {
           </div>
           <div className="prose prose-lg max-w-none dark:prose-invert">{children}</div>
           <div className="space-y-8 border-t border-gray-200 pt-4 dark:border-gray-700">
-            <div className="flex justify-between gap-4">
-              <div className="flex items-center gap-2">
-                <EditOnGithub filePath={filePath} />
-              </div>
+            <div className="flex justify-end">
               <SocialShare postUrl={postUrl} title={title} />
             </div>
             <Comments slug={slug} />

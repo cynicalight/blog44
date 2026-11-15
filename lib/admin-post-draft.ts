@@ -10,7 +10,7 @@ const adminPostDateSchema = z
 
 const adminPostInputSchema = z
   .object({
-    contentType: z.enum(['blog', 'gallery']),
+    contentType: z.enum(['blog', 'gallery', 'project']),
     slug: z.string(),
     scriptVariant: z.enum(['zh-Hans', 'zh-Hant']),
     title: z.string(),
@@ -19,6 +19,8 @@ const adminPostInputSchema = z
     tags: z.array(z.string()),
     draft: z.boolean(),
     coverImage: z.string(),
+    // Drafts saved before projects existed have no `github`.
+    github: z.string().default(''),
     body: z.string(),
   })
   .strict()

@@ -7,7 +7,7 @@ export const BLOG_SCRIPT_PREFERENCE_KEY = 'preferred-blog-script'
 
 export type BlogScriptVariant = 'zh-Hans' | 'zh-Hant'
 
-export const DEFAULT_BLOG_SCRIPT_VARIANT: BlogScriptVariant = 'zh-Hant'
+export const DEFAULT_BLOG_SCRIPT_VARIANT: BlogScriptVariant = 'zh-Hans'
 
 const SIMPLIFIED_TO_TRADITIONAL = OpenCC.Converter({ from: 'cn', to: 'tw' })
 const TRADITIONAL_TO_SIMPLIFIED = OpenCC.Converter({ from: 'tw', to: 'cn' })

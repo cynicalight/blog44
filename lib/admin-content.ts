@@ -17,23 +17,41 @@ import {
   getPairedBlogSourcePath,
   type BlogScriptVariant,
 } from '~/lib/blog-script'
+import { parseGithubRepo } from '~/lib/github-repo'
 import type { AdminPostDetail, AdminPostInput, AdminPostSummary } from '~/types/admin'
 
 const BLOG_ROOT = 'data/blog'
 const GALLERY_ROOT = 'data/gallery'
+const PROJECT_ROOT = 'data/projects'
 
-const postInputSchema = z.object({
-  contentType: z.enum(['blog', 'gallery']),
-  slug: z.string().min(1),
-  scriptVariant: z.enum(['zh-Hans', 'zh-Hant']).default(DEFAULT_BLOG_SCRIPT_VARIANT),
-  title: z.string().min(1),
-  date: z.string().min(10),
-  summary: z.string().optional().default(''),
-  tags: z.array(z.string()).default([]),
-  draft: z.boolean().default(false),
-  coverImage: z.string().optional().default(''),
-  body: z.string().default(''),
-})
+const postInputSchema = z
+  .object({
+    contentType: z.enum(['blog', 'gallery', 'project']),
+    slug: z.string().min(1),
+    scriptVariant: z.enum(['zh-Hans', 'zh-Hant']).default(DEFAULT_BLOG_SCRIPT_VARIANT),
+    title: z.string().min(1),
+    date: z.string().min(10),
+    summary: z.string().optional().default(''),
+    tags: z.array(z.string()).default([]),
+    draft: z.boolean().default(false),
+    coverImage: z.string().optional().default(''),
+    github: z.string().optional().default(''),
+    body: z.string().default(''),
+  })
+  // Projects need a GitHub repository; store it canonically as `owner/repo`.
+  .transform((input, context) => {
+    if (input.contentType !== 'project') return { ...input, github: '' }
+    const github = parseGithubRepo(input.github)
+    if (!github) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['github'],
+        message: 'Project 需要合法的 GitHub 仓库（owner/repo 或 github.com 链接）',
+      })
+      return z.NEVER
+    }
+    return { ...input, github }
+  })
 
 type GitHubDirectoryEntry = {
   path: string
@@ -265,6 +283,7 @@ function parsePost(path: string, source: string): ParsedPost {
         : [],
       draft: Boolean(data.draft),
       coverImage,
+      github: typeof data.github === 'string' ? data.github : '',
       body: parsed.content,
     },
     frontmatter: data,
@@ -290,6 +309,12 @@ function serializePost(input: AdminPostInput, existingFrontmatter?: Record<strin
     next.images = [input.coverImage.trim()]
   } else {
     delete next.images
+  }
+
+  if (input.contentType === 'project') {
+    next.github = input.github
+  } else {
+    delete next.github
   }
 
   if (!Array.isArray(next.authors) || next.authors.length === 0) {
@@ -372,11 +397,16 @@ export function parseAdminPostInput(input: unknown) {
 }
 
 export async function listAdminPosts(): Promise<AdminPostSummary[]> {
-  const [blogPaths, galleryPaths] = await Promise.all([
-    walkDirectory(BLOG_ROOT),
-    walkDirectory(GALLERY_ROOT),
-  ])
-  const paths = [...blogPaths, ...galleryPaths]
+  // A root with no files yet doesn't exist on GitHub; treat it as empty.
+  const roots = await Promise.all(
+    [BLOG_ROOT, GALLERY_ROOT, PROJECT_ROOT].map((root) =>
+      walkDirectory(root).catch((error) => {
+        if (error instanceof GitHubContentError && error.status === 404) return []
+        throw error
+      })
+    )
+  )
+  const paths = roots.flat()
   const posts = await Promise.all(
     paths.map(async (path) => {
       const file = await getFile(path)

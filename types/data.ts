@@ -7,16 +7,6 @@ export type SpotifyNowPlayingData = {
   albumImageUrl?: string
 }
 
-export type Project = {
-  type: 'work' | 'self'
-  title: string
-  description?: string
-  imgSrc: string
-  url?: string
-  repo?: string | GithubRepository | null
-  builtWith: string[]
-}
-
 export type Gallery = {
   type: 'trip' | 'street' | 'self'
   title: string

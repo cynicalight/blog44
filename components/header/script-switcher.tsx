@@ -23,7 +23,8 @@ export function ScriptSwitcher() {
   useEffect(() => {
     setMounted(true)
     const stored = window.localStorage.getItem(BLOG_SCRIPT_PREFERENCE_KEY)
-    const preferred = stored === 'zh-Hans' ? 'zh-Hans' : DEFAULT_BLOG_SCRIPT_VARIANT
+    const preferred: BlogScriptVariant =
+      stored === 'zh-Hans' || stored === 'zh-Hant' ? stored : DEFAULT_BLOG_SCRIPT_VARIANT
 
     if (isBlogPathname(pathname)) {
       const urlVariant = getBlogScriptVariantFromRoutePath(pathname.slice(1))

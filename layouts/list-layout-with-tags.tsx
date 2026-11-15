@@ -1,4 +1,4 @@
-import type { Blog } from 'contentlayer/generated'
+import type { Blog, Project } from 'contentlayer/generated'
 import type { CoreContent } from 'pliny/utils/contentlayer'
 import { Tag } from '~/components/blog/tags'
 import { PostCardGridView } from '~/components/blog/post-card-grid-view'
@@ -9,7 +9,7 @@ import tagData from '~/json/tag-data.json'
 interface ListLayoutProps {
   title: string
   description: React.ReactNode
-  posts: CoreContent<Blog>[]
+  posts: CoreContent<Blog | Project>[]
 }
 
 export function ListLayoutWithTags({ title, description, posts }: ListLayoutProps) {

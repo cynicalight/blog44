@@ -10,7 +10,6 @@ import { SocialShare } from '~/components/blog/social-share'
 import { Container } from '~/components/ui/container'
 import { ReadingSurface } from '~/components/lunar/pixel-ui'
 import { SITE_METADATA } from '~/data/site-metadata'
-import { EditOnGithub } from '~/components/blog/edit-on-github'
 import { ParallaxGallery } from '~/components/gallery/parallax-gallery'
 
 interface GalleryLayoutProps {
@@ -21,7 +20,7 @@ interface GalleryLayoutProps {
 }
 
 export function GalleryLayout({ content, children }: GalleryLayoutProps) {
-  const { slug, date, title, type, tags, readingTime, filePath } = content
+  const { slug, date, title, type, tags, readingTime } = content
   // 从 content 中安全地提取 imagesList，如果不存在则使用空数组
   const imagesList = (content as any).imagesList || []
   const postUrl = `${SITE_METADATA.siteUrl}/${type.toLowerCase()}/${slug}`
@@ -65,10 +64,7 @@ export function GalleryLayout({ content, children }: GalleryLayoutProps) {
           )}
 
           <div className="space-y-8 border-t border-gray-200 pt-6 dark:border-gray-700">
-            <div className="flex justify-between gap-4">
-              <div className="flex items-center gap-2">
-                <EditOnGithub filePath={filePath} />
-              </div>
+            <div className="flex justify-end">
               <SocialShare postUrl={postUrl} title={title} />
             </div>
             <Comments slug={slug} />

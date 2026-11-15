@@ -1,0 +1,78 @@
+---
+title: NeoRead：本地优先的 EPUB / PDF AI 阅读器
+date: '2026-11-15'
+github: cynicalight/NeoRead
+tags: ['electron', 'typescript', 'ai']
+draft: false
+summary: 一个把书库、论文库、双语对照、批注和 AI 助读放进同一个桌面应用的阅读器。文档、进度和笔记都留在本机，AI 只在你主动调用时才参与。
+images: ['https://raw.githubusercontent.com/cynicalight/NeoRead/main/website/assets/screenshots/pdf-bilingual-ai.webp']
+authors: ['default']
+---
+
+读论文和电子书的时候，我的工作流一直很零碎：PDF 阅读器负责看，Zotero 负责管文献，翻译插件负责对照，遇到看不懂的段落再复制到聊天窗口里问 AI。每换一个工具，上下文就断一次。
+
+NeoRead 想做的事情很简单：**把这些步骤收进同一个窗口里，并且让数据默认留在自己电脑上。**
+
+![NeoRead 的 PDF 双语阅读界面：左侧目录，中间原文与译文，右侧 AI 助读](https://raw.githubusercontent.com/cynicalight/NeoRead/main/website/assets/screenshots/pdf-bilingual-ai.webp)
+
+官网：[neoread.app](https://neoread.app/)，安装包在 [GitHub Releases](https://github.com/cynicalight/NeoRead/releases)（macOS Apple Silicon 的 DMG 和 Windows x64 的 EXE）。
+
+## 它能做什么
+
+### 书库和论文库分开管
+
+电子书和论文的使用方式完全不同，所以 NeoRead 把它们放进两个库：
+
+- **图书库** 支持 EPUB 和 PDF；**论文库** 只收 PDF，可以在两个库之间移动文档。
+- 论文可以通过编号、链接或标题导入，导入后会自动查找作者、年份、出处、DOI、arXiv 和摘要。常见的计算机与工科会议会显示简称，悬停能看到全称。
+- 支持嵌套分类、标签和智能分类，可以检测重复论文并合并，也可以 [从 Zotero 迁移](https://github.com/cynicalight/NeoRead/blob/main/docs/zotero-migration.md) PDF、分类、标签、笔记和批注。
+- 引用可以导出为 GB/T 7714、APA、BibTeX 和 RIS。
+
+### 原文和译文对照读
+
+- **PDF**：导入后在本地按页解析版面，翻译正文和图题，公式图片会转成 LaTeX，可以一边处理一边阅读。
+- **EPUB**：按章节手动翻译，原文和译文对照滚动，悬停时句子联动，批注在原文和译文之间共享。
+- 书签、高亮、下划线、问题批注和论文笔记都支持筛选、搜索和 Markdown 导出。
+
+两种格式各自保留适合自己的阅读方式：
+
+| 能力 | EPUB | PDF |
+| --- | --- | --- |
+| 阅读内核 | 应用内渲染清理后的章节，Readium Go Toolkit 解析 | PDF.js Viewer |
+| 排版 | 连续滚动 / 翻页，字号、字体、行距可调 | 连续滚动、缩放、适合宽度 |
+| 翻译 | 按章手动翻译 | 导入后解析并翻译 |
+| 搜索 | SQLite FTS5 | 逐页文本搜索 |
+
+### 结合原文问 AI
+
+选中一段文字就可以翻译、解释或引用提问；也可以总结 EPUB 当前章节或 PDF 当前页。回答里的出处可以点回原文，并闪烁定位到对应位置。
+
+AI 由内置的 Pi 运行，可以登录 ChatGPT、Claude 或 Kimi Code 账号，也可以填写厂商 API Key 或自定义兼容接口。问答和翻译能分别选择模型和思考强度。
+
+## 本地优先
+
+这是 NeoRead 最核心的设计约束：
+
+- 原文件放在文件系统，文档信息、阅读进度、批注、对话和设置都存在本机的 SQLite 里，没有内置云同步。
+- **AI 是可选的。** 本地阅读、搜索和批注不需要登录任何 AI 账户；只有你触发翻译、解释、总结或提问时，相关的选区和上下文才会发给你选择的模型服务。
+- 应用内置一个约 67 MB 的版面模型，第一次解析 PDF 就能离线提取版面、定位图片区域，不需要安装 Python 或 PaddlePaddle。
+- 本地 API 每次启动都会随机生成 token，并校验 Host 和 Origin。
+
+## 技术栈
+
+NeoRead 是一个 Electron 桌面应用：Go 服务负责解析、索引和本地 API，Web 界面用 TypeScript 写，EPUB 由 Readium Go Toolkit 解析，PDF 交给 PDF.js，全文搜索用 SQLite FTS5。
+
+想从源码运行的话，需要 Node.js 22+、pnpm 10.30.3 和 Go 1.26.5+：
+
+```sh
+git clone https://github.com/cynicalight/NeoRead.git
+cd NeoRead
+pnpm install
+pnpm desktop
+```
+
+`pnpm desktop` 会构建 Go 服务、Web 界面和 Electron，然后打开桌面窗口。
+
+## 最后
+
+NeoRead 还在快速迭代中。如果它刚好解决了你读书或读论文时的某个痛点，欢迎去 [GitHub](https://github.com/cynicalight/NeoRead) 点个 star，或者直接提 issue 告诉我哪里不好用。

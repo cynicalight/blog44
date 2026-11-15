@@ -27,6 +27,7 @@ import {
   getPublicPathFromSourcePath,
 } from '~/lib/admin-post-utils'
 import { type BlogScriptVariant } from '~/lib/blog-script'
+import { parseGithubRepo } from '~/lib/github-repo'
 import type { AdminContentType, AdminPostDetail, AdminPostInput } from '~/types/admin'
 
 const MarkdownEditor = dynamic(() => import('./markdown-editor'), {
@@ -50,8 +51,15 @@ function createEmptyForm(): AdminPostInput {
     tags: [],
     draft: false,
     coverImage: '',
+    github: '',
     body: '',
   }
+}
+
+const CONTENT_TYPE_LABELS: Record<AdminContentType, string> = {
+  blog: 'Blog',
+  gallery: 'Gallery',
+  project: 'Project',
 }
 
 function getDraftStatusText(status: NewPostDraftStatus) {
@@ -158,6 +166,7 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
           tags: post.tags,
           draft: post.draft,
           coverImage: post.coverImage,
+          github: post.github,
           body: post.body,
         })
         setTagInput(post.tags.join(', '))
@@ -323,6 +332,10 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
       setError('请等待图片上传完成后再保存。')
       return
     }
+    if (form.contentType === 'project' && !parseGithubRepo(form.github)) {
+      setError('Project 需要填写 GitHub 仓库：owner/repo 或 github.com 链接。')
+      return
+    }
     setError('')
     setSuccess('')
     setIsSaving(true)
@@ -472,18 +485,15 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
             <div className="space-y-2">
               <Label>类型</Label>
               <div className="flex flex-wrap gap-2">
-                <ToggleButton
-                  active={form.contentType === 'blog'}
-                  onClick={() => updateField('contentType', 'blog' as AdminContentType)}
-                >
-                  Blog
-                </ToggleButton>
-                <ToggleButton
-                  active={form.contentType === 'gallery'}
-                  onClick={() => updateField('contentType', 'gallery' as AdminContentType)}
-                >
-                  Gallery
-                </ToggleButton>
+                {(Object.keys(CONTENT_TYPE_LABELS) as AdminContentType[]).map((type) => (
+                  <ToggleButton
+                    key={type}
+                    active={form.contentType === type}
+                    onClick={() => updateField('contentType', type)}
+                  >
+                    {CONTENT_TYPE_LABELS[type]}
+                  </ToggleButton>
+                ))}
               </div>
             </div>
 
@@ -577,6 +587,24 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
               </div>
             ) : null}
 
+            {form.contentType === 'project' ? (
+              <div className="space-y-2 lg:col-span-2">
+                <Label htmlFor="post-github">GitHub 仓库</Label>
+                <Input
+                  id="post-github"
+                  value={form.github}
+                  onChange={(event) => updateField('github', event.target.value)}
+                  placeholder="cynicalight/NeoRead 或 https://github.com/cynicalight/NeoRead"
+                  required
+                />
+                <p className="text-xs text-muted-foreground">
+                  {form.github && !parseGithubRepo(form.github)
+                    ? '无法识别仓库，请填写 owner/repo 或 github.com 链接。'
+                    : '保存为 owner/repo；项目页会定期拉取仓库的 star 数。'}
+                </p>
+              </div>
+            ) : null}
+
             <div className="space-y-2 lg:col-span-2">
               <Label htmlFor="post-summary">摘要</Label>
               <Textarea
@@ -622,9 +650,7 @@ export function PostEditor({ mode, sourcePath }: PostEditorProps) {
           <CardContent className="space-y-2 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
               <span>内容类型：</span>
-              <Badge variant="secondary">
-                {form.contentType === 'gallery' ? 'Gallery' : 'Blog'}
-              </Badge>
+              <Badge variant="secondary">{CONTENT_TYPE_LABELS[form.contentType]}</Badge>
             </div>
             {form.contentType === 'blog' ? (
               <div>当前稿件：{form.scriptVariant === 'zh-Hant' ? '繁體' : '简体'}</div>

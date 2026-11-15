@@ -100,10 +100,12 @@
 **结论**
 
 - 非管理页面不再有顶部导航栏：`components/site-chrome.tsx` 挂载 `LunarChrome`，固定的全屏 Canvas 在 `/` 绘制大月球、对角线海面和像素标题，在其他路由绘制左上角小月球和角落海面；小月球的月相随阅读进度变化。悬停或点击月球展开站点导航，内页额外提供 HOME。页面标题统一使用 `PageHeader`，文章和画廊详情页的正文放在 `ReadingSurface` 中以保证可读性。Canvas 在标签页隐藏和开启减少动态效果时暂停。
-- 内容由 `data/blog`、`data/gallery` 等 MDX 源文件进入 Contentlayer；构建时生成标签数据和本地搜索索引。新增画廊 MDX 后仍需手动更新 `data/gallery.ts`。
+- 内容由 `data/blog`、`data/gallery`、`data/projects` 等 MDX 源文件进入 Contentlayer；构建时生成标签数据和本地搜索索引。新增画廊 MDX 后仍需手动更新 `data/gallery.ts`。
 - 浏览量 Route Handlers 通过 Prisma `views` 表读写；开发环境的 POST 不会自增，生产环境才会写入。
 - 本地开发可访问 `/api/admin/auth/local-preview` 获取一小时免登录预览会话并进入新建文章页；入口仅接受 development 模式下的本机 Host，拒绝 Vercel 环境与跨站导航，生产环境拒绝预览会话。预览服务应绑定 `127.0.0.1`。
-- 管理后台通过同源 `/api/admin/*` 工作：凭据由环境变量校验，签名会话放入 HttpOnly Cookie；文章 CRUD 通过 GitHub API 读取并提交仓库中的 MDX 内容，而不是写入本地文件或独立数据库。
+- Project 是带 `github`（规范化为 `owner/repo`）字段的 MDX 文章，`/projects` 和 `/projects/[...slug]` 复用文章布局，并以 `revalidate = 3600` 每小时重新拉取 star 数；配置了 `GITHUB_API_TOKEN` 时走 GraphQL，否则回退到未认证的 GitHub REST 接口。
+- 博客默认字形为简体（`DEFAULT_BLOG_SCRIPT_VARIANT = 'zh-Hans'`），`/blog/...` 是简体，`/blog/zh-hant/...` 是繁体，访客的字形偏好保存在 `localStorage`。
+- 管理后台通过同源 `/api/admin/*` 工作：凭据由环境变量校验，签名会话放入 HttpOnly Cookie；文章 CRUD 支持 Blog、Gallery、Project 三类（Project 必填 GitHub 仓库），通过 GitHub API 读取并提交仓库中的 MDX 内容，而不是写入本地文件或独立数据库。
 - 正文编辑器使用客户端按需加载的 Milkdown Crepe，支持 Markdown 即时渲染和源码切换；检测到 HTML/MDX 标签的内容使用源码模式，避免转换丢失。图片保留标准 Markdown 的 alt 文本，不使用 Crepe 将 alt 用于缩放比例的图片块。两种模式均复用 COS 上传接口，并将正文同步回现有表单和本地草稿。
 - 新建文章编辑器会把有实际内容的表单按版本化结构自动保存到当前浏览器的 `localStorage`，刷新后先校验再恢复。这个本地工作草稿独立于文章 frontmatter 的 `draft` 发布状态，成功提交到 GitHub 后会清除；编辑已有文章暂不自动保存。
 - 管理编辑器会把粘贴到封面或正文输入框的图片提交到 `/api/admin/assets`。该上传路径不经过 Routing Middleware，避免其 4 MB 请求体限制，但 Route Handler 仍会在服务端校验签名会话、同源请求、4 MB 文件上限和实际图片格式，再使用 COS 密钥上传；该 Vercel Function 的最长执行时间显式设为 15 秒。客户端会兼容平台返回的非 JSON 错误页；正文中的多张图片会逐张上传并插入 Markdown 图片链接，封面会回填公开 URL。

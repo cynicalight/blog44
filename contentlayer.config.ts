@@ -223,6 +223,43 @@ export const Gallery = defineDocumentType(() => ({
   },
 }))
 
+export const Project = defineDocumentType(() => ({
+  name: 'Project',
+  filePathPattern: 'projects/**/*.mdx',
+  contentType: 'mdx',
+  fields: {
+    title: { type: 'string', required: true },
+    date: { type: 'date', required: true },
+    /** `owner/repo` or a github.com URL; stars are fetched at request time. */
+    github: { type: 'string', required: true },
+    tags: { type: 'list', of: { type: 'string' }, default: [] },
+    lastmod: { type: 'date' },
+    draft: { type: 'boolean' },
+    summary: { type: 'string' },
+    images: { type: 'json' },
+    authors: { type: 'list', of: { type: 'string' } },
+    layout: { type: 'string' },
+    bibliography: { type: 'string' },
+  },
+  computedFields: {
+    ...computedFields,
+    structuredData: {
+      type: 'json',
+      resolve: (doc) => ({
+        '@context': 'https://schema.org',
+        '@type': 'SoftwareSourceCode',
+        name: doc.title,
+        datePublished: doc.date,
+        dateModified: doc.lastmod || doc.date,
+        description: doc.summary,
+        image: doc.images ? doc.images[0] : SITE_METADATA.socialBanner,
+        codeRepository: doc.github,
+        url: `${SITE_METADATA.siteUrl}/${doc._raw.flattenedPath}`,
+      }),
+    },
+  },
+}))
+
 export const Author = defineDocumentType(() => ({
   name: 'Author',
   filePathPattern: 'authors/**/*.mdx',
@@ -243,7 +280,7 @@ export const Author = defineDocumentType(() => ({
 
 export default makeSource({
   contentDirPath: 'data',
-  documentTypes: [Blog, Gallery, Author],
+  documentTypes: [Blog, Gallery, Project, Author],
   mdx: {
     cwd: process.cwd(),
     remarkPlugins: [
@@ -280,10 +317,11 @@ export default makeSource({
     ],
   },
   onSuccess: async (importData) => {
-    const { allBlogs, allGalleries } = await importData()
+    const { allBlogs, allGalleries, allProjects } = await importData()
     createTagCount([
       ...allBlogs.filter((post) => isDefaultBlogScriptVariant(post)),
       ...allGalleries,
+      ...allProjects,
     ])
     createSearchIndex(allBlogs)
   },

@@ -1,5 +1,5 @@
 import { clsx } from 'clsx'
-import type { Blog } from 'contentlayer/generated'
+import type { Blog, Project } from 'contentlayer/generated'
 import type { CoreContent } from 'pliny/utils/contentlayer'
 import { formatDate } from 'pliny/utils/formatDate'
 import { GritBackground } from '~/components/ui/grit-background'
@@ -8,7 +8,7 @@ import { Image } from '~/components/ui/image'
 import { Link } from '~/components/ui/link'
 import { SITE_METADATA } from '~/data/site-metadata'
 
-export function PostCardGridView({ post }: { post: CoreContent<Blog> }) {
+export function PostCardGridView({ post }: { post: CoreContent<Blog | Project> }) {
   const { path, date, title, images, readingTime } = post
   return (
     <article>

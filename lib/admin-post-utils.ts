@@ -11,6 +11,7 @@ import type { AdminContentType } from '~/types/admin'
 
 const BLOG_ROOT = 'data/blog'
 const GALLERY_ROOT = 'data/gallery'
+const PROJECT_ROOT = 'data/projects'
 
 export function sanitizePostSlug(input: string) {
   const lastSegment = input
@@ -50,9 +51,9 @@ export function buildSourcePath(
   slug: string,
   scriptVariant: BlogScriptVariant = DEFAULT_BLOG_SCRIPT_VARIANT
 ) {
-  return contentType === 'gallery'
-    ? buildGallerySourcePath(date, slug)
-    : buildBlogSourcePath(date, slug, scriptVariant)
+  if (contentType === 'gallery') return buildGallerySourcePath(date, slug)
+  if (contentType === 'project') return buildContentSourcePath(PROJECT_ROOT, date, slug)
+  return buildBlogSourcePath(date, slug, scriptVariant)
 }
 
 function buildContentSourcePath(
@@ -98,18 +99,22 @@ export function getContentTypeFromSourcePath(path: string): AdminContentType {
   if (path.startsWith(`${GALLERY_ROOT}/`)) {
     return 'gallery'
   }
+  if (path.startsWith(`${PROJECT_ROOT}/`)) {
+    return 'project'
+  }
   return 'blog'
 }
 
 export function getPublicPathFromSourcePath(path: string) {
-  return getContentTypeFromSourcePath(path) === 'gallery'
-    ? getPublicGalleryPathFromSourcePath(path)
-    : getPublicBlogPathFromSourcePath(path)
+  const contentType = getContentTypeFromSourcePath(path)
+  if (contentType === 'gallery') return getPublicGalleryPathFromSourcePath(path)
+  if (contentType === 'project') return `/${path.replace(/^data\//, '').replace(/\.mdx$/i, '')}`
+  return getPublicBlogPathFromSourcePath(path)
 }
 
 export function isManagedContentPath(path: string) {
   return (
-    (path.startsWith(`${BLOG_ROOT}/`) || path.startsWith(`${GALLERY_ROOT}/`)) &&
+    [BLOG_ROOT, GALLERY_ROOT, PROJECT_ROOT].some((root) => path.startsWith(`${root}/`)) &&
     path.endsWith('.mdx')
   )
 }

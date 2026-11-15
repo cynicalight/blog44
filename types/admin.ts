@@ -1,6 +1,6 @@
 import type { BlogScriptVariant } from '~/lib/blog-script'
 
-export type AdminContentType = 'blog' | 'gallery'
+export type AdminContentType = 'blog' | 'gallery' | 'project'
 
 export type AdminSessionUser = {
   email: string
@@ -17,6 +17,8 @@ export type AdminPostSummary = {
   tags: string[]
   summary: string
   coverImage: string
+  /** `owner/repo`; required for projects, empty otherwise. */
+  github: string
 }
 
 export type AdminPostDetail = AdminPostSummary & {
@@ -33,5 +35,6 @@ export type AdminPostInput = {
   tags: string[]
   draft: boolean
   coverImage: string
+  github: string
   body: string
 }
